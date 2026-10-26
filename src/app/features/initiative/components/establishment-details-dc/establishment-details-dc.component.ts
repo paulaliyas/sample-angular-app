@@ -1,18 +1,23 @@
-import { Component, input, output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Establishment } from '../../initiative.models';
 
 @Component({
   selector: 'app-establishment-details-dc',
   templateUrl: './establishment-details-dc.component.html',
-  styleUrl: './establishment-details-dc.component.scss',
+  styleUrls: ['./establishment-details-dc.component.scss'],
   standalone: false,
 })
 export class EstablishmentDetailsDcComponent {
-  readonly establishment = input.required<Establishment>();
-  readonly declarationAccepted = input(false);
-  readonly saving = input(false);
+  @Input() establishment!: Establishment;
 
-  readonly declarationChange = output<boolean>();
-  readonly save = output<void>();
-  readonly back = output<void>();
+  @Output() save = new EventEmitter<void>();
+  @Output() back = new EventEmitter<void>();
+
+  declarationAccepted = false;
+
+  onSubmit(): void {
+    if (this.declarationAccepted) {
+      this.save.emit();
+    }
+  }
 }

@@ -1,17 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import {
   AboutInitiativeDcComponent,
   AddContributorsDcComponent,
-  ContributorSearchDcComponent,
   ContributorsDcComponent,
   EstablishmentDetailsDcComponent,
   InitiativeScComponent,
-  RiyalIconDcComponent,
 } from './components';
 import { InitiativeDcComponent } from './initiative-dc.component';
 import { InitiativeRoutingModule } from './initiative-routing.module';
-import { InitiativeService } from './services';
 
 @NgModule({
   declarations: [
@@ -21,10 +19,7 @@ import { InitiativeService } from './services';
     EstablishmentDetailsDcComponent,
     ContributorsDcComponent,
     AddContributorsDcComponent,
-    ContributorSearchDcComponent,
-    RiyalIconDcComponent,
   ],
-  imports: [CommonModule, InitiativeRoutingModule],
-  providers: [InitiativeService],
+  imports: [CommonModule, FormsModule, InitiativeRoutingModule],
 })
 export class InitiativeModule {}

@@ -1,64 +1,77 @@
-import { Component, computed, input, linkedSignal, output, signal } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Contributor } from '../../initiative.models';
-import { filterContributors, pageList } from '../../initiative.utils';
-
-const PAGE_SIZE = 10;
 
 @Component({
   selector: 'app-add-contributors-dc',
   templateUrl: './add-contributors-dc.component.html',
-  styleUrl: './add-contributors-dc.component.scss',
+  styleUrls: ['./add-contributors-dc.component.scss'],
   standalone: false,
 })
-export class AddContributorsDcComponent {
+export class AddContributorsDcComponent implements OnInit {
   /** Every contributor of the establishment, eligible or not. */
-  readonly candidates = input.required<Contributor[]>();
-  /** NNIDs already added — preselected so this step also works for "Manage". */
-  readonly selectedNnids = input<string[]>([]);
-  readonly maxCount = input.required<number>();
-  readonly saving = input(false);
+  @Input() contributors: Contributor[] = [];
+  /** Already added — shown as ticked so this page also works for "Manage". */
+  @Input() selectedContributors: Contributor[] = [];
+  @Input() maxCount = 0;
 
-  /** Emits the selected NNIDs. */
-  readonly save = output<string[]>();
-  readonly back = output<void>();
+  @Output() save = new EventEmitter<Contributor[]>();
+  @Output() back = new EventEmitter<void>();
 
-  protected readonly query = signal('');
-  protected readonly currentPage = signal(1);
-  protected readonly selected = linkedSignal(() => new Set(this.selectedNnids()));
+  searchText = '';
+  pageSize = 5;
+  currentPage = 1;
+  selectedIds: string[] = [];
 
-  private readonly filtered = computed(() => filterContributors(this.candidates(), this.query()));
-  protected readonly totalPages = computed(() => Math.max(1, Math.ceil(this.filtered().length / PAGE_SIZE)));
-  protected readonly pageRows = computed(() => {
-    const start = (this.currentPage() - 1) * PAGE_SIZE;
-    return this.filtered().slice(start, start + PAGE_SIZE);
-  });
-  protected readonly pages = computed(() => pageList(this.currentPage(), this.totalPages()));
-  protected readonly selectedCount = computed(() => this.selected().size);
-  protected readonly limitReached = computed(() => this.selectedCount() >= this.maxCount());
-
-  protected search(query: string) {
-    this.query.set(query);
-    this.currentPage.set(1);
+  ngOnInit(): void {
+    this.selectedIds = this.selectedContributors.map((c) => c.nnid);
   }
 
-  protected goToPage(page: number) {
-    this.currentPage.set(Math.min(Math.max(page, 1), this.totalPages()));
+  get filteredContributors(): Contributor[] {
+    const text = this.searchText.trim().toLowerCase();
+    return this.contributors.filter((c) => c.name.toLowerCase().includes(text) || c.nnid.includes(text));
   }
 
-  protected isSelected(contributor: Contributor) {
-    return this.selected().has(contributor.nnid);
+  get pagedContributors(): Contributor[] {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.filteredContributors.slice(start, start + this.pageSize);
   }
 
-  protected toggle(contributor: Contributor, checked: boolean) {
-    this.selected.update((set) => {
-      const next = new Set(set);
-      if (checked) next.add(contributor.nnid);
-      else next.delete(contributor.nnid);
-      return next;
-    });
+  get totalPages(): number {
+    return Math.max(1, Math.ceil(this.filteredContributors.length / this.pageSize));
   }
 
-  protected submit() {
-    this.save.emit([...this.selected()]);
+  get pages(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+  onSearch(): void {
+    this.currentPage = 1;
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+    }
+  }
+
+  isSelected(contributor: Contributor): boolean {
+    return this.selectedIds.includes(contributor.nnid);
+  }
+
+  isDisabled(contributor: Contributor): boolean {
+    const limitReached = this.selectedIds.length >= this.maxCount;
+    return !contributor.eligible || (limitReached && !this.isSelected(contributor));
+  }
+
+  toggle(contributor: Contributor): void {
+    if (this.isSelected(contributor)) {
+      this.selectedIds = this.selectedIds.filter((id) => id !== contributor.nnid);
+    } else {
+      this.selectedIds = [...this.selectedIds, contributor.nnid];
+    }
+  }
+
+  onSubmit(): void {
+    this.save.emit(this.contributors.filter((c) => this.isSelected(c)));
   }
 }

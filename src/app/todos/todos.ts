@@ -1,4 +1,5 @@
-import { Component, computed, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 
 interface Todo {
   id: number;
@@ -8,6 +9,7 @@ interface Todo {
 
 @Component({
   selector: 'app-todos',
+  imports: [CommonModule],
   template: `
     <h2>Todos</h2>
     <form (submit)="add(input.value); input.value = ''; $event.preventDefault()">
@@ -15,19 +17,16 @@ interface Todo {
       <button type="submit">Add</button>
     </form>
     <ul>
-      @for (todo of todos(); track todo.id) {
-        <li [class.done]="todo.done">
-          <label>
-            <input type="checkbox" [checked]="todo.done" (change)="toggle(todo.id)" />
-            {{ todo.text }}
-          </label>
-          <button (click)="remove(todo.id)" aria-label="Delete">✕</button>
-        </li>
-      } @empty {
-        <li>Nothing to do 🎉</li>
-      }
+      <li *ngFor="let todo of todos" [class.done]="todo.done">
+        <label>
+          <input type="checkbox" [checked]="todo.done" (change)="toggle(todo)" />
+          {{ todo.text }}
+        </label>
+        <button (click)="remove(todo)" aria-label="Delete">✕</button>
+      </li>
+      <li *ngIf="todos.length === 0">Nothing to do 🎉</li>
     </ul>
-    <p>{{ remaining() }} of {{ todos().length }} remaining</p>
+    <p>{{ remaining }} of {{ todos.length }} remaining</p>
   `,
   styles: `
     :host { display: block; max-width: 640px; margin: 0 auto; }
@@ -40,23 +39,28 @@ interface Todo {
 })
 export class Todos {
   private nextId = 3;
-  protected readonly todos = signal<Todo[]>([
+
+  todos: Todo[] = [
     { id: 1, text: 'Learn Angular', done: true },
     { id: 2, text: 'Build something', done: false },
-  ]);
-  protected readonly remaining = computed(() => this.todos().filter((t) => !t.done).length);
+  ];
 
-  add(text: string) {
+  get remaining(): number {
+    return this.todos.filter((t) => !t.done).length;
+  }
+
+  add(text: string): void {
     const trimmed = text.trim();
-    if (!trimmed) return;
-    this.todos.update((list) => [...list, { id: this.nextId++, text: trimmed, done: false }]);
+    if (trimmed) {
+      this.todos.push({ id: this.nextId++, text: trimmed, done: false });
+    }
   }
 
-  toggle(id: number) {
-    this.todos.update((list) => list.map((t) => (t.id === id ? { ...t, done: !t.done } : t)));
+  toggle(todo: Todo): void {
+    todo.done = !todo.done;
   }
 
-  remove(id: number) {
-    this.todos.update((list) => list.filter((t) => t.id !== id));
+  remove(todo: Todo): void {
+    this.todos = this.todos.filter((t) => t !== todo);
   }
 }

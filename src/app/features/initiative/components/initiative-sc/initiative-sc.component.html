@@ -1,44 +1,29 @@
-@if (error(); as message) {
-  <div class="alert" role="alert">{{ message }}</div>
-}
+<ng-container [ngSwitch]="step">
+  <app-about-initiative-dc
+    *ngSwitchCase="'about'"
+    (apply)="onApply()"
+  ></app-about-initiative-dc>
 
-<div class="step" [attr.aria-busy]="loading()">
-  @switch (step()) {
-    @case ('about') {
-      <app-about-initiative-dc [faqs]="faqs()" (apply)="onApply()" />
-    }
+  <app-establishment-details-dc
+    *ngSwitchCase="'establishment'"
+    [establishment]="establishment"
+    (save)="onSaveApplication()"
+    (back)="goTo('about')"
+  ></app-establishment-details-dc>
 
-    @case ('establishment') {
-      @if (establishment(); as establishment) {
-        <app-establishment-details-dc
-          [establishment]="establishment"
-          [declarationAccepted]="declarationAccepted()"
-          [saving]="loading()"
-          (declarationChange)="declarationAccepted.set($event)"
-          (save)="onSaveApplication()"
-          (back)="goTo('about')"
-        />
-      }
-    }
+  <app-contributors-dc
+    *ngSwitchCase="'contributors'"
+    [contributors]="addedContributors"
+    (manage)="onManageContributors()"
+    (remove)="onRemoveContributor($event)"
+  ></app-contributors-dc>
 
-    @case ('contributors') {
-      <app-contributors-dc
-        [contributors]="contributors()"
-        [busy]="loading()"
-        (manage)="onManageContributors()"
-        (remove)="onRemoveContributor($event)"
-      />
-    }
-
-    @case ('add-contributors') {
-      <app-add-contributors-dc
-        [candidates]="candidates()"
-        [selectedNnids]="addedNnids()"
-        [maxCount]="maxContributors()"
-        [saving]="loading()"
-        (save)="onSaveContributors($event)"
-        (back)="goTo('contributors')"
-      />
-    }
-  }
-</div>
+  <app-add-contributors-dc
+    *ngSwitchCase="'add-contributors'"
+    [contributors]="allContributors"
+    [selectedContributors]="addedContributors"
+    [maxCount]="maxContributors"
+    (save)="onSaveContributors($event)"
+    (back)="goTo('contributors')"
+  ></app-add-contributors-dc>
+</ng-container>

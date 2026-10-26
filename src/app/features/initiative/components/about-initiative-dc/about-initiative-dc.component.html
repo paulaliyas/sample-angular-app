@@ -13,15 +13,13 @@
     </header>
 
     <div class="faq">
-      @for (faq of faqs(); track faq.question) {
-        <details class="faq__item">
-          <summary class="faq__question">
-            <span class="faq__text">{{ faq.question }}</span>
-            <span class="faq__chevron" aria-hidden="true"></span>
-          </summary>
-          <div class="faq__answer">{{ faq.answer }}</div>
-        </details>
-      }
+      <details class="faq__item" *ngFor="let faq of faqs">
+        <summary class="faq__question">
+          <span class="faq__text">{{ faq.question }}</span>
+          <span class="faq__chevron" aria-hidden="true"></span>
+        </summary>
+        <div class="faq__answer">{{ faq.answer }}</div>
+      </details>
     </div>
   </div>
 </section>

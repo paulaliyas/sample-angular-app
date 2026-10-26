@@ -1,29 +1,23 @@
 <section class="panel-outer">
-  <form class="panel panel--wide-gutter" (submit)="$event.preventDefault(); save.emit()">
+  <form class="panel panel--wide-gutter" (ngSubmit)="onSubmit()">
     <div class="details">
       <h2 class="section-title">Establishment Details</h2>
 
       <dl class="details__card">
         <div class="field">
           <dt class="field__label">Establishment Name</dt>
-          <dd class="field__value"><bdi>{{ establishment().name }}</bdi></dd>
+          <dd class="field__value"><bdi>{{ establishment.name }}</bdi></dd>
         </div>
 
         <div class="field">
           <dt class="field__label">Establishment Registration Number</dt>
-          <dd class="field__value"><bdi>{{ establishment().registrationNumber }}</bdi></dd>
+          <dd class="field__value"><bdi>{{ establishment.registrationNumber }}</bdi></dd>
         </div>
       </dl>
     </div>
 
     <label class="declaration">
-      <input
-        #declaration
-        type="checkbox"
-        class="checkbox"
-        [checked]="declarationAccepted()"
-        (change)="declarationChange.emit(declaration.checked)"
-      />
+      <input type="checkbox" class="checkbox" name="declaration" [(ngModel)]="declarationAccepted" />
       <span class="checkbox__box" aria-hidden="true"></span>
       <span class="declaration__text">
         <span class="declaration__title">Declaration</span>
@@ -38,7 +32,7 @@
 
     <div class="cta">
       <button type="button" class="btn btn--outline" (click)="back.emit()">Cancel</button>
-      <button type="submit" class="btn btn--primary" [disabled]="!declarationAccepted() || saving()">Apply</button>
+      <button type="submit" class="btn btn--primary" [disabled]="!declarationAccepted">Apply</button>
     </div>
   </form>
 </section>

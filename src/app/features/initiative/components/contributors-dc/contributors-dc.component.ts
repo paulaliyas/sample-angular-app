@@ -1,22 +1,22 @@
-import { Component, computed, input, output, signal } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Contributor } from '../../initiative.models';
-import { filterContributors } from '../../initiative.utils';
 
 @Component({
   selector: 'app-contributors-dc',
   templateUrl: './contributors-dc.component.html',
-  styleUrl: './contributors-dc.component.scss',
+  styleUrls: ['./contributors-dc.component.scss'],
   standalone: false,
 })
 export class ContributorsDcComponent {
-  readonly contributors = input.required<Contributor[]>();
-  readonly busy = input(false);
+  @Input() contributors: Contributor[] = [];
 
-  /** Opens the add/manage step. */
-  readonly manage = output<void>();
-  readonly remove = output<Contributor>();
+  @Output() manage = new EventEmitter<void>();
+  @Output() remove = new EventEmitter<Contributor>();
 
-  protected readonly query = signal('');
-  protected readonly hasContributors = computed(() => this.contributors().length > 0);
-  protected readonly rows = computed(() => filterContributors(this.contributors(), this.query()));
+  searchText = '';
+
+  get filteredContributors(): Contributor[] {
+    const text = this.searchText.trim().toLowerCase();
+    return this.contributors.filter((c) => c.name.toLowerCase().includes(text) || c.nnid.includes(text));
+  }
 }

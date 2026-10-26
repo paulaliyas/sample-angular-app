@@ -1,104 +1,75 @@
-import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { finalize, forkJoin, Observable, switchMap } from 'rxjs';
-import { Contributor, Establishment, Faq } from '../../initiative.models';
-import { InitiativeService } from '../../services';
-
-export type InitiativeStep = 'about' | 'establishment' | 'contributors' | 'add-contributors';
+import { Component } from '@angular/core';
+import { Contributor, Establishment } from '../../initiative.models';
 
 /**
- * Smart component for the initiative. Owns the state, makes every API call,
- * and shows one dc step at a time — each "save" calls the API, then moves on.
+ * Smart component for the initiative.
+ * Holds the data and shows one step at a time — each save moves to the next step.
+ * API calls go in the methods below (marked TODO).
  */
 @Component({
   selector: 'app-initiative-sc',
   templateUrl: './initiative-sc.component.html',
-  styleUrl: './initiative-sc.component.scss',
+  styleUrls: ['./initiative-sc.component.scss'],
   standalone: false,
 })
-export class InitiativeScComponent implements OnInit {
-  private readonly api = inject(InitiativeService);
-  private readonly destroyRef = inject(DestroyRef);
+export class InitiativeScComponent {
+  /** 'about' | 'establishment' | 'contributors' | 'add-contributors' */
+  step = 'about';
 
-  readonly step = signal<InitiativeStep>('about');
-  readonly loading = signal(false);
-  readonly error = signal<string | null>(null);
+  maxContributors = 600;
 
-  readonly faqs = signal<Faq[]>([]);
-  readonly establishment = signal<Establishment | null>(null);
-  readonly declarationAccepted = signal(false);
-  readonly contributors = signal<Contributor[]>([]);
-  readonly candidates = signal<Contributor[]>([]);
-  readonly maxContributors = signal(0);
-  readonly addedNnids = computed(() => this.contributors().map((c) => c.nnid));
+  establishment: Establishment = {
+    name: 'شركة عبدالله فهد المطيري للخدمات المسانده',
+    registrationNumber: '536562462',
+  };
 
-  ngOnInit(): void {
-    this.request(this.api.getFaqs(), (faqs) => this.faqs.set(faqs));
-  }
+  // Sample data from the design — TODO: load from the API
+  allContributors: Contributor[] = [
+    { nnid: '98765432101', name: 'Mohammed Abdullah Al-Khudhair', joiningDate: '2026/10/26', wage: 7500, eligible: true },
+    { nnid: '98765432102', name: 'Fahad Mohammed Al-Shammari', joiningDate: '2026/10/26', wage: 6200, eligible: false, ineligibilityReason: 'Reason for Ineligibility' },
+    { nnid: '98765432103', name: 'Abdullah Khalid Al-Harbi', joiningDate: '2026/10/26', wage: 4800, eligible: true },
+    { nnid: '98765432104', name: 'Nasser Ibrahim Al-Qahtani', joiningDate: '2026/10/26', wage: 9100, eligible: true },
+    { nnid: '98765432105', name: 'Saud Abdulrahman Al-Zahrani', joiningDate: '2026/10/26', wage: 3500, eligible: true },
+    { nnid: '98765432106', name: 'Mohammed Yousef Al-Otaibi', joiningDate: '2026/10/26', wage: 8700, eligible: true },
+    { nnid: '98765432107', name: 'Khalid Abdullah Al-Subaie', joiningDate: '2026/10/26', wage: 1300, eligible: true },
+    { nnid: '98765432108', name: 'Abdulaziz Sulaiman Al-Dosari', joiningDate: '2026/10/26', wage: 5600, eligible: false, ineligibilityReason: 'Reason for Ineligibility' },
+    { nnid: '98765432109', name: 'Faisal Abdullah Al-Ghamdi', joiningDate: '2026/10/26', wage: 7200, eligible: true },
+    { nnid: '98765432110', name: 'Turki Mohammed Al-Harbi', joiningDate: '2026/10/26', wage: 4000, eligible: true },
+  ];
+
+  /** Contributors added to the initiative. */
+  addedContributors: Contributor[] = [];
 
   /** About → Establishment Details */
   onApply(): void {
-    this.request(this.api.getEstablishment(), (establishment) => {
-      this.establishment.set(establishment);
-      this.step.set('establishment');
-    });
+    this.step = 'establishment';
   }
 
-  /** Establishment Details → Contributors: submit the application, then load the contributors. */
+  /** Establishment Details → Contributors */
   onSaveApplication(): void {
-    const establishment = this.establishment();
-    if (!establishment || !this.declarationAccepted()) return;
-
-    const save$ = this.api
-      .submitApplication(establishment.registrationNumber)
-      .pipe(switchMap(() => this.api.getContributors()));
-
-    this.request(save$, (contributors) => {
-      this.contributors.set(contributors);
-      this.step.set('contributors');
-    });
+    // TODO: call the API to submit the application
+    this.step = 'contributors';
   }
 
   /** Contributors → Add Contributors */
   onManageContributors(): void {
-    this.request(forkJoin([this.api.getCandidates(), this.api.getMaxContributors()]), ([candidates, max]) => {
-      this.candidates.set(candidates);
-      this.maxContributors.set(max);
-      this.step.set('add-contributors');
-    });
+    this.step = 'add-contributors';
   }
 
-  /** Add Contributors → Contributors: save the selection. */
-  onSaveContributors(nnids: string[]): void {
-    this.request(this.api.saveContributors(nnids), (contributors) => {
-      this.contributors.set(contributors);
-      this.step.set('contributors');
-    });
+  /** Add Contributors → Contributors */
+  onSaveContributors(selected: Contributor[]): void {
+    // TODO: call the API to save the contributors
+    this.addedContributors = selected;
+    this.step = 'contributors';
   }
 
   onRemoveContributor(contributor: Contributor): void {
-    this.request(this.api.removeContributor(contributor.nnid), () =>
-      this.contributors.update((list) => list.filter((c) => c.nnid !== contributor.nnid)),
-    );
+    // TODO: call the API to remove the contributor
+    this.addedContributors = this.addedContributors.filter((c) => c.nnid !== contributor.nnid);
   }
 
-  /** Back / Cancel — no API call. */
-  goTo(step: InitiativeStep): void {
-    this.error.set(null);
-    this.step.set(step);
-  }
-
-  private request<T>(source: Observable<T>, onSuccess: (value: T) => void): void {
-    this.loading.set(true);
-    this.error.set(null);
-    source
-      .pipe(
-        finalize(() => this.loading.set(false)),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe({
-        next: onSuccess,
-        error: () => this.error.set('Something went wrong. Please try again.'),
-      });
+  /** Cancel / back */
+  goTo(step: string): void {
+    this.step = step;
   }
 }
