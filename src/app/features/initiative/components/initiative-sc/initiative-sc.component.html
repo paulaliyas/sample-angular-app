@@ -1,0 +1,44 @@
+@if (error(); as message) {
+  <div class="alert" role="alert">{{ message }}</div>
+}
+
+<div class="step" [attr.aria-busy]="loading()">
+  @switch (step()) {
+    @case ('about') {
+      <app-about-initiative-dc [faqs]="faqs()" (apply)="onApply()" />
+    }
+
+    @case ('establishment') {
+      @if (establishment(); as establishment) {
+        <app-establishment-details-dc
+          [establishment]="establishment"
+          [declarationAccepted]="declarationAccepted()"
+          [saving]="loading()"
+          (declarationChange)="declarationAccepted.set($event)"
+          (save)="onSaveApplication()"
+          (back)="goTo('about')"
+        />
+      }
+    }
+
+    @case ('contributors') {
+      <app-contributors-dc
+        [contributors]="contributors()"
+        [busy]="loading()"
+        (manage)="onManageContributors()"
+        (remove)="onRemoveContributor($event)"
+      />
+    }
+
+    @case ('add-contributors') {
+      <app-add-contributors-dc
+        [candidates]="candidates()"
+        [selectedNnids]="addedNnids()"
+        [maxCount]="maxContributors()"
+        [saving]="loading()"
+        (save)="onSaveContributors($event)"
+        (back)="goTo('contributors')"
+      />
+    }
+  }
+</div>

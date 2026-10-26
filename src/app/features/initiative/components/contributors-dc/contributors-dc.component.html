@@ -1,0 +1,104 @@
+<section class="page">
+  <div class="toolbar">
+    <app-contributor-search-dc (queryChange)="query.set($event)" />
+
+    <button type="button" class="btn btn--md btn--primary" [disabled]="!hasContributors() || busy()" (click)="manage.emit()">
+      <!-- Stand-in for GOSI3.0/UserGear -->
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="10" cy="9" r="4.5" stroke="currentColor" stroke-width="1.5" />
+        <path d="M2.75 19.5c1.5-2.6 4.1-4.25 7.25-4.25 1.1 0 2.15.2 3.1.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        <circle cx="18" cy="17" r="2" stroke="currentColor" stroke-width="1.5" />
+        <path d="M18 13.5v1.5M18 19v1.5M21.03 15.25l-1.3.75M16.27 18l-1.3.75M21.03 18.75l-1.3-.75M16.27 16l-1.3-.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+      Manage Contributors
+    </button>
+  </div>
+
+  <div class="table-card">
+    <div class="table-scroll">
+      <table class="table">
+        <colgroup>
+          <col class="col--contributor" />
+          <col />
+          <col />
+          <col />
+          <col class="col--actions" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th scope="col">Contributor</th>
+            <th scope="col">Joining Date</th>
+            <th scope="col"><span class="th-content">Contributory Wage <app-riyal-icon-dc /></span></th>
+            <th scope="col"><span class="th-content">Benefit Amount <app-riyal-icon-dc /></span></th>
+            <th scope="col"><span class="visually-hidden">Actions</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (!hasContributors()) {
+            <tr>
+              <td colspan="5" class="empty">
+                <div class="empty__inner">
+                  <!-- Stand-in for the empty-box illustration -->
+                  <svg width="96" height="96" viewBox="0 0 96 96" fill="none" aria-hidden="true">
+                    <path d="M8 38h48v42H8z" fill="#E5E7EA" />
+                    <path d="M8 38h48v8H8z" fill="#D5D8DD" />
+                    <path d="M8 38 18 28h44l-6 10z" fill="#C8CCD3" />
+                    <path d="m56 38 22 20-16 18-6-8z" fill="#F3F4F5" />
+                    <path d="M56 38 70 22l24 20-16 16z" fill="#EDEEF0" stroke="#D5D8DD" />
+                    <rect x="17" y="15" width="19" height="8" rx="4" fill="#00004E" />
+                    <circle cx="22" cy="19" r="1.2" fill="#fff" />
+                    <circle cx="26.5" cy="19" r="1.2" fill="#fff" />
+                    <circle cx="31" cy="19" r="1.2" fill="#fff" />
+                  </svg>
+
+                  <p class="empty__text">You haven't added any contributors to the initiative yet.</p>
+
+                  <button type="button" class="btn btn--md btn--green" [disabled]="busy()" (click)="manage.emit()">
+                    <!-- Stand-in for GOSI3.0/Plus -->
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M3.75 12h16.5M12 3.75v16.5" stroke="#00004E" stroke-width="1.5" stroke-linecap="round" />
+                    </svg>
+                    Add Contributor
+                  </button>
+                </div>
+              </td>
+            </tr>
+          } @else {
+            @for (c of rows(); track c.nnid) {
+              <tr>
+                <td>
+                  <span class="contributor">
+                    <span class="contributor__text">
+                      <span class="contributor__name">{{ c.name }}</span>
+                      <span class="contributor__id">NNID: {{ c.nnid }}</span>
+                    </span>
+                  </span>
+                </td>
+                <td>{{ c.joiningDate }}</td>
+                <td>{{ c.wage | number: '1.2-2' }}</td>
+                <td>{{ c.benefitAmount != null ? (c.benefitAmount | number: '1.2-2') : '—' }}</td>
+                <td>
+                  <button
+                    type="button"
+                    class="icon-btn"
+                    [attr.aria-label]="'Remove ' + c.name"
+                    [disabled]="busy()"
+                    (click)="remove.emit(c)"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                      <path d="M3.75 5h12.5M8.125 8.75v5M11.875 8.75v5M5 5l.625 11.25h8.75L15 5M7.5 5V3.125h5V5" stroke="#334157" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="5" class="no-results">No contributors match your search.</td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

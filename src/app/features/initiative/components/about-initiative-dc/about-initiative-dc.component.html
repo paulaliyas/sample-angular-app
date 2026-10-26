@@ -1,0 +1,27 @@
+<section class="panel-outer">
+  <div class="panel panel--wide-gutter">
+    <header class="header">
+      <h2 class="section-title">About the Initiative</h2>
+
+      <button type="button" class="apply-btn" (click)="apply.emit()">
+        Apply
+        <!-- Stand-in for GOSI3.0/ArrowRight -->
+        <svg width="25.626" height="25.626" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M3.75 12h16.5M13.5 5.25 20.25 12 13.5 18.75" stroke="#00BF00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+    </header>
+
+    <div class="faq">
+      @for (faq of faqs(); track faq.question) {
+        <details class="faq__item">
+          <summary class="faq__question">
+            <span class="faq__text">{{ faq.question }}</span>
+            <span class="faq__chevron" aria-hidden="true"></span>
+          </summary>
+          <div class="faq__answer">{{ faq.answer }}</div>
+        </details>
+      }
+    </div>
+  </div>
+</section>

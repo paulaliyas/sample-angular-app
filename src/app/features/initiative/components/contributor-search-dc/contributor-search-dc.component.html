@@ -1,0 +1,26 @@
+<label class="search">
+  <!-- Stand-in for GOSI3.0/MagnifyingGlass -->
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+    <circle cx="9" cy="9" r="6.25" stroke="#808896" stroke-width="1.25" />
+    <path d="m13.5 13.5 3.75 3.75" stroke="#808896" stroke-width="1.25" stroke-linecap="round" />
+  </svg>
+  <input
+    #input
+    type="search"
+    class="search__input"
+    placeholder="Search by name, ID / Iqama number"
+    aria-label="Search by name, ID / Iqama number"
+    (input)="queryChange.emit(input.value)"
+  />
+</label>
+
+<!-- TODO: the filter panel isn't designed yet -->
+<button type="button" class="filter-btn">
+  <!-- Stand-in for GOSI3.0/SlidersHorizontal -->
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+    <path d="M3.125 6.25h3.75M10.625 6.25h6.25M3.125 13.75h8.75M15.625 13.75h1.25" stroke="#00122D" stroke-width="1.25" stroke-linecap="round" />
+    <circle cx="8.75" cy="6.25" r="1.875" stroke="#00122D" stroke-width="1.25" />
+    <circle cx="13.75" cy="13.75" r="1.875" stroke="#00122D" stroke-width="1.25" />
+  </svg>
+  <span class="filter-btn__label">Filter</span>
+</button>

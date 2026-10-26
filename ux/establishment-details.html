@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Establishment Details</title>
+  <style>
+    /* ==========================================================
+       Design tokens (from Figma styles)
+       ========================================================== */
+    :root {
+      --rich-blue-01: #00004e;   /* Primary/Rich Blue/01 (Brand) */
+      --vivid-green-01: #00bf00; /* Primary/Vivid Green/01 (Brand) */
+      --midnight-02: #334157;    /* Grayscale/Midnight/02 */
+      --midnight-03: #808896;    /* Grayscale/Midnight/03 */
+      --midnight-04: #e5e7ea;    /* Grayscale/Midnight/04 */
+      --midnight-05: #f3f4f5;    /* Grayscale/Midnight/05 */
+      --white-06: #ffffff;       /* Grayscale/Midnight/06 (White) */
+
+      --font-family: "Ping AR + LT", "Ping AR LT", "Segoe UI", Tahoma, Arial, sans-serif;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-family);
+      background: var(--white-06);
+    }
+
+    /* ==========================================================
+       Layout
+       ========================================================== */
+    .outer-container {
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-start;
+      padding: 20px;
+      border-radius: 24px;
+      background: var(--midnight-05);
+    }
+
+    .container {
+      flex: 1 0 0;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      padding: 32px 89px;
+      border-radius: 24px;
+      background: var(--white-06);
+    }
+
+    /* ==========================================================
+       Establishment details
+       ========================================================== */
+    .details {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .details__title {
+      margin: 0;
+      font-size: 18px;      /* L/Bold */
+      font-weight: 700;
+      line-height: 26px;
+      color: var(--rich-blue-01);
+    }
+
+    .details__card {
+      display: flex;
+      gap: 40px;
+      margin: 0;
+      padding: 24px;
+      border: 1px solid var(--midnight-04);
+      border-radius: 10px;
+      background: var(--white-06);
+    }
+
+    .field {
+      flex: 1 0 0;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .field__label {
+      margin: 0;
+      font-size: 10px;      /* 2XS/Regular */
+      font-weight: 400;
+      line-height: 14px;
+      color: var(--midnight-03);
+    }
+
+    .field__value {
+      margin: 0;
+      min-height: 24px;
+      display: flex;
+      align-items: center;
+      font-size: 14px;      /* S/Medium */
+      font-weight: 500;
+      line-height: 22px;
+      color: var(--rich-blue-01);
+      overflow-wrap: anywhere;
+    }
+
+    /* ==========================================================
+       Declaration checkbox
+       ========================================================== */
+    .declaration {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      cursor: pointer;
+    }
+
+    .declaration__input {
+      /* visually hidden, still focusable */
+      position: absolute;
+      opacity: 0;
+      width: 1px;
+      height: 1px;
+    }
+
+    .declaration__box {
+      flex-shrink: 0;
+      position: relative;
+      width: 20px;
+      height: 20px;
+      margin-top: 2px;
+      border: 1.5px solid var(--rich-blue-01);
+      border-radius: 2px;
+      background: var(--white-06);
+      transition: background-color 0.15s ease;
+    }
+
+    .declaration__input:checked + .declaration__box {
+      background: var(--rich-blue-01);
+    }
+
+    .declaration__input:checked + .declaration__box::after {
+      content: "";
+      position: absolute;
+      left: 5.5px;
+      top: 1.5px;
+      width: 5px;
+      height: 10px;
+      border: solid var(--white-06);
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+
+    .declaration__input:focus-visible + .declaration__box {
+      outline: 2px solid var(--vivid-green-01);
+      outline-offset: 2px;
+    }
+
+    .declaration__text {
+      flex: 1 0 0;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 16px;
+    }
+
+    .declaration__title {
+      font-weight: 700;     /* M/Bold */
+      line-height: 24px;
+      color: var(--rich-blue-01);
+    }
+
+    .declaration__body {
+      font-weight: 400;     /* M/Regular */
+      line-height: 24px;
+      color: var(--midnight-02);
+    }
+
+    /* ==========================================================
+       Buttons
+       ========================================================== */
+    .cta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      height: 56px;
+      padding: 8px 40px;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 18px;      /* L/Medium */
+      font-weight: 500;
+      line-height: 26px;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid var(--rich-blue-01);
+      outline-offset: 2px;
+    }
+
+    .btn--outline {
+      background: var(--white-06);
+      border: 1.5px solid var(--vivid-green-01);
+      color: var(--rich-blue-01);
+    }
+
+    .btn--outline:hover {
+      background: #f2fcf2;
+    }
+
+    .btn--primary {
+      padding-inline: 64px;
+      border: none;
+      background: var(--rich-blue-01);  /* enabled state — not in this frame, adjust to your design */
+      color: var(--white-06);
+    }
+
+    .btn--primary:disabled {
+      background: var(--midnight-03);
+      color: var(--midnight-04);
+      cursor: not-allowed;
+    }
+
+    /* ==========================================================
+       Responsive
+       ========================================================== */
+    @media (max-width: 900px) {
+      .container {
+        padding: 32px 24px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .outer-container {
+        padding: 12px;
+      }
+
+      .container {
+        gap: 32px;
+        padding: 24px 16px;
+      }
+
+      .details__card {
+        flex-direction: column;
+        gap: 20px;
+        padding: 16px;
+      }
+
+      .cta {
+        flex-direction: column-reverse;
+        align-items: stretch;
+      }
+
+      .btn,
+      .btn--primary {
+        width: 100%;
+        padding-inline: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Figma node 189:5479 — outerContainer -->
+  <section class="outer-container">
+    <form class="container" id="initiativeForm">
+
+      <!-- Establishment details -->
+      <div class="details">
+        <h2 class="details__title">Establishment Details</h2>
+
+        <dl class="details__card">
+          <div class="field">
+            <dt class="field__label">Establishment Name</dt>
+            <dd class="field__value"><bdi>شركة عبدالله فهد المطيري للخدمات المسانده</bdi></dd>
+          </div>
+
+          <div class="field">
+            <dt class="field__label">Establishment Registration Number</dt>
+            <dd class="field__value"><bdi>536562462</bdi></dd>
+          </div>
+        </dl>
+      </div>
+
+      <!-- Declaration -->
+      <label class="declaration">
+        <input type="checkbox" class="declaration__input" id="declaration" required />
+        <span class="declaration__box" aria-hidden="true"></span>
+        <span class="declaration__text">
+          <span class="declaration__title">Declaration</span>
+          <span class="declaration__body">
+            I declare that I have read and agree to the terms and conditions of the GOSI Initiative, and I confirm that the information provided is accurate. I also authorize the General Organization for Social Insurance to request the “Initiative” record from licensed entities in accordance with the applicable laws, regulations, decisions and policies.
+          </span>
+        </span>
+      </label>
+
+      <!-- Actions -->
+      <div class="cta">
+        <button type="button" class="btn btn--outline">Cancel</button>
+        <button type="submit" class="btn btn--primary" id="applyBtn" disabled>Apply</button>
+      </div>
+
+    </form>
+  </section>
+
+  <script>
+    // Apply stays disabled until the declaration is ticked
+    const declaration = document.getElementById("declaration");
+    const applyBtn = document.getElementById("applyBtn");
+
+    declaration.addEventListener("change", () => {
+      applyBtn.disabled = !declaration.checked;
+    });
+
+    document.getElementById("initiativeForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      // TODO: submit the application
+    });
+  </script>
+</body>
+</html>

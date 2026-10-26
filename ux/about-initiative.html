@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About the Initiative</title>
+  <style>
+    /* ==========================================================
+       Design tokens (from Figma styles)
+       ========================================================== */
+    :root {
+      --rich-blue-01: #00004e;   /* Primary/Rich Blue/01 (Brand) */
+      --vivid-green-01: #00bf00; /* Primary/Vivid Green/01 (Brand) */
+      --midnight-01: #00122d;    /* Grayscale/Midnight/01 (Brand) */
+      --midnight-04: #e5e7ea;    /* Grayscale/Midnight/04 */
+      --midnight-05: #f3f4f5;    /* Grayscale/Midnight/05 */
+      --white-06: #ffffff;       /* Grayscale/Midnight/06 (White) */
+
+      --font-family: "Ping AR + LT", "Ping AR LT", "Segoe UI", Tahoma, Arial, sans-serif;
+
+      /* Chevron used in the FAQ rows (stand-in for Figma "Gosi-previous-icon/Arrow-Down") */
+      --icon-chevron-down: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M6.95 9.41 12 14.59l5.05-5.18' stroke='%2300BF00' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-family);
+      background: var(--white-06);
+    }
+
+    /* ==========================================================
+       Layout
+       ========================================================== */
+    .outer-container {
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-start;
+      padding: 20px;
+      border-radius: 24px;
+      background: var(--midnight-05);
+    }
+
+    .container {
+      flex: 1 0 0;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 89px;
+      border-radius: 24px;
+      background: var(--white-06);
+    }
+
+    .initiative {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* ==========================================================
+       Header
+       ========================================================== */
+    .initiative__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .initiative__title {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 26px;
+      color: var(--rich-blue-01);
+    }
+
+    /* ==========================================================
+       Button — Components/Button (outline green)
+       ========================================================== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8.542px;
+      height: 51px;
+      padding: 8.542px 32px;
+      border-radius: 8px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+
+    .btn--outline-green {
+      background: var(--white-06);
+      border: 1.068px solid var(--vivid-green-01);
+      color: var(--rich-blue-01);
+    }
+
+    .btn--outline-green:hover {
+      background: #f2fcf2;
+    }
+
+    .btn--outline-green:focus-visible {
+      outline: 2px solid var(--rich-blue-01);
+      outline-offset: 2px;
+    }
+
+    .btn__label {
+      font-size: 17.08px;
+      font-weight: 500;
+      line-height: 25.626px;
+      white-space: nowrap;
+    }
+
+    .btn__icon {
+      flex-shrink: 0;
+    }
+
+    /* Arrow should point the other way in RTL (Arabic) */
+    [dir="rtl"] .btn__icon {
+      transform: scaleX(-1);
+    }
+
+    /* ==========================================================
+       FAQ accordion
+       ========================================================== */
+    .faq {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 32px 24px;
+      border: 1px solid var(--midnight-04);
+      border-radius: 10px;
+      background: var(--white-06);
+    }
+
+    .faq__item {
+      padding: 12px;
+      border-radius: 6px;
+      background: var(--midnight-05);
+    }
+
+    .faq__question {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    /* Hide the default disclosure marker */
+    .faq__question::-webkit-details-marker {
+      display: none;
+    }
+
+    .faq__question:focus-visible {
+      outline: 2px solid var(--rich-blue-01);
+      outline-offset: 4px;
+      border-radius: 4px;
+    }
+
+    .faq__text {
+      flex: 1 0 0;
+      min-width: 0;
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 22px;
+      color: var(--midnight-01);
+      overflow-wrap: break-word;
+    }
+
+    .faq__chevron {
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+      background: var(--icon-chevron-down) center / 24px 24px no-repeat;
+      transition: transform 0.2s ease;
+    }
+
+    .faq__item[open] .faq__chevron {
+      transform: rotate(180deg);
+    }
+
+    .faq__answer {
+      padding-top: 12px;
+      font-size: 14px;
+      line-height: 22px;
+      color: var(--midnight-01);
+    }
+
+    /* ==========================================================
+       Responsive
+       ========================================================== */
+    @media (max-width: 900px) {
+      .container {
+        padding: 32px 24px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .outer-container {
+        padding: 12px;
+      }
+
+      .container {
+        padding: 24px 16px;
+      }
+
+      .faq {
+        padding: 16px 12px;
+      }
+
+      .btn {
+        padding-inline: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Figma node 183:5005 — outerContainer -->
+  <section class="outer-container">
+    <div class="container">
+      <div class="initiative">
+
+        <!-- Header: title + Apply button -->
+        <header class="initiative__header">
+          <h2 class="initiative__title">About the Initiative</h2>
+
+          <button type="button" class="btn btn--outline-green">
+            <span class="btn__label">Apply</span>
+            <!-- Replace with assets/arrow-right.svg exported from Figma (GOSI3.0/ArrowRight) -->
+            <svg class="btn__icon" width="25.626" height="25.626" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M3.75 12h16.5M13.5 5.25 20.25 12 13.5 18.75" stroke="#00BF00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </header>
+
+        <!-- FAQ accordion -->
+        <div class="faq">
+          <details class="faq__item">
+            <summary class="faq__question">
+              <span class="faq__text">What is the Daam Initiative for the Aviation Sector?</span>
+              <span class="faq__chevron" aria-hidden="true"></span>
+            </summary>
+            <div class="faq__answer">Answer content goes here.</div>
+          </details>
+
+          <details class="faq__item">
+            <summary class="faq__question">
+              <span class="faq__text">What are the initiative's eligibility conditions?</span>
+              <span class="faq__chevron" aria-hidden="true"></span>
+            </summary>
+            <div class="faq__answer">Answer content goes here.</div>
+          </details>
+
+          <details class="faq__item">
+            <summary class="faq__question">
+              <span class="faq__text">What percentage is covered by the employer?</span>
+              <span class="faq__chevron" aria-hidden="true"></span>
+            </summary>
+            <div class="faq__answer">Answer content goes here.</div>
+          </details>
+
+          <details class="faq__item">
+            <summary class="faq__question">
+              <span class="faq__text">What percentage is covered by the contributor?</span>
+              <span class="faq__chevron" aria-hidden="true"></span>
+            </summary>
+            <div class="faq__answer">Answer content goes here.</div>
+          </details>
+
+          <details class="faq__item">
+            <summary class="faq__question">
+              <span class="faq__text">How is the employer compensated for the initiative amount?</span>
+              <span class="faq__chevron" aria-hidden="true"></span>
+            </summary>
+            <div class="faq__answer">Answer content goes here.</div>
+          </details>
+
+          <details class="faq__item">
+            <summary class="faq__question">
+              <span class="faq__text">Is there a specific duration for the initiative?</span>
+              <span class="faq__chevron" aria-hidden="true"></span>
+            </summary>
+            <div class="faq__answer">Answer content goes here.</div>
+          </details>
+
+          <details class="faq__item">
+            <summary class="faq__question">
+              <span class="faq__text">How do I add a contributor to the initiative?</span>
+              <span class="faq__chevron" aria-hidden="true"></span>
+            </summary>
+            <div class="faq__answer">Answer content goes here.</div>
+          </details>
+
+          <details class="faq__item">
+            <summary class="faq__question">
+              <span class="faq__text">Terms and Conditions</span>
+              <span class="faq__chevron" aria-hidden="true"></span>
+            </summary>
+            <div class="faq__answer">Answer content goes here.</div>
+          </details>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</body>
+</html>

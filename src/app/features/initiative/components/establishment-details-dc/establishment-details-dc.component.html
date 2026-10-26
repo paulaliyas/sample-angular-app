@@ -1,0 +1,44 @@
+<section class="panel-outer">
+  <form class="panel panel--wide-gutter" (submit)="$event.preventDefault(); save.emit()">
+    <div class="details">
+      <h2 class="section-title">Establishment Details</h2>
+
+      <dl class="details__card">
+        <div class="field">
+          <dt class="field__label">Establishment Name</dt>
+          <dd class="field__value"><bdi>{{ establishment().name }}</bdi></dd>
+        </div>
+
+        <div class="field">
+          <dt class="field__label">Establishment Registration Number</dt>
+          <dd class="field__value"><bdi>{{ establishment().registrationNumber }}</bdi></dd>
+        </div>
+      </dl>
+    </div>
+
+    <label class="declaration">
+      <input
+        #declaration
+        type="checkbox"
+        class="checkbox"
+        [checked]="declarationAccepted()"
+        (change)="declarationChange.emit(declaration.checked)"
+      />
+      <span class="checkbox__box" aria-hidden="true"></span>
+      <span class="declaration__text">
+        <span class="declaration__title">Declaration</span>
+        <span class="declaration__body">
+          I declare that I have read and agree to the terms and conditions of the GOSI Initiative, and I confirm
+          that the information provided is accurate. I also authorize the General Organization for Social Insurance
+          to request the “Initiative” record from licensed entities in accordance with the applicable laws,
+          regulations, decisions and policies.
+        </span>
+      </span>
+    </label>
+
+    <div class="cta">
+      <button type="button" class="btn btn--outline" (click)="back.emit()">Cancel</button>
+      <button type="submit" class="btn btn--primary" [disabled]="!declarationAccepted() || saving()">Apply</button>
+    </div>
+  </form>
+</section>

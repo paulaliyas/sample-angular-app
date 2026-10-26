@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add Contributors</title>
+  <style>
+    /* ==========================================================
+       Design tokens (from Figma styles)
+       ========================================================== */
+    :root {
+      --rich-blue-01: #00004e;   /* Primary/Rich Blue/01 (Brand) */
+      --vivid-green-01: #00bf00; /* Primary/Vivid Green/01 (Brand) */
+      --midnight-01: #00122d;    /* Grayscale/Midnight/01 (Brand) */
+      --midnight-02: #334157;    /* Grayscale/Midnight/02 */
+      --midnight-03: #808896;    /* Grayscale/Midnight/03 */
+      --midnight-04: #e5e7ea;    /* Grayscale/Midnight/04 */
+      --midnight-05: #f3f4f5;    /* Grayscale/Midnight/05 */
+      --white-06: #ffffff;       /* Grayscale/Midnight/06 (White) */
+      --info-01: #a37dfc;        /* Status/Info/01 */
+      --info-02: #ede5fe;        /* Status/Info/02 */
+      --shadow-md: 0 0 12px rgba(196, 203, 210, 0.3); /* Shadow-Md */
+
+      --font-family: "Ping AR + LT", "Ping AR LT", "Segoe UI", Tahoma, Arial, sans-serif;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-family);
+      background: var(--white-06);
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+
+    /* ==========================================================
+       Layout
+       ========================================================== */
+    .outer-container {
+      padding: 20px;
+      border-radius: 24px;
+      background: var(--midnight-05);
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      padding: 32px 56px;
+      border-radius: 24px;
+      background: var(--white-06);
+    }
+
+    .section {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .section__title {
+      margin: 0;
+      font-size: 18px;      /* L/Bold */
+      font-weight: 700;
+      line-height: 26px;
+      color: var(--rich-blue-01);
+    }
+
+    /* ==========================================================
+       Info toast
+       ========================================================== */
+    .toast {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      max-width: 869px;
+      padding: 8px 12px;
+      border: 1px solid var(--info-01);
+      border-radius: 10px;
+      background: var(--info-02);
+    }
+
+    .toast svg {
+      flex-shrink: 0;
+    }
+
+    .toast__text {
+      flex: 1 0 0;
+      min-width: 0;
+      margin: 0;
+      font-size: 14px;      /* S/Medium */
+      font-weight: 500;
+      line-height: 22px;
+      color: var(--rich-blue-01);
+    }
+
+    /* ==========================================================
+       Toolbar
+       ========================================================== */
+    .toolbar {
+      display: flex;
+      align-items: stretch;
+      gap: 16px;
+      height: 48px;
+    }
+
+    .search {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 309px;
+      padding: 8px 16px;
+      border: 1px solid var(--midnight-03);
+      border-radius: 40px;
+      background: var(--white-06);
+    }
+
+    .search:focus-within {
+      border-color: var(--rich-blue-01);
+    }
+
+    .search svg {
+      flex-shrink: 0;
+    }
+
+    .search__input {
+      flex: 1 0 0;
+      min-width: 0;
+      padding: 0;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: 14px;      /* S/Regular */
+      line-height: 22px;
+      color: var(--midnight-01);
+    }
+
+    .search__input::placeholder {
+      color: var(--midnight-03);
+    }
+
+    .filter-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 12px;
+      border: 1px solid var(--midnight-03);
+      border-radius: 8px;
+      background: var(--white-06);
+      font-family: inherit;
+      font-size: 14px;      /* S/Medium */
+      font-weight: 500;
+      line-height: 22px;
+      color: var(--midnight-01);
+      cursor: pointer;
+    }
+
+    .filter-btn:hover {
+      background: var(--midnight-05);
+    }
+
+    /* ==========================================================
+       Table
+       ========================================================== */
+    .table-card {
+      overflow: hidden;
+      border: 1px solid var(--midnight-04);
+      border-radius: 20px;
+      background: var(--white-06);
+    }
+
+    .table-scroll {
+      overflow-x: auto;
+    }
+
+    .table {
+      width: 100%;
+      min-width: 760px;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .table col.col--contributor { width: 300px; }
+
+    .table th,
+    .table td {
+      padding: 0 24px;
+      border-bottom: 1px solid var(--midnight-04);
+      text-align: start;
+      font-size: 14px;
+      line-height: 22px;
+      white-space: nowrap;
+    }
+
+    .table th {
+      height: 44px;
+      background: var(--midnight-05);
+      font-weight: 500;     /* S/Medium */
+      color: var(--midnight-02);
+    }
+
+    .table td {
+      height: 72px;
+      font-weight: 400;     /* S/Regular */
+      color: var(--midnight-02);
+    }
+
+    .table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .table tbody tr:hover td {
+      background: #fafbfb;
+    }
+
+    .th-content {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Contributor cell */
+    .contributor {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+    }
+
+    .contributor--disabled {
+      cursor: not-allowed;
+    }
+
+    .contributor__name {
+      display: block;
+      font-weight: 500;
+      color: var(--midnight-01);
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .contributor__id {
+      display: block;
+      color: var(--midnight-03);
+    }
+
+    .contributor__text {
+      min-width: 0;
+    }
+
+    /* Checkbox */
+    .checkbox {
+      position: absolute;
+      opacity: 0;
+      width: 1px;
+      height: 1px;
+    }
+
+    .checkbox__box {
+      flex-shrink: 0;
+      position: relative;
+      width: 20px;
+      height: 20px;
+      border: 1.5px solid var(--rich-blue-01);
+      border-radius: 2px;
+      background: var(--white-06);
+      transition: background-color 0.15s ease;
+    }
+
+    .checkbox:checked + .checkbox__box {
+      background: var(--rich-blue-01);
+    }
+
+    .checkbox:checked + .checkbox__box::after {
+      content: "";
+      position: absolute;
+      left: 5.5px;
+      top: 1.5px;
+      width: 5px;
+      height: 10px;
+      border: solid var(--white-06);
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+
+    .checkbox:disabled + .checkbox__box {
+      border-color: var(--midnight-03);
+      background: var(--midnight-04);
+    }
+
+    .checkbox:focus-visible + .checkbox__box {
+      outline: 2px solid var(--vivid-green-01);
+      outline-offset: 2px;
+    }
+
+    /* Eligibility + tooltip */
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .status__info {
+      position: relative;
+      display: inline-flex;
+      padding: 0;
+      border: none;
+      background: none;
+      cursor: help;
+    }
+
+    .status__info:focus-visible {
+      outline: 2px solid var(--rich-blue-01);
+      outline-offset: 2px;
+      border-radius: 50%;
+    }
+
+    .tooltip {
+      position: absolute;
+      bottom: calc(100% + 10px);
+      left: 50%;
+      z-index: 2;
+      padding: 8px 12px;
+      border-radius: 8px;
+      background: var(--midnight-01);
+      filter: drop-shadow(var(--shadow-md));
+      font-size: 12px;      /* XS/Bold */
+      font-weight: 700;
+      line-height: 18px;
+      color: var(--white-06);
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateX(-50%) translateY(4px);
+      transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
+      pointer-events: none;
+    }
+
+    .tooltip::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top-color: var(--midnight-01);
+    }
+
+    .status__info:hover .tooltip,
+    .status__info:focus-visible .tooltip {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ==========================================================
+       Pagination
+       ========================================================== */
+    .pagination {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 24px 16px;
+      border-top: 1px solid var(--midnight-04);
+    }
+
+    .pagination__side {
+      flex: 1 0 0;
+      display: flex;
+    }
+
+    .pagination__side--end {
+      justify-content: flex-end;
+    }
+
+    .pager-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100px;
+      height: 36px;
+      padding: 8px;
+      border: 1px solid var(--vivid-green-01);
+      border-radius: 6px;
+      background: var(--white-06);
+      font-family: inherit;
+      font-size: 14px;      /* S/Medium */
+      font-weight: 500;
+      line-height: 22px;
+      color: var(--rich-blue-01);
+      cursor: pointer;
+    }
+
+    .pager-btn:hover:not(:disabled) {
+      background: #f2fcf2;
+    }
+
+    .pager-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .pages {
+      display: flex;
+      gap: 2px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .page-num {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      padding: 8px;
+      border: none;
+      border-radius: 20px;
+      background: transparent;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 22px;
+      color: var(--midnight-02);
+      cursor: pointer;
+    }
+
+    .page-num:hover:not([aria-current]) {
+      background: #f8f9f9;
+    }
+
+    .page-num[aria-current="page"] {
+      background: var(--midnight-05);
+      color: var(--midnight-01);
+    }
+
+    .page-ellipsis {
+      cursor: default;
+    }
+
+    .pager-btn:focus-visible,
+    .page-num:focus-visible,
+    .filter-btn:focus-visible,
+    .btn:focus-visible {
+      outline: 2px solid var(--rich-blue-01);
+      outline-offset: 2px;
+    }
+
+    /* ==========================================================
+       Footer buttons
+       ========================================================== */
+    .cta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 56px;
+      padding: 8px 40px;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 18px;      /* L/Medium */
+      font-weight: 500;
+      line-height: 26px;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .btn--outline {
+      border: 1.5px solid var(--vivid-green-01);
+      background: var(--white-06);
+      color: var(--rich-blue-01);
+    }
+
+    .btn--outline:hover {
+      background: #f2fcf2;
+    }
+
+    .btn--primary {
+      padding-inline: 64px;
+      border: none;
+      background: var(--rich-blue-01);  /* enabled state — not in this frame */
+      color: var(--white-06);
+    }
+
+    .btn--primary:disabled {
+      background: var(--midnight-03);
+      color: var(--midnight-04);
+      cursor: not-allowed;
+    }
+
+    /* ==========================================================
+       Responsive
+       ========================================================== */
+    @media (max-width: 900px) {
+      .container {
+        padding: 32px 24px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .outer-container {
+        padding: 12px;
+      }
+
+      .container {
+        gap: 32px;
+        padding: 24px 16px;
+      }
+
+      .search {
+        flex: 1 0 0;
+        width: auto;
+        min-width: 0;
+      }
+
+      .filter-btn__label {
+        display: none;
+      }
+
+      .pagination {
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+
+      .pages {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+      }
+
+      .pagination__side {
+        flex: 0 0 auto;
+      }
+
+      .cta {
+        flex-direction: column-reverse;
+        align-items: stretch;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Figma node 190:5446 — outerContainer -->
+  <div class="outer-container">
+    <form class="container" id="addContributorsForm">
+
+      <section class="section" aria-labelledby="sectionTitle">
+        <h2 class="section__title" id="sectionTitle">
+          Add Contributors (<span id="selectedCount">0</span>/<span id="maxCount">600</span>)
+        </h2>
+
+        <!-- Info toast -->
+        <div class="toast" role="note">
+          <!-- Stand-in for GOSI3.0/WarningCircle -->
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" stroke="#00004E" stroke-width="1.5"/>
+            <path d="M12 7.5v5.25" stroke="#00004E" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="12" cy="16.13" r="1.13" fill="#00004E"/>
+          </svg>
+          <p class="toast__text">
+            The list shows all eligible and ineligible contributors based on GOSI data. The establishment can select contributors up to a maximum of 60% of its total contributors.
+          </p>
+        </div>
+
+        <!-- Search + filter -->
+        <div class="toolbar">
+          <label class="search">
+            <!-- Stand-in for GOSI3.0/MagnifyingGlass -->
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <circle cx="9" cy="9" r="6.25" stroke="#808896" stroke-width="1.25"/>
+              <path d="m13.5 13.5 3.75 3.75" stroke="#808896" stroke-width="1.25" stroke-linecap="round"/>
+            </svg>
+            <input type="search" class="search__input" id="searchInput"
+                   placeholder="Search by name, ID / Iqama number"
+                   aria-label="Search by name, ID / Iqama number" />
+          </label>
+
+          <button type="button" class="filter-btn">
+            <!-- Stand-in for GOSI3.0/SlidersHorizontal -->
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M3.125 6.25h3.75M10.625 6.25h6.25M3.125 13.75h8.75M15.625 13.75h1.25" stroke="#00122D" stroke-width="1.25" stroke-linecap="round"/>
+              <circle cx="8.75" cy="6.25" r="1.875" stroke="#00122D" stroke-width="1.25"/>
+              <circle cx="13.75" cy="13.75" r="1.875" stroke="#00122D" stroke-width="1.25"/>
+            </svg>
+            <span class="filter-btn__label">Filter</span>
+          </button>
+        </div>
+
+        <!-- Table -->
+        <div class="table-card">
+          <div class="table-scroll">
+            <table class="table">
+              <colgroup>
+                <col class="col--contributor" />
+                <col />
+                <col />
+                <col />
+              </colgroup>
+              <thead>
+                <tr>
+                  <th scope="col">Contributor Details</th>
+                  <th scope="col">Joining Date</th>
+                  <th scope="col">
+                    <span class="th-content">
+                      Contributory Wage
+                      <!-- Stand-in for GOSI3.0/Riyal -->
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" role="img" aria-label="SAR">
+                        <path d="M6.2 1.5v11.2M9.8 2.3v12.2M2.3 6.4l11.4-2.4M2.3 9.6l11.4-2.4M9.4 14.2l4.3-.9M2.3 12.4l3.9-.8" stroke="#334157" stroke-width="1.4" stroke-linecap="round"/>
+                      </svg>
+                    </span>
+                  </th>
+                  <th scope="col">Eligibility Status</th>
+                </tr>
+              </thead>
+              <tbody id="contributorRows"></tbody>
+            </table>
+          </div>
+
+          <!-- Pagination -->
+          <nav class="pagination" aria-label="Pagination">
+            <div class="pagination__side">
+              <button type="button" class="pager-btn" id="prevBtn">
+                <!-- Stand-in for GOSI3.0/ArrowLeft -->
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <path d="M16.875 10H3.125M8.75 4.375 3.125 10l5.625 5.625" stroke="#00BF00" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Previous
+              </button>
+            </div>
+
+            <ul class="pages" id="pageList"></ul>
+
+            <div class="pagination__side pagination__side--end">
+              <button type="button" class="pager-btn" id="nextBtn">
+                Next
+                <!-- Stand-in for GOSI3.0/ArrowRight -->
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <path d="M3.125 10h13.75M11.25 4.375 16.875 10l-5.625 5.625" stroke="#00BF00" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+          </nav>
+        </div>
+      </section>
+
+      <!-- Footer actions -->
+      <div class="cta">
+        <button type="button" class="btn btn--outline">Cancel</button>
+        <button type="submit" class="btn btn--primary" id="submitBtn" disabled>Submit</button>
+      </div>
+
+    </form>
+  </div>
+
+  <script>
+    // Sample data from the Figma frame — replace with your API response
+    const contributors = [
+      { name: "Mohammed Abdullah Al-Khudhair", nnid: "98765432101", joiningDate: "2026/10/26", wage: 7500, eligible: true },
+      { name: "Fahad Mohammed Al-Shammari",    nnid: "98765432101", joiningDate: "2026/10/26", wage: 6200, eligible: false, reason: "Reason for Ineligibility" },
+      { name: "Abdullah Khalid Al-Harbi",      nnid: "98765432101", joiningDate: "2026/10/26", wage: 4800, eligible: true },
+      { name: "Nasser Ibrahim Al-Qahtani",     nnid: "98765432101", joiningDate: "2026/10/26", wage: 9100, eligible: true },
+      { name: "Saud Abdulrahman Al-Zahrani",   nnid: "98765432101", joiningDate: "2026/10/26", wage: 3500, eligible: true },
+      { name: "Mohammed Yousef Al-Otaibi",     nnid: "98765432101", joiningDate: "2026/10/26", wage: 8700, eligible: true },
+      { name: "Khalid Abdullah Al-Subaie",     nnid: "98765432101", joiningDate: "2026/10/26", wage: 1300, eligible: true },
+      { name: "Abdulaziz Sulaiman Al-Dosari",  nnid: "98765432101", joiningDate: "2026/10/26", wage: 5600, eligible: false, reason: "Reason for Ineligibility" },
+      { name: "Faisal Abdullah Al-Ghamdi",     nnid: "98765432101", joiningDate: "2026/10/26", wage: 7200, eligible: true },
+      { name: "Turki Mohammed Al-Harbi",       nnid: "98765432101", joiningDate: "2026/10/26", wage: 4000, eligible: true }
+    ];
+
+    const TOTAL_PAGES = 10;
+    let currentPage = 1;
+    const selected = new Set();
+
+    const rowsEl = document.getElementById("contributorRows");
+    const countEl = document.getElementById("selectedCount");
+    const submitBtn = document.getElementById("submitBtn");
+    const pageListEl = document.getElementById("pageList");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    const infoIcon = `
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <circle cx="10" cy="10" r="7.5" stroke="#334157" stroke-width="1.25"/>
+        <path d="M9.375 9.375H10v4.375h.625" stroke="#334157" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="9.84" cy="6.72" r=".94" fill="#334157"/>
+      </svg>`;
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    }
+
+    function renderRows(list) {
+      rowsEl.innerHTML = list.map((c, i) => {
+        const id = `contributor-${i}`;
+        const status = c.eligible
+          ? "Eligible"
+          : `<span class="status">
+               <button type="button" class="status__info" aria-describedby="${id}-tip">
+                 ${infoIcon}
+                 <span class="tooltip" role="tooltip" id="${id}-tip">${escapeHtml(c.reason)}</span>
+               </button>
+               Not Eligible
+             </span>`;
+
+        return `
+          <tr>
+            <td>
+              <label class="contributor ${c.eligible ? "" : "contributor--disabled"}">
+                <input type="checkbox" class="checkbox" data-index="${i}"
+                       ${c.eligible ? "" : "disabled"} ${selected.has(i) ? "checked" : ""} />
+                <span class="checkbox__box" aria-hidden="true"></span>
+                <span class="contributor__text">
+                  <span class="contributor__name">${escapeHtml(c.name)}</span>
+                  <span class="contributor__id">NNID: ${escapeHtml(c.nnid)}</span>
+                </span>
+              </label>
+            </td>
+            <td>${escapeHtml(c.joiningDate)}</td>
+            <td>${c.wage.toFixed(2)}</td>
+            <td>${status}</td>
+          </tr>`;
+      }).join("");
+    }
+
+    function updateSelection() {
+      countEl.textContent = selected.size;
+      submitBtn.disabled = selected.size === 0;
+    }
+
+    function renderPages() {
+      const pages = [1, 2, 3, "…", 8, 9, 10];
+      pageListEl.innerHTML = pages.map((p) =>
+        p === "…"
+          ? `<li><span class="page-num page-ellipsis" aria-hidden="true">...</span></li>`
+          : `<li><button type="button" class="page-num" data-page="${p}"
+                ${p === currentPage ? 'aria-current="page"' : ""}
+                aria-label="Page ${p}">${p}</button></li>`
+      ).join("");
+      prevBtn.disabled = currentPage === 1;
+      nextBtn.disabled = currentPage === TOTAL_PAGES;
+    }
+
+    function goToPage(page) {
+      currentPage = Math.min(Math.max(page, 1), TOTAL_PAGES);
+      renderPages();
+      // TODO: fetch contributors for currentPage
+    }
+
+    rowsEl.addEventListener("change", (e) => {
+      if (!e.target.matches(".checkbox")) return;
+      const index = Number(e.target.dataset.index);
+      e.target.checked ? selected.add(index) : selected.delete(index);
+      updateSelection();
+    });
+
+    pageListEl.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-page]");
+      if (btn) goToPage(Number(btn.dataset.page));
+    });
+
+    prevBtn.addEventListener("click", () => goToPage(currentPage - 1));
+    nextBtn.addEventListener("click", () => goToPage(currentPage + 1));
+
+    document.getElementById("searchInput").addEventListener("input", (e) => {
+      const q = e.target.value.trim().toLowerCase();
+      // Client-side filter for the demo; swap for a server-side search
+      const filtered = contributors
+        .map((c, i) => ({ ...c, _i: i }))
+        .filter((c) => !q || c.name.toLowerCase().includes(q) || c.nnid.includes(q));
+      rowsEl.innerHTML = "";
+      renderRows(contributors);
+      [...rowsEl.rows].forEach((row, i) => {
+        row.hidden = !filtered.some((c) => c._i === i);
+      });
+    });
+
+    document.getElementById("addContributorsForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      // TODO: submit [...selected].map(i => contributors[i])
+    });
+
+    renderRows(contributors);
+    renderPages();
+    updateSelection();
+  </script>
+</body>
+</html>
