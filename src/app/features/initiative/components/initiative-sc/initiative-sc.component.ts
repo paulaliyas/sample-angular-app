@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { Contributor, Establishment } from '../../initiative.models';
+import { Component, ViewEncapsulation } from '@angular/core';
+import { Contributor, Establishment } from '../initiative.models';
 
 /**
  * Smart component for the initiative.
@@ -9,7 +9,9 @@ import { Contributor, Establishment } from '../../initiative.models';
 @Component({
   selector: 'app-initiative-sc',
   templateUrl: './initiative-sc.component.html',
-  styleUrls: ['./initiative-sc.component.scss'],
+  styleUrls: ['./initiative-sc.component.scss', './initiative-sc-tables.scss'],
+  // Not encapsulated so the shared styles reach the dc components (they're scoped to app-initiative-sc)
+  encapsulation: ViewEncapsulation.None,
   standalone: false,
 })
 export class InitiativeScComponent {

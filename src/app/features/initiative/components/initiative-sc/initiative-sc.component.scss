@@ -1,3 +1,201 @@
-:host {
+// Shared styles for all initiative components.
+// The SC uses ViewEncapsulation.None, so these reach the dc components it hosts,
+// and everything is nested under app-initiative-sc so nothing leaks into the host app.
+
+app-initiative-sc {
+  /* Design tokens (from Figma styles) */
+  --rich-blue-01: #00004e;   /* Primary/Rich Blue/01 (Brand) */
+  --vivid-green-01: #00bf00; /* Primary/Vivid Green/01 (Brand) */
+  --midnight-01: #00122d;    /* Grayscale/Midnight/01 (Brand) */
+  --midnight-02: #334157;    /* Grayscale/Midnight/02 */
+  --midnight-03: #808896;    /* Grayscale/Midnight/03 */
+  --midnight-04: #e5e7ea;    /* Grayscale/Midnight/04 */
+  --midnight-05: #f3f4f5;    /* Grayscale/Midnight/05 */
+  --white-06: #ffffff;       /* Grayscale/Midnight/06 (White) */
+  --gray-200: #eaecf0;       /* Gray/200 */
+  --info-01: #a37dfc;        /* Status/Info/01 */
+  --info-02: #ede5fe;        /* Status/Info/02 */
+  --green-tint: #f2fcf2;     /* hover on outline-green buttons */
+  --shadow-sm: 0 1px 3px 0 rgba(16, 24, 40, 0.1), 0 1px 2px 0 rgba(16, 24, 40, 0.06);
+  --shadow-md: 0 0 12px rgba(196, 203, 210, 0.3);
+
+  --font-family: "Ping AR + LT", "Ping AR LT", "Segoe UI", Tahoma, Arial, sans-serif;
+
   display: block;
+  font-family: var(--font-family);
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  /* ==========================================================
+     Page panels
+     ========================================================== */
+  .panel-outer {
+    padding: 20px;
+    border-radius: 24px;
+    background: var(--midnight-05);
+  }
+
+  .panel {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    padding: 32px 56px;
+    border-radius: 24px;
+    background: var(--white-06);
+  }
+
+  .panel--wide-gutter {
+    padding-inline: 89px;
+  }
+
+  .section-title {
+    margin: 0;
+    font-size: 18px;      /* L/Bold */
+    font-weight: 700;
+    line-height: 26px;
+    color: var(--rich-blue-01);
+  }
+
+  /* ==========================================================
+     Buttons
+     ========================================================== */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 56px;
+    padding: 8px 40px;
+    border: none;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 18px;      /* L/Medium */
+    font-weight: 500;
+    line-height: 26px;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+
+  .btn svg {
+    flex-shrink: 0;
+  }
+
+  .btn--md {
+    height: 48px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 16px;      /* M/Medium */
+    line-height: 24px;
+  }
+
+  .btn--outline {
+    border: 1.5px solid var(--vivid-green-01);
+    background: var(--white-06);
+    color: var(--rich-blue-01);
+  }
+
+  .btn--outline:hover {
+    background: var(--green-tint);
+  }
+
+  .btn--primary {
+    background: var(--rich-blue-01);
+    color: var(--white-06);
+  }
+
+  .cta .btn--primary {
+    padding-inline: 64px;
+  }
+
+  .btn--primary:disabled {
+    background: var(--midnight-03);
+    color: var(--midnight-04);
+    cursor: not-allowed;
+  }
+
+  .btn--green {
+    min-width: 180px;
+    padding-inline: 20px;
+    background: var(--vivid-green-01);
+    color: var(--rich-blue-01);
+  }
+
+  .btn--green:hover {
+    background: #00ab00;
+  }
+
+  .btn:focus-visible {
+    outline: 2px solid var(--rich-blue-01);
+    outline-offset: 2px;
+  }
+
+  /* Footer action row */
+  .cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  /* ==========================================================
+     Checkbox (visually hidden input + drawn box)
+     ========================================================== */
+  .checkbox {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+  }
+
+  .checkbox__box {
+    flex-shrink: 0;
+    position: relative;
+    width: 20px;
+    height: 20px;
+    border: 1.5px solid var(--rich-blue-01);
+    border-radius: 2px;
+    background: var(--white-06);
+    transition: background-color 0.15s ease;
+  }
+
+  .checkbox:checked + .checkbox__box {
+    background: var(--rich-blue-01);
+  }
+
+  .checkbox:checked + .checkbox__box::after {
+    content: "";
+    position: absolute;
+    left: 5.5px;
+    top: 1.5px;
+    width: 5px;
+    height: 10px;
+    border: solid var(--white-06);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  .checkbox:disabled + .checkbox__box {
+    border-color: var(--midnight-03);
+    background: var(--midnight-04);
+  }
+
+  .checkbox:focus-visible + .checkbox__box {
+    outline: 2px solid var(--vivid-green-01);
+    outline-offset: 2px;
+  }
 }

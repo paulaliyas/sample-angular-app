@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Contributor } from '../../initiative.models';
+import { Contributor } from '../initiative.models';
 
 @Component({
   selector: 'app-contributors-dc',

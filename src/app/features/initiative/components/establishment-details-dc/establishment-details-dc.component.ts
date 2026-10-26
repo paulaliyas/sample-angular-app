@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Establishment } from '../../initiative.models';
+import { Establishment } from '../initiative.models';
 
 @Component({
   selector: 'app-establishment-details-dc',

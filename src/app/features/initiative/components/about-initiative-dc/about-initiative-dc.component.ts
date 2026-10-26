@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { Faq } from '../../initiative.models';
+import { Faq } from '../initiative.models';
 
 @Component({
   selector: 'app-about-initiative-dc',

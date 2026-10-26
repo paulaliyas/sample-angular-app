@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
-import { InitiativeModule } from '../../initiative.module';
+import { InitiativeComponentsModule } from '../initiative-components.module';
 import { InitiativeScComponent } from './initiative-sc.component';
 
 describe('InitiativeScComponent', () => {
@@ -8,8 +7,7 @@ describe('InitiativeScComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [InitiativeModule],
-      providers: [provideRouter([])],
+      imports: [InitiativeComponentsModule],
     });
     const fixture = TestBed.createComponent(InitiativeScComponent);
     component = fixture.componentInstance;
