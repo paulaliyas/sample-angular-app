@@ -1,0 +1,25 @@
+intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  // Attach current screen route only to the application's own API calls
+  const isAppApi = this.isAppApiRequest(request.url);
+  console.log('[x-current-route]', request.url, '| isAppApi:', isAppApi);
+
+  if (isAppApi) {
+    request = request.clone({
+      setHeaders: {
+        'x-current-route': this.routeTrackingService.getCurrentRoute()
+      }
+    });
+  }
+
+  let publicTenancy = '';
+  // ...rest of the interceptor
+}
+
+private isAppApiRequest(url: string): boolean {
+  const apiBaseUrls = [this.envBaseUrl, this.envMilitaryBaseUrl]
+    .filter((baseUrl): baseUrl is string => !!baseUrl && baseUrl.trim().length > 0);
+
+  console.log('[x-current-route] baseUrls:', JSON.stringify(apiBaseUrls));
+
+  return apiBaseUrls.some((baseUrl) => url.startsWith(baseUrl));
+}
