@@ -1,0 +1,25 @@
+app-pagination-dc {
+  .pagination { display: flex; align-items: center; gap: 12px; padding: 12px 24px 16px; }
+  .pagination__side { flex: 1 1 0; display: flex; }
+  .pagination__side--end { justify-content: flex-end; }
+  .btn-page {
+    width: 100px; height: 36px; padding: 8px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    background: var(--white); border: 1px solid var(--vivid-green-01); border-radius: 6px; cursor: pointer;
+    font-size: 14px; line-height: 22px; font-weight: 500; color: var(--rich-blue-01);
+  }
+  .btn-page:hover:not(:disabled) { filter: brightness(0.96); }
+  .btn-page:disabled { opacity: 0.4; cursor: not-allowed; }
+  .pages { display: flex; gap: 2px; }
+  .page {
+    width: 40px; height: 40px; padding: 8px; border: 0; border-radius: 20px; background: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; line-height: 22px; font-weight: 500; color: var(--midnight-02);
+  }
+  .page--gap { cursor: default; }
+  .page--active { background: var(--midnight-05); color: var(--midnight-01); }
+  .btn-page:focus-visible, .page:focus-visible { outline: 2px solid var(--vivid-green-01); outline-offset: 2px; }
+
+  @media (max-width: 600px) {
+    .pagination { flex-wrap: wrap; justify-content: center; }
+  }
+}

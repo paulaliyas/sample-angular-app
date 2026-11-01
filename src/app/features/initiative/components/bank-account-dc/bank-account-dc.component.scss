@@ -1,0 +1,49 @@
+app-bank-account-dc {
+  /* ===== Update Missing IBAN ===== */
+  .update { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+  .update__head { display: flex; flex-direction: column; gap: 12px; }
+
+  .toast {
+    display: flex; align-items: center; gap: 12px; padding: 11px 12px;
+    background: var(--warning-02); border: 1px solid var(--warning-01); border-radius: 10px;
+    font-size: 14px; line-height: 22px; font-weight: 500; color: var(--rich-blue-01);
+  }
+  .toast svg { flex-shrink: 0; }
+
+  .tab { padding: 0 4px 12px; }
+
+  /* Task list */
+  .task-list {
+    background: var(--white); border: 1px solid var(--midnight-04); border-radius: 20px;
+    padding: 20px 24px 0; display: flex; flex-direction: column; gap: 16px;
+  }
+  .no-results { justify-content: center; }
+  .task-list .pagination { padding: 12px 0 16px; border-top: 1px solid var(--midnight-04); }
+
+  /* Locked (existing IBAN): grey, read-only until the pencil is pressed */
+  .field--iban.is-locked { background: var(--midnight-04); cursor: default; }
+  .field--iban.is-locked .field__input { color: var(--midnight-03); cursor: default; }
+  .field--iban.is-locked:focus-within { border-color: var(--midnight-03); }
+
+  .actions { display: flex; align-items: center; flex-shrink: 0; }
+  .btn-icon {
+    flex-shrink: 0; width: 64px; height: 64px; padding: 8px; border: 0; border-radius: 16px; background: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .btn-icon:hover:not(:disabled) { background: var(--midnight-05); }
+  .btn-icon:focus-visible { outline: 2px solid var(--vivid-green-01); outline-offset: 2px; }
+  .btn-edit { color: var(--vivid-green-01); }
+  .btn-save, .btn-cancel { display: none; }
+  .row.is-editing .btn-edit { display: none; }
+  .row.is-editing .btn-save, .row.is-editing .btn-cancel { display: flex; }
+  /* While any row is being edited, other pencils turn grey and are disabled */
+  .btn-edit:disabled { color: var(--midnight-03); cursor: not-allowed; }
+  .btn-save:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  @media (max-width: 600px) {
+    .update { padding: 16px; }
+    .task-list { padding: 16px 16px 0; }
+    .actions { order: 4; margin-left: auto; }
+    .field--bank { order: 3; }
+  }
+}

@@ -1,0 +1,15 @@
+[
+  {
+    "contributor": {
+      "nnid": "98765432112",
+      "name": "Sultan Fahad Al-Anazi",
+      "joiningDate": "2021/10/19",
+      "wage": 5200,
+      "benefitAmount": 5200,
+      "iban": "SA3965000000608010167527",
+      "maskedIban": "SA3965*********7527",
+      "bankName": "Saudi Investment Bank"
+    },
+    "requestId": "1384766220"
+  }
+]

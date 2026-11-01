@@ -1,0 +1,30 @@
+<nav class="pagination" aria-label="Pagination">
+  <div class="pagination__side">
+    <button type="button" class="btn-page" [disabled]="page <= 1" (click)="goTo(page - 1)">
+      <app-icon-dc name="arrow-left"></app-icon-dc><span>Previous</span>
+    </button>
+  </div>
+
+  <div class="pages">
+    <ng-container *ngFor="let item of items">
+      <button
+        *ngIf="item !== null; else gap"
+        type="button"
+        class="page"
+        [class.page--active]="item === page"
+        [attr.aria-current]="item === page ? 'page' : null"
+        [attr.aria-label]="'Page ' + item"
+        (click)="goTo(item)"
+      >
+        {{ item }}
+      </button>
+      <ng-template #gap><span class="page page--gap">…</span></ng-template>
+    </ng-container>
+  </div>
+
+  <div class="pagination__side pagination__side--end">
+    <button type="button" class="btn-page" [disabled]="page >= totalPages" (click)="goTo(page + 1)">
+      <span>Next</span><app-icon-dc name="arrow-right"></app-icon-dc>
+    </button>
+  </div>
+</nav>

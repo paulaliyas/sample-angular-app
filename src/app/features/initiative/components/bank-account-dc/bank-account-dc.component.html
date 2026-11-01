@@ -1,0 +1,120 @@
+<main class="content">
+  <div class="stack">
+    <app-how-it-works-dc [currentStep]="3"></app-how-it-works-dc>
+
+    <section class="update" aria-labelledby="update-title">
+      <div class="update__head">
+        <h2 id="update-title" class="block-title">Update Missing IBAN</h2>
+        <div class="toast" role="status" *ngIf="stillMissingCount > 0">
+          <app-icon-dc name="warning"></app-icon-dc>
+          <p>{{ stillMissingCount }} contributors don't have an IBAN yet.</p>
+        </div>
+      </div>
+
+      <div class="tabs" role="tablist">
+        <button type="button" class="tab" role="tab" [class.tab--active]="tab === 'missing'" [attr.aria-selected]="tab === 'missing'" (click)="showTab('missing')">
+          Missing IBAN ({{ missingCount }})
+        </button>
+        <button type="button" class="tab" role="tab" [class.tab--active]="tab === 'existing'" [attr.aria-selected]="tab === 'existing'" (click)="showTab('existing')">
+          Existing IBAN ({{ existingCount }})
+        </button>
+      </div>
+
+      <div class="toolbar">
+        <label class="search">
+          <app-icon-dc name="search"></app-icon-dc>
+          <input
+            type="search"
+            placeholder="Search by name, ID / Iqama number"
+            aria-label="Search contributors"
+            [(ngModel)]="searchText"
+            (ngModelChange)="onSearch()"
+          />
+        </label>
+        <!-- TODO: the filter panel isn't designed yet -->
+        <button type="button" class="filter"><app-icon-dc name="filter"></app-icon-dc><span>Filter</span></button>
+      </div>
+
+      <div class="task-list">
+        <ul class="rows">
+          <li class="row" *ngFor="let c of pagedContributors" [class.is-editing]="editingId === c.nnid">
+            <div class="contributor">
+              <span class="contributor__name">{{ c.name }}</span>
+              <span class="contributor__id">ID No: {{ c.nnid }}</span>
+            </div>
+
+            <label class="field field--iban" [class.is-verified]="isVerified(c)" [class.is-locked]="isLocked(c)">
+              <span class="field__inner">
+                <span class="field__label">IBAN</span>
+                <input
+                  #ibanInput
+                  type="text"
+                  class="field__input"
+                  placeholder="IBAN"
+                  autocomplete="off"
+                  spellcheck="false"
+                  [value]="valueOf(c)"
+                  [readOnly]="isLocked(c)"
+                  [attr.aria-label]="'IBAN for ' + c.name"
+                  (input)="onInput(c, ibanInput)"
+                  (change)="onChange(c)"
+                  (keydown.enter)="saveEdit()"
+                  (keydown.escape)="cancelEdit()"
+                />
+              </span>
+              <span class="field__icon"><app-icon-dc name="seal-check"></app-icon-dc></span>
+            </label>
+
+            <label class="field field--bank">
+              <span class="field__inner">
+                <span class="field__label">Bank name</span>
+                <input
+                  type="text"
+                  class="field__input"
+                  placeholder="Bank name"
+                  readonly
+                  tabindex="-1"
+                  [value]="bankOf(c)"
+                  [attr.aria-label]="'Bank name for ' + c.name"
+                />
+              </span>
+            </label>
+
+            <div class="actions" *ngIf="tab === 'existing'">
+              <button
+                type="button"
+                class="btn-icon btn-edit"
+                [disabled]="editingId !== null"
+                [attr.aria-label]="'Edit IBAN for ' + c.name"
+                (click)="startEdit(c, ibanInput)"
+              >
+                <app-icon-dc name="pencil"></app-icon-dc>
+              </button>
+              <button
+                type="button"
+                class="btn-icon btn-save"
+                [disabled]="!editValue.trim()"
+                [attr.aria-label]="'Save IBAN for ' + c.name"
+                (click)="saveEdit()"
+              >
+                <app-icon-dc name="save"></app-icon-dc>
+              </button>
+              <button type="button" class="btn-icon btn-cancel" [attr.aria-label]="'Cancel editing IBAN for ' + c.name" (click)="cancelEdit()">
+                <app-icon-dc name="cancel"></app-icon-dc>
+              </button>
+            </div>
+          </li>
+
+          <li class="row no-results" *ngIf="filteredContributors.length === 0">No contributors to show.</li>
+        </ul>
+
+        <app-pagination-dc [page]="page" [totalPages]="totalPages" (pageChange)="goToPage($event)"></app-pagination-dc>
+      </div>
+    </section>
+  </div>
+
+  <section class="card submit-bar">
+    <button type="button" class="btn btn--secondary" (click)="back.emit()">Cancel</button>
+    <button type="button" class="btn btn--primary" [disabled]="editingId !== null" (click)="onNext()">Next</button>
+  </section>
+</main>

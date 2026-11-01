@@ -1,77 +1,307 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import { Contributor, Establishment } from '../initiative.models';
+import { Component, DestroyRef, ElementRef, OnInit, ViewEncapsulation } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { forkJoin, Observable, Subscription } from 'rxjs';
+import { InitiativeApiService } from '../initiative-api.service';
+import {
+  Contributor,
+  ContributorSelection,
+  Eligibility,
+  Establishment,
+  Faq,
+  IbanUpdate,
+  InitiativeMember,
+  InitiativeRequest,
+  SelectionStrategy,
+  STRATEGY_OPTIONS,
+} from '../initiative.models';
 
 /**
  * Smart component for the initiative.
- * Holds the data and shows one step at a time — each save moves to the next step.
- * API calls go in the methods below (marked TODO).
+ * The only place that calls the API; holds the data and shows one screen at a time.
+ * It starts with the eligibility call, which decides the path:
+ *   not enrolled → apply → choose-contributors → bank-account → summary → dashboard
+ *   enrolled     → dashboard
+ * The dashboard has the Requests / Manage Contributors / IBAN Update tabs, plus the add drawers.
  */
 @Component({
   selector: 'app-initiative-sc',
   templateUrl: './initiative-sc.component.html',
-  styleUrls: ['./initiative-sc.component.scss', './initiative-sc-tables.scss'],
+  styleUrls: [
+    './styles/initiative-sc.component.scss',
+    './styles/initiative-sc-tables.scss',
+    './styles/initiative-sc-iban.scss',
+    './styles/initiative-sc-drawer.scss',
+  ],
   // Not encapsulated so the shared styles reach the dc components (they're scoped to app-initiative-sc)
   encapsulation: ViewEncapsulation.None,
   standalone: false,
 })
-export class InitiativeScComponent {
-  /** 'about' | 'establishment' | 'contributors' | 'add-contributors' */
-  step = 'about';
+export class InitiativeScComponent implements OnInit {
+  /** 'apply' | 'choose-contributors' | 'bank-account' | 'summary' | 'dashboard' */
+  step = 'apply';
+  /** 'requests' | 'members' | 'iban-updates' */
+  dashboardTab = 'requests';
+  /** 'add-contributors' | 'missing-iban' | null */
+  drawer: string | null = null;
 
-  maxContributors = 600;
+  /** First load in progress */
+  loading = true;
+  /** The first screen's data is in; until then a failed load offers "Try again" */
+  loaded = false;
+  /** A request is being sent — its button is disabled so it can't be sent twice */
+  saving = false;
+  error = '';
 
-  establishment: Establishment = {
-    name: 'شركة عبدالله فهد المطيري للخدمات المسانده',
-    registrationNumber: '536562462',
-  };
+  // From the API
+  eligibility: Eligibility | null = null;
+  faqs: Faq[] = [];
+  eligibleContributors: Contributor[] = [];
+  /** The list the API prepared for the chosen strategy */
+  preparedSelection: Contributor[] | null = null;
+  /** Bank names looked up for IBANs the user typed (IBAN → bank name) */
+  bankNames: Record<string, string> = {};
+  members: InitiativeMember[] = [];
+  requests: InitiativeRequest[] = [];
+  ibanUpdates: IbanUpdate[] = [];
 
-  // Sample data from the design — TODO: load from the API
-  allContributors: Contributor[] = [
-    { nnid: '98765432101', name: 'Mohammed Abdullah Al-Khudhair', joiningDate: '2026/10/26', wage: 7500, eligible: true },
-    { nnid: '98765432102', name: 'Fahad Mohammed Al-Shammari', joiningDate: '2026/10/26', wage: 6200, eligible: false, ineligibilityReason: 'Reason for Ineligibility' },
-    { nnid: '98765432103', name: 'Abdullah Khalid Al-Harbi', joiningDate: '2026/10/26', wage: 4800, eligible: true },
-    { nnid: '98765432104', name: 'Nasser Ibrahim Al-Qahtani', joiningDate: '2026/10/26', wage: 9100, eligible: true },
-    { nnid: '98765432105', name: 'Saud Abdulrahman Al-Zahrani', joiningDate: '2026/10/26', wage: 3500, eligible: true },
-    { nnid: '98765432106', name: 'Mohammed Yousef Al-Otaibi', joiningDate: '2026/10/26', wage: 8700, eligible: true },
-    { nnid: '98765432107', name: 'Khalid Abdullah Al-Subaie', joiningDate: '2026/10/26', wage: 1300, eligible: true },
-    { nnid: '98765432108', name: 'Abdulaziz Sulaiman Al-Dosari', joiningDate: '2026/10/26', wage: 5600, eligible: false, ineligibilityReason: 'Reason for Ineligibility' },
-    { nnid: '98765432109', name: 'Faisal Abdullah Al-Ghamdi', joiningDate: '2026/10/26', wage: 7200, eligible: true },
-    { nnid: '98765432110', name: 'Turki Mohammed Al-Harbi', joiningDate: '2026/10/26', wage: 4000, eligible: true },
-  ];
+  /** From Choose Contributors */
+  selection: ContributorSelection | null = null;
+  /** The chosen contributors with the IBANs from Bank Account Update */
+  applicationContributors: Contributor[] = [];
+  /** Contributors being added while their missing IBANs are entered */
+  pendingAdditions: Contributor[] = [];
+  /** IBANs typed in the missing-IBAN drawer, kept while going back to the list */
+  ibanDrafts: Record<string, string> = {};
 
-  /** Contributors added to the initiative. */
-  addedContributors: Contributor[] = [];
+  private strategyRequest?: Subscription;
 
-  /** About → Establishment Details */
+  constructor(
+    private api: InitiativeApiService,
+    private host: ElementRef<HTMLElement>,
+    private destroyRef: DestroyRef,
+  ) {}
+
+  ngOnInit(): void {
+    this.load();
+  }
+
+  get establishment(): Establishment | null {
+    return this.eligibility?.establishment ?? null;
+  }
+
+  get maxContributors(): number {
+    return this.eligibility?.maxContributors ?? 0;
+  }
+
+  get strategyTitle(): string {
+    return STRATEGY_OPTIONS.find((s) => s.value === this.selection?.strategy)?.title ?? '';
+  }
+
+  get totalBenefit(): number {
+    return this.applicationContributors.reduce((sum, c) => sum + c.benefitAmount, 0);
+  }
+
+  /** Eligible contributors who aren't in the initiative */
+  get candidates(): Contributor[] {
+    return this.eligibleContributors.filter((c) => !this.members.some((m) => m.nnid === c.nnid));
+  }
+
+  get remainingPlaces(): number {
+    return Math.max(0, this.maxContributors - this.members.length);
+  }
+
+  get pendingWithoutIban(): Contributor[] {
+    return this.pendingAdditions.filter((c) => !c.iban);
+  }
+
+  /** Eligibility first; its "enrolled" flag decides which path's data to load and which screen to show */
+  load(): void {
+    this.loading = true;
+    this.error = '';
+    this.call(
+      this.api.getEligibility(),
+      (eligibility) => {
+        this.eligibility = eligibility;
+        if (eligibility.enrolled) {
+          this.loadDashboard(() => this.showFirstScreen('dashboard'));
+        } else {
+          this.loadEnrolment(() => this.showFirstScreen('apply'));
+        }
+      },
+      "We couldn't load the initiative.",
+    );
+  }
+
+  /* ===== Application ===== */
+
+  /** Apply → Choose Contributors */
   onApply(): void {
-    this.step = 'establishment';
+    if (!this.selection) {
+      this.onStrategyChange('highest');
+    }
+    this.goTo('choose-contributors');
   }
 
-  /** Establishment Details → Contributors */
-  onSaveApplication(): void {
-    // TODO: call the API to submit the application
-    this.step = 'contributors';
+  onStrategyChange(strategy: SelectionStrategy): void {
+    // Only the latest pick counts, even if an earlier response arrives after it
+    this.strategyRequest?.unsubscribe();
+    this.strategyRequest = this.call(
+      this.api.getStrategySelection(strategy),
+      (contributors) => (this.preparedSelection = contributors),
+      "We couldn't prepare the list.",
+    );
   }
 
-  /** Contributors → Add Contributors */
-  onManageContributors(): void {
-    this.step = 'add-contributors';
+  /** Choose Contributors → Bank Account Update */
+  onChooseContributors(selection: ContributorSelection): void {
+    this.selection = selection;
+    // Keep IBANs already entered, in case the user came back to change the list
+    this.applicationContributors = selection.contributors.map(
+      (c) => this.applicationContributors.find((a) => a.nnid === c.nnid) ?? c,
+    );
+    this.goTo('bank-account');
   }
 
-  /** Add Contributors → Contributors */
-  onSaveContributors(selected: Contributor[]): void {
-    // TODO: call the API to save the contributors
-    this.addedContributors = selected;
-    this.step = 'contributors';
+  onIbanEntered(iban: string): void {
+    this.call(this.api.getBankName(iban), (name) => (this.bankNames = { ...this.bankNames, [iban]: name }));
   }
 
-  onRemoveContributor(contributor: Contributor): void {
-    // TODO: call the API to remove the contributor
-    this.addedContributors = this.addedContributors.filter((c) => c.nnid !== contributor.nnid);
+  /** Bank Account Update → Summary */
+  onBankAccountNext(contributors: Contributor[]): void {
+    this.applicationContributors = contributors;
+    this.goTo('summary');
   }
+
+  /** Summary → Dashboard */
+  onSubmitRequest(): void {
+    this.save(
+      this.api.submitApplication({ strategy: this.selection!.strategy, contributors: this.applicationContributors }),
+      () => {
+        this.dashboardTab = 'requests';
+        this.goTo('dashboard');
+      },
+      "We couldn't submit the request.",
+    );
+  }
+
+  /* ===== Dashboard ===== */
+
+  onRemoveMembers(removed: InitiativeMember[]): void {
+    this.save(this.api.removeContributors(removed), () => {}, "We couldn't remove the contributors.");
+  }
+
+  /** Add Contributors drawer → Missing IBAN drawer when any of them has no IBAN */
+  onAddContributors(selected: Contributor[]): void {
+    this.pendingAdditions = selected;
+    if (this.pendingWithoutIban.length > 0) {
+      this.drawer = 'missing-iban';
+    } else {
+      this.addMembers(selected);
+    }
+  }
+
+  onMissingIbansSubmitted(withIbans: Contributor[]): void {
+    this.addMembers(this.pendingAdditions.map((c) => withIbans.find((w) => w.nnid === c.nnid) ?? c));
+  }
+
+  /** Missing IBAN drawer → back to the Add Contributors drawer, keeping what was typed */
+  onMissingIbansBack(drafts: Record<string, string>): void {
+    this.ibanDrafts = drafts;
+    this.drawer = 'add-contributors';
+  }
+
+  openDrawer(drawer: string): void {
+    this.drawer = drawer;
+  }
+
+  closeDrawer(): void {
+    this.drawer = null;
+    this.pendingAdditions = [];
+    this.ibanDrafts = {};
+  }
+
+  /* ===== Navigation ===== */
 
   /** Cancel / back */
   goTo(step: string): void {
     this.step = step;
+    // The new screen would otherwise open at the old scroll position, part-way down
+    if (this.host.nativeElement.getBoundingClientRect().top < 0) {
+      this.host.nativeElement.scrollIntoView?.({ block: 'start' });
+    }
+  }
+
+  /* ===== Helpers ===== */
+
+  private addMembers(contributors: Contributor[]): void {
+    this.save(this.api.addContributors(contributors), () => this.closeDrawer(), "We couldn't add the contributors.");
+  }
+
+  private showFirstScreen(step: string): void {
+    this.loading = false;
+    this.loaded = true;
+    this.goTo(step);
+  }
+
+  /** What the enrolment path needs */
+  private loadEnrolment(done: () => void): void {
+    this.call(
+      forkJoin({ faqs: this.api.getFaqs(), contributors: this.api.getEligibleContributors() }),
+      ({ faqs, contributors }) => {
+        this.faqs = faqs;
+        this.eligibleContributors = contributors;
+        done();
+      },
+      "We couldn't load the initiative.",
+    );
+  }
+
+  /** The dashboard lists, plus the contributors (their IBANs may have changed, and the add drawer needs them) */
+  private loadDashboard(done = () => {}): void {
+    this.call(
+      forkJoin({
+        requests: this.api.getRequests(),
+        members: this.api.getMembers(),
+        ibanUpdates: this.api.getIbanUpdates(),
+        contributors: this.api.getEligibleContributors(),
+      }),
+      ({ requests, members, ibanUpdates, contributors }) => {
+        this.requests = requests;
+        this.members = members;
+        this.ibanUpdates = ibanUpdates;
+        this.eligibleContributors = contributors;
+        done();
+      },
+      "We couldn't load the initiative.",
+    );
+  }
+
+  /** Sends a change, then reloads the dashboard from the API */
+  private save(request: Observable<InitiativeRequest>, done: () => void, errorMessage: string): void {
+    if (this.saving) {
+      return;
+    }
+    this.saving = true;
+    this.error = '';
+    this.call(
+      request,
+      () => {
+        this.saving = false;
+        this.loadDashboard();
+        done();
+      },
+      errorMessage,
+    );
+  }
+
+  private call<T>(request: Observable<T>, next: (value: T) => void, errorMessage = ''): Subscription {
+    return request.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next,
+      error: () => {
+        this.loading = false;
+        this.saving = false;
+        this.error = errorMessage;
+      },
+    });
   }
 }

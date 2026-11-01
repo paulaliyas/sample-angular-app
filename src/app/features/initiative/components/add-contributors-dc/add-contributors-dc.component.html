@@ -1,149 +1,98 @@
-<div class="panel-outer">
-  <form class="panel" (ngSubmit)="onSubmit()">
-    <section class="section">
-      <h2 class="section-title">Add Contributors ({{ selectedIds.length }}/{{ maxCount }})</h2>
+<div class="drawer-backdrop" (click)="close.emit()">
+  <section class="drawer" role="dialog" aria-modal="true" aria-labelledby="add-drawer-title" (click)="$event.stopPropagation()">
+    <header class="drawer__head">
+      <h2 id="add-drawer-title" class="drawer__title">Add contributors</h2>
+      <button #closeButton type="button" class="btn-close" aria-label="Close" (click)="close.emit()"><app-icon-dc name="close"></app-icon-dc></button>
+    </header>
 
-      <div class="toast" role="note">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <circle cx="12" cy="12" r="9" stroke="#00004E" stroke-width="1.5" />
-          <path d="M12 7.5v5.25" stroke="#00004E" stroke-width="1.5" stroke-linecap="round" />
-          <circle cx="12" cy="16.13" r="1.13" fill="#00004E" />
-        </svg>
-        <p class="toast__text">
-          The list shows all eligible and ineligible contributors based on GOSI data. The establishment can select
-          contributors up to a maximum of 60% of its total contributors.
-        </p>
-      </div>
-
-      <div class="search-bar">
-        <label class="search">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-            <circle cx="9" cy="9" r="6.25" stroke="#808896" stroke-width="1.25" />
-            <path d="m13.5 13.5 3.75 3.75" stroke="#808896" stroke-width="1.25" stroke-linecap="round" />
-          </svg>
-          <input
-            type="search"
-            class="search__input"
-            name="search"
-            placeholder="Search by name, ID / Iqama number"
-            aria-label="Search by name, ID / Iqama number"
-            [(ngModel)]="searchText"
-            (ngModelChange)="onSearch()"
-          />
-        </label>
-
-        <!-- TODO: the filter panel isn't designed yet -->
-        <button type="button" class="filter-btn">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-            <path d="M3.125 6.25h3.75M10.625 6.25h6.25M3.125 13.75h8.75M15.625 13.75h1.25" stroke="#00122D" stroke-width="1.25" stroke-linecap="round" />
-            <circle cx="8.75" cy="6.25" r="1.875" stroke="#00122D" stroke-width="1.25" />
-            <circle cx="13.75" cy="13.75" r="1.875" stroke="#00122D" stroke-width="1.25" />
-          </svg>
-          <span class="filter-btn__label">Filter</span>
-        </button>
-      </div>
-
-      <div class="table-card">
-        <div class="table-scroll">
-          <table class="table">
-            <colgroup>
-              <col class="col--contributor" />
-              <col />
-              <col />
-              <col />
-            </colgroup>
-            <thead>
-              <tr>
-                <th scope="col">Contributor Details</th>
-                <th scope="col">Joining Date</th>
-                <th scope="col">Contributory Wage (SAR)</th>
-                <th scope="col">Eligibility Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let c of pagedContributors">
-                <td>
-                  <label class="contributor" [class.contributor--disabled]="!c.eligible">
-                    <input
-                      type="checkbox"
-                      class="checkbox"
-                      [checked]="isSelected(c)"
-                      [disabled]="isDisabled(c)"
-                      (change)="toggle(c)"
-                    />
-                    <span class="checkbox__box" aria-hidden="true"></span>
-                    <span class="contributor__text">
-                      <span class="contributor__name">{{ c.name }}</span>
-                      <span class="contributor__id">NNID: {{ c.nnid }}</span>
-                    </span>
-                  </label>
-                </td>
-                <td>{{ c.joiningDate }}</td>
-                <td>{{ c.wage | number: '1.2-2' }}</td>
-                <td>
-                  <ng-container *ngIf="c.eligible; else notEligible">Eligible</ng-container>
-                  <ng-template #notEligible>
-                    <span class="status">
-                      <button type="button" class="status__info" [attr.aria-describedby]="'tip-' + c.nnid">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                          <circle cx="10" cy="10" r="7.5" stroke="#334157" stroke-width="1.25" />
-                          <path d="M9.375 9.375H10v4.375h.625" stroke="#334157" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                          <circle cx="9.84" cy="6.72" r=".94" fill="#334157" />
-                        </svg>
-                        <span class="tooltip" role="tooltip" [id]="'tip-' + c.nnid">{{ c.ineligibilityReason }}</span>
-                      </button>
-                      Not Eligible
-                    </span>
-                  </ng-template>
-                </td>
-              </tr>
-
-              <tr *ngIf="filteredContributors.length === 0">
-                <td colspan="4" class="no-results">No contributors match your search.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <nav class="pagination" aria-label="Pagination">
-          <div class="pagination__side">
-            <button type="button" class="pager-btn" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                <path d="M16.875 10H3.125M8.75 4.375 3.125 10l5.625 5.625" stroke="#00BF00" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-              </svg>
-              Previous
-            </button>
-          </div>
-
-          <ul class="pages">
-            <li *ngFor="let page of pages">
-              <button
-                type="button"
-                class="page-num"
-                [attr.aria-current]="page === currentPage ? 'page' : null"
-                [attr.aria-label]="'Page ' + page"
-                (click)="goToPage(page)"
-              >
-                {{ page }}
-              </button>
-            </li>
-          </ul>
-
-          <div class="pagination__side pagination__side--end">
-            <button type="button" class="pager-btn" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">
-              Next
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                <path d="M3.125 10h13.75M11.25 4.375 16.875 10l-5.625 5.625" stroke="#00BF00" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-              </svg>
-            </button>
-          </div>
-        </nav>
-      </div>
-    </section>
-
-    <div class="cta">
-      <button type="button" class="btn btn--outline" (click)="back.emit()">Cancel</button>
-      <button type="submit" class="btn btn--primary" [disabled]="selectedIds.length === 0">Submit</button>
+    <div class="toolbar">
+      <label class="search">
+        <app-icon-dc name="search"></app-icon-dc>
+        <input
+          type="search"
+          placeholder="Search by name, ID / Iqama number"
+          aria-label="Search contributors"
+          [(ngModel)]="searchText"
+          (ngModelChange)="onSearch()"
+        />
+      </label>
+      <!-- TODO: the filter panel isn't designed yet -->
+      <button type="button" class="filter"><app-icon-dc name="filter"></app-icon-dc><span>Filter</span></button>
     </div>
-  </form>
+
+    <div class="table-wrap">
+      <div class="table-scroll">
+        <table>
+          <colgroup>
+            <col style="width: 310px" />
+            <col />
+            <col style="width: 179px" />
+            <col style="width: 160px" />
+          </colgroup>
+          <thead>
+            <tr>
+              <th>
+                <span class="th-check">
+                  <input
+                    type="checkbox"
+                    class="cb"
+                    aria-label="Select all contributors"
+                    [checked]="allPageSelected"
+                    [disabled]="pagedContributors.length === 0"
+                    (change)="toggleAll()"
+                  />
+                  <span class="th-inline">Contributor</span>
+                </span>
+              </th>
+              <th>Joining Date</th>
+              <th><span class="th-inline">Contributory Wage <app-icon-dc name="sort"></app-icon-dc></span></th>
+              <th>IBAN</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let c of pagedContributors">
+              <td>
+                <label class="contributor">
+                  <input
+                    type="checkbox"
+                    class="cb"
+                    [checked]="isSelected(c)"
+                    [disabled]="isDisabled(c)"
+                    [attr.aria-label]="'Select ' + c.name"
+                    (change)="toggle(c)"
+                  />
+                  <span class="contributor__text">
+                    <span class="contributor__name">{{ c.name }}</span>
+                    <span class="contributor__id">ID No: {{ c.nnid }}</span>
+                  </span>
+                </label>
+              </td>
+              <td>{{ c.joiningDate }}</td>
+              <td>{{ c.wage | number: '1.2-2' : 'en-US' }}</td>
+              <td>{{ c.maskedIban || 'N/A' }}</td>
+            </tr>
+
+            <tr *ngIf="filteredContributors.length === 0">
+              <td colspan="4" class="no-results">
+                {{ contributors.length === 0 ? 'There are no more eligible contributors to add.' : 'No contributors match your search.' }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <app-pagination-dc [page]="page" [totalPages]="totalPages" (pageChange)="page = $event"></app-pagination-dc>
+    </div>
+
+    <footer class="drawer__foot">
+      <p class="counter" aria-live="polite">
+        <span class="counter__num">{{ selectedIds.length }}</span>
+        <span class="counter__sel">selected</span>
+        <span class="counter__rest">/ {{ remainingAfterSelection }} remains</span>
+      </p>
+      <div class="spacer"></div>
+      <button type="button" class="btn btn--secondary" (click)="close.emit()">Cancel</button>
+      <button type="button" class="btn btn--primary" [disabled]="selectedIds.length === 0 || busy" (click)="onAdd()">Add contributors</button>
+    </footer>
+  </section>
 </div>

@@ -1,0 +1,128 @@
+<main class="content">
+  <div class="stack">
+    <app-how-it-works-dc [currentStep]="2"></app-how-it-works-dc>
+
+    <section class="card prepare" aria-labelledby="prepare-title">
+      <div class="block-head">
+        <h2 id="prepare-title" class="block-title">How should we prepare your list?</h2>
+        <p class="block-sub">Pick one option. You can still add or remove contributors after the list is ready.</p>
+      </div>
+
+      <div class="options" role="radiogroup" aria-labelledby="prepare-title">
+        <label class="option" *ngFor="let option of strategies">
+          <input
+            type="radio"
+            name="strategy"
+            [value]="option.value"
+            [checked]="option.value === strategy"
+            (change)="selectStrategy(option.value)"
+          />
+          <span class="option__radio"><app-icon-dc name="radio-check"></app-icon-dc></span>
+          <span class="option__body">
+            <span class="tag"><app-icon-dc [name]="option.icon"></app-icon-dc><span>{{ option.tag }}</span></span>
+            <span class="option__text">
+              <span class="option__title">{{ option.title }}</span>
+              <span class="option__desc">{{ option.description }}</span>
+            </span>
+          </span>
+        </label>
+      </div>
+
+      <p class="note">
+        <app-icon-dc name="info"></app-icon-dc>
+        <span>The list is filled up to the maximum allowed for your establishment.</span>
+      </p>
+    </section>
+  </div>
+
+  <section class="card details" aria-labelledby="strategy-title">
+    <div class="block-head">
+      <h2 id="strategy-title" class="block-title">{{ strategyTitle }} Strategy</h2>
+      <p class="block-sub">Initiative contributors details based on your selection</p>
+    </div>
+
+    <div class="panel">
+      <div class="tabs" role="tablist">
+        <button type="button" class="tab" role="tab" [class.tab--active]="tab === 'selected'" [attr.aria-selected]="tab === 'selected'" (click)="showTab('selected')">
+          Selected ({{ selectedIds.length }})
+        </button>
+        <button type="button" class="tab" role="tab" [class.tab--active]="tab === 'not-selected'" [attr.aria-selected]="tab === 'not-selected'" (click)="showTab('not-selected')">
+          Not Selected ({{ notSelectedCount }})
+        </button>
+      </div>
+
+      <div class="toolbar">
+        <label class="search">
+          <app-icon-dc name="search"></app-icon-dc>
+          <input
+            type="search"
+            placeholder="Search by name, ID / Iqama number"
+            aria-label="Search contributors"
+            [(ngModel)]="searchText"
+            (ngModelChange)="onSearch()"
+          />
+        </label>
+        <!-- TODO: the filter panel isn't designed yet -->
+        <button type="button" class="filter"><app-icon-dc name="filter"></app-icon-dc><span>Filter</span></button>
+      </div>
+
+      <div class="table-wrap">
+        <div class="table-scroll">
+          <table>
+            <colgroup><col class="col-contributor" /><col /><col /><col /></colgroup>
+            <thead>
+              <tr>
+                <th>Contributor Details</th>
+                <th>Joining Date</th>
+                <th><span class="th-inline">Contributory Wage <app-icon-dc name="sort"></app-icon-dc></span></th>
+                <th>IBAN</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let c of pagedContributors">
+                <td>
+                  <label class="contributor">
+                    <input
+                      type="checkbox"
+                      class="cb"
+                      [checked]="isSelected(c)"
+                      [disabled]="isDisabled(c)"
+                      [attr.aria-label]="'Select ' + c.name"
+                      (change)="toggle(c)"
+                    />
+                    <span class="contributor__text">
+                      <span class="contributor__name">{{ c.name }}</span>
+                      <span class="contributor__id">NNID: {{ c.nnid }}</span>
+                    </span>
+                  </label>
+                </td>
+                <td>{{ c.joiningDate }}</td>
+                <td>{{ c.wage | number: '1.2-2' : 'en-US' }}</td>
+                <td class="cell--iban">{{ c.maskedIban || 'N/A' }}</td>
+              </tr>
+
+              <tr *ngIf="filteredContributors.length === 0">
+                <td colspan="4" class="no-results">No contributors to show.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <app-pagination-dc [page]="page" [totalPages]="totalPages" (pageChange)="page = $event"></app-pagination-dc>
+      </div>
+    </div>
+  </section>
+
+  <section class="card submit-bar">
+    <div class="counter">
+      <p class="counter__label">
+        <span class="counter__num">{{ selectedIds.length }}</span>
+        <span class="counter__text">of {{ maxCount }} selected · {{ withoutIbanCount }} without IBAN</span>
+      </p>
+      <p class="counter__hint">Contributors without an IBAN are added as "N/A".</p>
+    </div>
+    <div class="spacer"></div>
+    <button type="button" class="btn btn--secondary" (click)="cancel.emit()">Cancel</button>
+    <button type="button" class="btn btn--primary" [disabled]="selectedIds.length === 0" (click)="onNext()">Next</button>
+  </section>
+</main>

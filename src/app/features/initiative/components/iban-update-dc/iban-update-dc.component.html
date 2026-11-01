@@ -1,0 +1,60 @@
+<div class="toolbar">
+  <div class="toolbar__left">
+    <label class="search">
+      <app-icon-dc name="search"></app-icon-dc>
+      <input
+        type="search"
+        placeholder="Search by name, ID / Iqama number"
+        aria-label="Search contributors"
+        [(ngModel)]="searchText"
+        (ngModelChange)="onSearch()"
+      />
+    </label>
+    <!-- TODO: the filter panel isn't designed yet -->
+    <button type="button" class="filter"><app-icon-dc name="filter"></app-icon-dc><span>Filter</span></button>
+  </div>
+</div>
+
+<div class="table-wrap">
+  <div class="table-scroll">
+    <table>
+      <colgroup>
+        <col />
+        <col style="width: 131px" />
+        <col style="width: 123px" />
+        <col style="width: 110px" />
+        <col style="width: 160px" />
+        <col style="width: 145px" />
+      </colgroup>
+      <thead>
+        <tr>
+          <th>Contributor</th>
+          <th>Request ID</th>
+          <th>Joining Date</th>
+          <th><span class="th-inline">Benefit <app-icon-dc name="info-circle"></app-icon-dc></span></th>
+          <th class="th-iban">IBAN</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let u of pagedUpdates">
+          <td class="cell--name">{{ u.contributor.name }}</td>
+          <td>{{ u.requestId }}</td>
+          <td>{{ u.contributor.joiningDate }}</td>
+          <td>{{ u.contributor.benefitAmount | number: '1.2-2' : 'en-US' }}</td>
+          <td class="cell--iban">{{ u.contributor.maskedIban }}</td>
+          <!-- TODO: only "Under Review" is in the design so far -->
+          <td><span class="status status--warning">Under Review</span></td>
+        </tr>
+
+        <tr *ngIf="filteredUpdates.length === 0">
+          <td colspan="6" class="no-results">
+            {{ updates.length === 0 ? 'There are no IBAN updates.' : 'No contributors match your search.' }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <app-pagination-dc [page]="page" [totalPages]="totalPages" (pageChange)="page = $event"></app-pagination-dc>
+</div>

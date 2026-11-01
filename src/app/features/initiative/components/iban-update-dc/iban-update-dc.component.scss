@@ -1,0 +1,10 @@
+app-iban-update-dc {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  .table-wrap { border-radius: 10px; }
+  table { min-width: 960px; }
+  .cell--name { font-weight: 500; color: var(--midnight-01); overflow: hidden; text-overflow: ellipsis; }
+  th.th-iban, td.cell--iban { padding-left: 9px; padding-right: 9px; }
+}
