@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Request Summary – Daam Initiative</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ===== Design tokens (Figma variables) ===== */
+    :root {
+      --midnight-01: #00122d;
+      --midnight-02: #334157;
+      --midnight-03: #808896;
+      --midnight-04: #e5e7ea;
+      --midnight-05: #f3f4f5;
+      --white: #ffffff;
+      --rich-blue-01: #00004e;
+      --vivid-blue: #0064ff;
+      --vivid-blue-bg: rgba(0, 100, 255, 0.06);
+      --vivid-green-01: #00bf00;
+      --vivid-green-04: #bfefbf;
+      --step-done-bg: rgba(16, 194, 16, 0.2);
+
+      --font: "Ping AR + LT", "IBM Plex Sans Arabic", system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; padding: 24px; font-family: var(--font); background: #e9ebee; color: var(--midnight-01); -webkit-font-smoothing: antialiased; }
+    p, h2, ol { margin: 0; }
+    button { font-family: inherit; }
+
+    /* ===== Outer container ===== */
+    .content {
+      max-width: 1063px; margin: 0 auto; padding: 24px;
+      background: var(--midnight-05); border-radius: 24px;
+      display: flex; flex-direction: column; gap: 20px;
+    }
+    .card { background: var(--white); border: 1px solid var(--midnight-04); }
+
+    /* ===== Steps (shared by "How it works" and "What happens next?") ===== */
+    .steps { display: flex; gap: 20px; padding: 0; list-style: none; }
+    .step { flex: 1 1 0; min-width: 0; display: flex; gap: 12px; align-items: flex-start; }
+    .step__num {
+      flex-shrink: 0; width: 32px; height: 32px; border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--midnight-05); color: var(--rich-blue-01);
+      font-size: 14px; line-height: 22px; font-weight: 700;
+    }
+    .step__text { display: flex; flex-direction: column; gap: 4px; font-size: 14px; line-height: 22px; }
+    .step__title { font-weight: 700; color: var(--rich-blue-01); }
+    .step__title--green { color: var(--vivid-green-01); }
+    .step__desc { font-size: 14px; line-height: 22px; color: var(--midnight-02); }
+    .step--done .step__num { background: var(--step-done-bg); }
+    .step--active .step__num { background: var(--vivid-green-01); }
+
+    .how { padding: 18px 24px; display: flex; flex-direction: column; gap: 16px; border-radius: 20px 20px 0 0; }
+    .section-title { font-size: 16px; line-height: 24px; font-weight: 700; color: var(--rich-blue-01); }
+
+    /* ===== Summary cards ===== */
+    .summary { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+    .summary__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .summary__titles { display: flex; flex-direction: column; gap: 1px; }
+    .block-title { font-size: 18px; line-height: 26px; font-weight: 700; color: var(--rich-blue-01); }
+    .block-sub { font-size: 14px; line-height: 22px; color: var(--midnight-02); }
+
+    .details { margin: 0; border: 1px solid var(--midnight-04); border-radius: 12px; overflow: hidden; }
+    .details__row {
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      padding: 14px 16px; font-size: 14px; line-height: 22px;
+    }
+    .details__row + .details__row { border-top: 1px solid var(--midnight-04); }
+    .details dt { color: var(--midnight-02); }
+    .details dd { margin: 0; font-weight: 700; color: var(--midnight-01); text-align: right; }
+
+    .tag {
+      display: inline-flex; align-items: center; gap: 4px; height: 31px; padding: 6px 12px;
+      background: var(--vivid-green-04); border-radius: 40px;
+      font-size: 12px; line-height: 18px; font-weight: 700; color: var(--rich-blue-01); white-space: nowrap;
+    }
+    .count { display: inline-flex; align-items: baseline; gap: 6px; font-size: 16px; line-height: 24px; }
+    .count__num { font-weight: 700; color: var(--midnight-01); }
+    .count__of { font-weight: 400; color: var(--midnight-03); }
+
+    .btn-link {
+      display: inline-flex; align-items: center; gap: 8px; padding: 0; border: 0; background: none; cursor: pointer; border-radius: 8px;
+      font-size: 16px; line-height: 24px; font-weight: 500; color: var(--rich-blue-01); text-decoration: underline;
+    }
+    .btn-link:focus-visible { outline: 2px solid var(--vivid-green-01); outline-offset: 2px; }
+
+    /* ===== What happens next ===== */
+    .next {
+      padding: 18px 24px; display: flex; flex-direction: column; gap: 16px;
+      background: var(--vivid-blue-bg); border: 1px solid var(--vivid-blue); border-radius: 10px;
+    }
+
+    /* ===== Submit bar ===== */
+    .submit-bar {
+      position: sticky; bottom: 0;
+      min-height: 84px; padding: 16px 24px; display: flex; align-items: center; justify-content: flex-end; gap: 20px;
+      border-radius: 0 0 20px 20px;
+    }
+    .btn {
+      height: 48px; padding: 8px 24px; border-radius: 8px; cursor: pointer;
+      font-size: 16px; line-height: 24px; font-weight: 500; color: var(--rich-blue-01); text-align: center;
+    }
+    .btn--secondary { background: var(--white); border: 1px solid var(--vivid-green-01); }
+    .btn--primary { background: var(--vivid-green-01); border: 0; }
+    .btn:hover { filter: brightness(0.96); }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 900px) {
+      .steps { flex-wrap: wrap; }
+      .step { flex: 1 1 calc(50% - 10px); }
+    }
+    @media (max-width: 600px) {
+      body { padding: 0; }
+      .content { padding: 16px; border-radius: 0; }
+      .step { flex-basis: 100%; }
+      .details__row { flex-wrap: wrap; }
+      .btn { flex: 1; }
+    }
+  </style>
+</head>
+<body>
+  <main class="content">
+
+    <!-- How it works -->
+    <section class="card how" aria-labelledby="how-title">
+      <h2 id="how-title" class="section-title">How it works</h2>
+      <ol class="steps">
+          <li class="step step--done">
+            <span class="step__num"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21.531 7.28055L9.53104 19.2806C9.46139 19.3503 9.37867 19.4056 9.28762 19.4433C9.19657 19.4811 9.09898 19.5005 9.00042 19.5005C8.90186 19.5005 8.80426 19.4811 8.71321 19.4433C8.62216 19.4056 8.53945 19.3503 8.46979 19.2806L3.21979 14.0306C3.07906 13.8898 3 13.699 3 13.4999C3 13.3009 3.07906 13.11 3.21979 12.9693C3.36052 12.8286 3.55139 12.7495 3.75042 12.7495C3.94944 12.7495 4.14031 12.8286 4.28104 12.9693L9.00042 17.6896L20.4698 6.2193C20.6105 6.07857 20.8014 5.99951 21.0004 5.99951C21.1994 5.99951 21.3903 6.07857 21.531 6.2193C21.6718 6.36003 21.7508 6.55091 21.7508 6.74993C21.7508 6.94895 21.6718 7.13982 21.531 7.28055Z" fill="#00BF00"/></svg></span>
+            <div class="step__text">
+              <span class="step__title">Apply</span>
+              <span class="step__desc">Review details and accept terms and conditions.</span>
+            </div>
+          </li>
+          <li class="step step--done">
+            <span class="step__num"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21.531 7.28055L9.53104 19.2806C9.46139 19.3503 9.37867 19.4056 9.28762 19.4433C9.19657 19.4811 9.09898 19.5005 9.00042 19.5005C8.90186 19.5005 8.80426 19.4811 8.71321 19.4433C8.62216 19.4056 8.53945 19.3503 8.46979 19.2806L3.21979 14.0306C3.07906 13.8898 3 13.699 3 13.4999C3 13.3009 3.07906 13.11 3.21979 12.9693C3.36052 12.8286 3.55139 12.7495 3.75042 12.7495C3.94944 12.7495 4.14031 12.8286 4.28104 12.9693L9.00042 17.6896L20.4698 6.2193C20.6105 6.07857 20.8014 5.99951 21.0004 5.99951C21.1994 5.99951 21.3903 6.07857 21.531 6.2193C21.6718 6.36003 21.7508 6.55091 21.7508 6.74993C21.7508 6.94895 21.6718 7.13982 21.531 7.28055Z" fill="#00BF00"/></svg></span>
+            <div class="step__text">
+              <span class="step__title">Choose Contributors</span>
+              <span class="step__desc">Select eligible Saudi contributors</span>
+            </div>
+          </li>
+          <li class="step step--done">
+            <span class="step__num"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21.531 7.28055L9.53104 19.2806C9.46139 19.3503 9.37867 19.4056 9.28762 19.4433C9.19657 19.4811 9.09898 19.5005 9.00042 19.5005C8.90186 19.5005 8.80426 19.4811 8.71321 19.4433C8.62216 19.4056 8.53945 19.3503 8.46979 19.2806L3.21979 14.0306C3.07906 13.8898 3 13.699 3 13.4999C3 13.3009 3.07906 13.11 3.21979 12.9693C3.36052 12.8286 3.55139 12.7495 3.75042 12.7495C3.94944 12.7495 4.14031 12.8286 4.28104 12.9693L9.00042 17.6896L20.4698 6.2193C20.6105 6.07857 20.8014 5.99951 21.0004 5.99951C21.1994 5.99951 21.3903 6.07857 21.531 6.2193C21.6718 6.36003 21.7508 6.55091 21.7508 6.74993C21.7508 6.94895 21.6718 7.13982 21.531 7.28055Z" fill="#00BF00"/></svg></span>
+            <div class="step__text">
+              <span class="step__title step__title--green">Bank Account Update</span>
+              <span class="step__desc">Update contributors missing IBAN</span>
+            </div>
+          </li>
+          <li class="step step--active" aria-current="step">
+            <span class="step__num">4</span>
+            <div class="step__text">
+              <span class="step__title">Summary</span>
+              <span class="step__desc">Review transaction details and confirm</span>
+            </div>
+          </li>
+      </ol>
+    </section>
+
+    <!-- Request Summary -->
+    <section class="card summary" aria-labelledby="request-title">
+      <div class="summary__head">
+        <div class="summary__titles">
+          <h2 id="request-title" class="block-title">Request Summary</h2>
+          <p class="block-sub">Please review the details below before submitting the request. You can go back to edit if needed.</p>
+        </div>
+      </div>
+      <dl class="details">
+        <div class="details__row"><dt>Establishment Name</dt><dd>Saudi Airlines</dd></div>
+        <div class="details__row"><dt>Establishment Number</dt><dd>123455677899</dd></div>
+        <div class="details__row"><dt>Terms &amp; Conditions</dt><dd><span class="tag"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M13 2H3C2.73478 2 2.48043 2.10536 2.29289 2.29289C2.10536 2.48043 2 2.73478 2 3V13C2 13.2652 2.10536 13.5196 2.29289 13.7071C2.48043 13.8946 2.73478 14 3 14H13C13.2652 14 13.5196 13.8946 13.7071 13.7071C13.8946 13.5196 14 13.2652 14 13V3C14 2.73478 13.8946 2.48043 13.7071 2.29289C13.5196 2.10536 13.2652 2 13 2ZM13 13H3V3H13V13ZM8.75 5V11C8.75 11.1326 8.69732 11.2598 8.60355 11.3536C8.50979 11.4473 8.38261 11.5 8.25 11.5C8.11739 11.5 7.99021 11.4473 7.89645 11.3536C7.80268 11.2598 7.75 11.1326 7.75 11V5.9375L7.0275 6.41937C6.97284 6.45582 6.91153 6.48114 6.84708 6.49388C6.78264 6.50663 6.71631 6.50656 6.65189 6.49368C6.58747 6.4808 6.52622 6.45535 6.47163 6.41879C6.41704 6.38224 6.37019 6.33529 6.33375 6.28062C6.29731 6.22596 6.27199 6.16466 6.25924 6.10021C6.24649 6.03576 6.24656 5.96943 6.25944 5.90501C6.27233 5.84059 6.29778 5.77934 6.33433 5.72475C6.37089 5.67017 6.41784 5.62332 6.4725 5.58687L7.9725 4.58687C8.0476 4.53677 8.13486 4.50793 8.22503 4.50342C8.31519 4.49891 8.4049 4.51889 8.48462 4.56126C8.56434 4.60362 8.63111 4.66677 8.67783 4.74402C8.72456 4.82127 8.7495 4.90972 8.75 5Z" fill="#00004E"/></svg><span>Accepted</span></span></dd></div>
+      </dl>
+    </section>
+
+    <!-- Contributors Summary -->
+    <section class="card summary" aria-labelledby="contrib-title">
+      <div class="summary__head">
+        <h2 id="contrib-title" class="block-title">Contributors Summary</h2>
+        <button type="button" class="btn-link"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21.3103 6.87866L17.1216 2.68897C16.9823 2.54965 16.8169 2.43913 16.6349 2.36373C16.4529 2.28832 16.2578 2.24951 16.0608 2.24951C15.8638 2.24951 15.6687 2.28832 15.4867 2.36373C15.3047 2.43913 15.1393 2.54965 15 2.68897L3.43969 14.2502C3.2998 14.389 3.18889 14.5542 3.11341 14.7362C3.03792 14.9183 2.99938 15.1135 3.00001 15.3105V19.5002C3.00001 19.898 3.15804 20.2796 3.43935 20.5609C3.72065 20.8422 4.10218 21.0002 4.50001 21.0002H8.6897C8.88675 21.0009 9.08197 20.9623 9.26399 20.8868C9.44602 20.8113 9.61122 20.7004 9.75001 20.5605L21.3103 9.00022C21.4496 8.86093 21.5602 8.69556 21.6356 8.51355C21.711 8.33153 21.7498 8.13645 21.7498 7.93944C21.7498 7.74243 21.711 7.54735 21.6356 7.36534C21.5602 7.18333 21.4496 7.01795 21.3103 6.87866ZM8.6897 19.5002H4.50001V15.3105L12.75 7.06053L16.9397 11.2502L8.6897 19.5002ZM18 10.189L13.8103 6.00022L16.0603 3.75022L20.25 7.93897L18 10.189Z" fill="#00BF00"/></svg><span>Edit</span></button>
+      </div>
+      <dl class="details">
+        <div class="details__row"><dt>Strategy</dt><dd>Highest Wage</dd></div>
+        <div class="details__row"><dt>Total estimated monthly benefit</dt><dd>SAR 1,284,000</dd></div>
+        <div class="details__row"><dt>Number of contributors</dt>
+          <dd><span class="count"><span class="count__num">600</span><span class="count__of">of 600 (70% of eligible contributors)</span></span></dd>
+        </div>
+      </dl>
+    </section>
+
+    <!-- What happens next? -->
+    <section class="next" aria-labelledby="next-title">
+      <h2 id="next-title" class="section-title">What happens next?</h2>
+      <ol class="steps">
+          <li class="step">
+            <span class="step__num">1</span>
+            <p class="step__desc">Your request will be submitted for processing</p>
+          </li>
+          <li class="step">
+            <span class="step__num">2</span>
+            <p class="step__desc">Contributors with valid IBAN will be validated with “SIMAH”</p>
+          </li>
+          <li class="step">
+            <span class="step__num">3</span>
+            <p class="step__desc">Approved contributors will be eligible for the next benefit payment</p>
+          </li>
+      </ol>
+    </section>
+
+    <!-- Submit bar (sticky) -->
+    <section class="card submit-bar">
+      <button type="button" class="btn btn--secondary">Back</button>
+      <button type="button" class="btn btn--primary">Submit</button>
+    </section>
+
+  </main>
+</body>
+</html>

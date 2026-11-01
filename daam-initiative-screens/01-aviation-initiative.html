@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daam Initiative – Aviation Sector</title>
+  <!-- Fallback web font; "Ping AR + LT" is used first if installed -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ===== Design tokens (from Figma variables) ===== */
+    :root {
+      --midnight-01: #00122d;
+      --midnight-02: #334157;
+      --midnight-04: #e5e7ea;
+      --midnight-05: #f3f4f5;
+      --white: #ffffff;
+      --rich-blue-01: #00004e;
+      --vivid-blue: #0064ff;
+      --vivid-green-01: #00bf00;
+      --vivid-green-03: #80df80;
+      --vivid-green-04: #bfefbf;
+      --badge-bg: rgba(0, 18, 45, 0.3);
+
+      --font: "Ping AR + LT", "IBM Plex Sans Arabic", system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: var(--font);
+      background: #e9ebee;
+      color: var(--midnight-01);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    p { margin: 0; }
+
+    /* ===== Outer container ===== */
+    .content {
+      max-width: 1063px;
+      margin: 0 auto;
+      padding: 24px;
+      background: var(--midnight-05);
+      border-radius: 24px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ===== Hero / "Your establishment" ===== */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      min-height: 137px;
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      background: var(--vivid-blue);
+      border: 1px solid var(--midnight-04);
+      border-bottom: 0;
+      border-radius: 20px 20px 0 0;
+    }
+
+    .hero__pattern {
+      position: absolute;
+      left: 507px;
+      top: 24px;
+      width: 482px;
+      height: 228px;
+      pointer-events: none;
+    }
+
+    .hero__inner {
+      position: relative;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .hero__title { color: var(--white); font-weight: 700; display: flex; flex-direction: column; gap: 4px; }
+    .hero__title-sm { font-size: 18px; line-height: 26px; }
+    .hero__title-lg { font-size: 28px; line-height: 40px; }
+
+    .hero__badges { display: flex; gap: 12px; flex-shrink: 0; }
+
+    .badge {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      padding: 7px 12px;
+      border-radius: 10px;
+      background: var(--badge-bg);
+      color: var(--white);
+      white-space: nowrap;
+    }
+    .badge__label { font-size: 12px; line-height: 18px; font-weight: 400; }
+    .badge__value { font-size: 16px; line-height: 24px; font-weight: 700; }
+
+    /* ===== Section titles ===== */
+    .section-title {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 700;
+      color: var(--rich-blue-01);
+    }
+
+    /* ===== How it works ===== */
+    .how {
+      background: var(--white);
+      border: 1px solid var(--midnight-04);
+      padding: 18px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .steps { display: flex; gap: 20px; margin: 0; padding: 0; list-style: none; }
+
+    .step { flex: 1 1 0; min-width: 0; display: flex; gap: 12px; align-items: flex-start; }
+
+    .step__num {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--midnight-05);
+      color: var(--rich-blue-01);
+      font-size: 14px;
+      line-height: 22px;
+      font-weight: 700;
+    }
+
+    .step__text { display: flex; flex-direction: column; gap: 4px; font-size: 14px; line-height: 22px; }
+    .step__title { font-weight: 700; color: var(--rich-blue-01); }
+    .step__desc { font-weight: 400; color: var(--midnight-02); }
+
+    .step--active .step__num { background: var(--vivid-green-01); }
+    .step--active .step__title { color: var(--vivid-green-01); }
+
+    /* ===== FAQ ===== */
+    .faq {
+      background: var(--white);
+      border: 1px solid var(--midnight-04);
+      border-top: 0;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .accordion {
+      background: var(--midnight-05);
+      border-radius: 16px;
+    }
+
+    .accordion summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 24px;
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+      border-radius: 16px;
+    }
+    .accordion summary::-webkit-details-marker { display: none; }
+    .accordion summary:focus-visible { outline: 2px solid var(--vivid-blue); outline-offset: 2px; }
+
+    .accordion__q {
+      flex: 1 1 0;
+      font-size: 18px;
+      line-height: 26px;
+      font-weight: 500;
+      color: var(--midnight-01);
+    }
+
+    .accordion__icon {
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+      margin-top: 2px;
+      transition: transform 0.2s ease;
+    }
+    .accordion[open] .accordion__icon { transform: rotate(180deg); }
+
+    .accordion__a {
+      padding: 0 24px 24px;
+      font-size: 14px;
+      line-height: 22px;
+      color: var(--midnight-02);
+    }
+
+    /* ===== Apply card ===== */
+    .apply {
+      background: var(--vivid-green-04);
+      border: 1px solid var(--vivid-green-03);
+      border-top: 0;
+      border-radius: 0 0 20px 20px;
+      padding: 24px;
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+    }
+
+    .declaration {
+      flex: 1 1 0;
+      min-width: 0;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 22px;
+      color: var(--midnight-02);
+    }
+
+    .declaration a { color: var(--rich-blue-01); text-decoration: underline; }
+
+    /* Checkbox — exact Figma vector (box 16x16, tick overflows to 19px) */
+    .checkbox {
+      appearance: none;
+      -webkit-appearance: none;
+      flex-shrink: 0;
+      width: 19px;
+      height: 16px;
+      margin: 3px -3px 0 0; /* tick overflow doesn't push text, like Figma */
+      border: 0;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='19' height='16' viewBox='0 0 19 16' fill='none'%3E%3Crect x='0.5' y='0.5' width='15' height='15' rx='1.5' stroke='%2300004E'/%3E%3C/svg%3E") no-repeat 0 0 / 19px 16px;
+      cursor: pointer;
+    }
+    .checkbox:checked {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='19' height='16' viewBox='0 0 19 16' fill='none'%3E%3Crect x='0.5' y='0.5' width='15' height='15' rx='1.5' stroke='%2300004E'/%3E%3Cpath d='M18 1L8.375 10L4 5.90909' stroke='%2300BF00' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    }
+    .checkbox:focus-visible { outline: 2px solid var(--vivid-blue); outline-offset: 2px; }
+
+    .btn {
+      flex-shrink: 0;
+      width: 204px;
+      height: 48px;
+      padding: 8px 24px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--vivid-green-01);
+      color: var(--rich-blue-01);
+      font-family: inherit;
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: filter 0.15s ease, opacity 0.15s ease;
+    }
+    .btn:hover:not(:disabled) { filter: brightness(0.95); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 900px) {
+      .hero__inner { flex-direction: column; align-items: flex-start; }
+      .hero__pattern { left: auto; right: -120px; }
+      .steps { flex-wrap: wrap; }
+      .step { flex: 1 1 calc(50% - 10px); }
+    }
+
+    @media (max-width: 600px) {
+      body { padding: 0; }
+      .content { padding: 16px; border-radius: 0; }
+      .hero__title-lg { font-size: 22px; line-height: 32px; }
+      .hero__badges { flex-wrap: wrap; }
+      .step { flex-basis: 100%; }
+      .accordion__q { font-size: 16px; line-height: 24px; }
+      .apply { flex-direction: column; }
+      .btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <main class="content">
+
+    <!-- Your establishment -->
+    <section class="hero" aria-labelledby="hero-title">
+      <svg class="hero__pattern" viewBox="0 0 482.001 228.26" fill="none" aria-hidden="true">
+        <path d="M187.501 99.229C184.857 102.226 181.223 103.225 177.588 103.225H167.344C167.344 80.9149 188.823 61.6019 206.997 51.6124C188.823 41.6229 167.344 22.3099 167.344 0H177.588C181.553 0 184.857 1.66492 187.501 4.66176L234.094 51.9454L187.501 99.229Z" fill="#0171FE"/>
+        <path d="M378.971 219.422C373.126 226.049 365.088 228.258 357.05 228.258H334.398C334.398 178.925 381.894 136.218 422.083 114.129C381.894 92.0394 334.398 49.3331 334.398 0H357.05C365.819 0 373.126 3.68157 378.971 10.3084L482.001 114.865L378.971 219.422Z" fill="#0171FE"/>
+        <path d="M20.1572 99.229C17.5137 102.226 13.8788 103.225 10.2439 103.225H0C0 80.9149 21.479 61.6019 39.6536 51.6124C21.479 41.6229 0 22.3099 0 0H10.2439C14.2092 0 17.5137 1.66492 20.1572 4.66176L66.7503 51.9454L20.1572 99.229Z" fill="#0171FE"/>
+        <path d="M290.851 99.229C293.494 102.226 297.129 103.225 300.764 103.225H311.008C311.008 80.9149 289.529 61.6019 271.354 51.6124C289.529 41.6229 311.008 22.3099 311.008 0H300.764C296.799 0 293.494 1.66492 290.851 4.66176L244.258 51.9454L290.851 99.229Z" fill="#0171FE"/>
+        <path d="M123.507 99.229C126.15 102.226 129.785 103.225 133.42 103.225H143.664C143.664 80.9149 122.185 61.6019 104.01 51.6124C122.185 41.6229 143.664 22.3099 143.664 0H133.42C129.455 0 126.15 1.66492 123.507 4.66176L76.9138 51.9454L123.507 99.229Z" fill="#0171FE"/>
+      </svg>
+
+      <div class="hero__inner">
+        <div class="hero__title">
+          <p class="hero__title-sm">Your Establishment is</p>
+          <h1 id="hero-title" class="hero__title-lg" style="margin:0;">Eligible for the Aviation Sector</h1>
+        </div>
+
+        <div class="hero__badges">
+          <div class="badge">
+            <span class="badge__label">Establishment name</span>
+            <span class="badge__value" dir="rtl" lang="ar">الخطوط الجوية السعودية</span>
+          </div>
+          <div class="badge">
+            <span class="badge__label">Establishment number</span>
+            <span class="badge__value">536562462</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="how" aria-labelledby="how-title">
+      <h2 id="how-title" class="section-title" style="margin:0;">How it works</h2>
+      <ol class="steps">
+        <li class="step step--active" aria-current="step">
+          <span class="step__num">1</span>
+          <div class="step__text">
+            <span class="step__title">Apply</span>
+            <span class="step__desc">Review details and accept terms and conditions.</span>
+          </div>
+        </li>
+        <li class="step">
+          <span class="step__num">2</span>
+          <div class="step__text">
+            <span class="step__title">Choose Contributors</span>
+            <span class="step__desc">Select eligible Saudi contributors</span>
+          </div>
+        </li>
+        <li class="step">
+          <span class="step__num">3</span>
+          <div class="step__text">
+            <span class="step__title">Bank Account Update</span>
+            <span class="step__desc">Update contributors missing IBAN</span>
+          </div>
+        </li>
+        <li class="step">
+          <span class="step__num">4</span>
+          <div class="step__text">
+            <span class="step__title">Summary</span>
+            <span class="step__desc">Review transaction details and confirm</span>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq" aria-labelledby="faq-title">
+      <h2 id="faq-title" class="section-title" style="margin:0;">Frequently asked questions</h2>
+
+      <details class="accordion">
+        <summary>
+          <span class="accordion__q">What is the Daam Initiative for the Aviation Sector?</span>
+          <svg class="accordion__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.031 9.53055L12.531 17.0306C12.4614 17.1003 12.3787 17.1556 12.2876 17.1933C12.1966 17.2311 12.099 17.2505 12.0004 17.2505C11.9019 17.2505 11.8043 17.2311 11.7132 17.1933C11.6222 17.1556 11.5394 17.1003 11.4698 17.0306L3.96979 9.53055C3.82906 9.38982 3.75 9.19895 3.75 8.99993C3.75 8.80091 3.82906 8.61003 3.96979 8.4693C4.11052 8.32857 4.30139 8.24951 4.50042 8.24951C4.69944 8.24951 4.89031 8.32857 5.03104 8.4693L12.0004 15.4396L18.9698 8.4693C19.0395 8.39962 19.1222 8.34435 19.2132 8.30663C19.3043 8.26892 19.4019 8.24951 19.5004 8.24951C19.599 8.24951 19.6965 8.26892 19.7876 8.30663C19.8786 8.34435 19.9614 8.39962 20.031 8.4693C20.1007 8.53899 20.156 8.62171 20.1937 8.71276C20.2314 8.8038 20.2508 8.90138 20.2508 8.99993C20.2508 9.09847 20.2314 9.19606 20.1937 9.2871C20.156 9.37815 20.1007 9.46087 20.031 9.53055Z" fill="#00BF00"/></svg>
+        </summary>
+        <div class="accordion__a">Answer content goes here.</div>
+      </details>
+
+      <details class="accordion">
+        <summary>
+          <span class="accordion__q">What are the initiative's eligibility conditions?</span>
+          <svg class="accordion__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.031 9.53055L12.531 17.0306C12.4614 17.1003 12.3787 17.1556 12.2876 17.1933C12.1966 17.2311 12.099 17.2505 12.0004 17.2505C11.9019 17.2505 11.8043 17.2311 11.7132 17.1933C11.6222 17.1556 11.5394 17.1003 11.4698 17.0306L3.96979 9.53055C3.82906 9.38982 3.75 9.19895 3.75 8.99993C3.75 8.80091 3.82906 8.61003 3.96979 8.4693C4.11052 8.32857 4.30139 8.24951 4.50042 8.24951C4.69944 8.24951 4.89031 8.32857 5.03104 8.4693L12.0004 15.4396L18.9698 8.4693C19.0395 8.39962 19.1222 8.34435 19.2132 8.30663C19.3043 8.26892 19.4019 8.24951 19.5004 8.24951C19.599 8.24951 19.6965 8.26892 19.7876 8.30663C19.8786 8.34435 19.9614 8.39962 20.031 8.4693C20.1007 8.53899 20.156 8.62171 20.1937 8.71276C20.2314 8.8038 20.2508 8.90138 20.2508 8.99993C20.2508 9.09847 20.2314 9.19606 20.1937 9.2871C20.156 9.37815 20.1007 9.46087 20.031 9.53055Z" fill="#00BF00"/></svg>
+        </summary>
+        <div class="accordion__a">Answer content goes here.</div>
+      </details>
+
+      <details class="accordion">
+        <summary>
+          <span class="accordion__q">What percentage is covered by the employer?</span>
+          <svg class="accordion__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.031 9.53055L12.531 17.0306C12.4614 17.1003 12.3787 17.1556 12.2876 17.1933C12.1966 17.2311 12.099 17.2505 12.0004 17.2505C11.9019 17.2505 11.8043 17.2311 11.7132 17.1933C11.6222 17.1556 11.5394 17.1003 11.4698 17.0306L3.96979 9.53055C3.82906 9.38982 3.75 9.19895 3.75 8.99993C3.75 8.80091 3.82906 8.61003 3.96979 8.4693C4.11052 8.32857 4.30139 8.24951 4.50042 8.24951C4.69944 8.24951 4.89031 8.32857 5.03104 8.4693L12.0004 15.4396L18.9698 8.4693C19.0395 8.39962 19.1222 8.34435 19.2132 8.30663C19.3043 8.26892 19.4019 8.24951 19.5004 8.24951C19.599 8.24951 19.6965 8.26892 19.7876 8.30663C19.8786 8.34435 19.9614 8.39962 20.031 8.4693C20.1007 8.53899 20.156 8.62171 20.1937 8.71276C20.2314 8.8038 20.2508 8.90138 20.2508 8.99993C20.2508 9.09847 20.2314 9.19606 20.1937 9.2871C20.156 9.37815 20.1007 9.46087 20.031 9.53055Z" fill="#00BF00"/></svg>
+        </summary>
+        <div class="accordion__a">Answer content goes here.</div>
+      </details>
+
+      <details class="accordion">
+        <summary>
+          <span class="accordion__q">What percentage is covered by the contributor?</span>
+          <svg class="accordion__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.031 9.53055L12.531 17.0306C12.4614 17.1003 12.3787 17.1556 12.2876 17.1933C12.1966 17.2311 12.099 17.2505 12.0004 17.2505C11.9019 17.2505 11.8043 17.2311 11.7132 17.1933C11.6222 17.1556 11.5394 17.1003 11.4698 17.0306L3.96979 9.53055C3.82906 9.38982 3.75 9.19895 3.75 8.99993C3.75 8.80091 3.82906 8.61003 3.96979 8.4693C4.11052 8.32857 4.30139 8.24951 4.50042 8.24951C4.69944 8.24951 4.89031 8.32857 5.03104 8.4693L12.0004 15.4396L18.9698 8.4693C19.0395 8.39962 19.1222 8.34435 19.2132 8.30663C19.3043 8.26892 19.4019 8.24951 19.5004 8.24951C19.599 8.24951 19.6965 8.26892 19.7876 8.30663C19.8786 8.34435 19.9614 8.39962 20.031 8.4693C20.1007 8.53899 20.156 8.62171 20.1937 8.71276C20.2314 8.8038 20.2508 8.90138 20.2508 8.99993C20.2508 9.09847 20.2314 9.19606 20.1937 9.2871C20.156 9.37815 20.1007 9.46087 20.031 9.53055Z" fill="#00BF00"/></svg>
+        </summary>
+        <div class="accordion__a">Answer content goes here.</div>
+      </details>
+
+      <details class="accordion">
+        <summary>
+          <span class="accordion__q">How is the employer compensated for the initiative amount?</span>
+          <svg class="accordion__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.031 9.53055L12.531 17.0306C12.4614 17.1003 12.3787 17.1556 12.2876 17.1933C12.1966 17.2311 12.099 17.2505 12.0004 17.2505C11.9019 17.2505 11.8043 17.2311 11.7132 17.1933C11.6222 17.1556 11.5394 17.1003 11.4698 17.0306L3.96979 9.53055C3.82906 9.38982 3.75 9.19895 3.75 8.99993C3.75 8.80091 3.82906 8.61003 3.96979 8.4693C4.11052 8.32857 4.30139 8.24951 4.50042 8.24951C4.69944 8.24951 4.89031 8.32857 5.03104 8.4693L12.0004 15.4396L18.9698 8.4693C19.0395 8.39962 19.1222 8.34435 19.2132 8.30663C19.3043 8.26892 19.4019 8.24951 19.5004 8.24951C19.599 8.24951 19.6965 8.26892 19.7876 8.30663C19.8786 8.34435 19.9614 8.39962 20.031 8.4693C20.1007 8.53899 20.156 8.62171 20.1937 8.71276C20.2314 8.8038 20.2508 8.90138 20.2508 8.99993C20.2508 9.09847 20.2314 9.19606 20.1937 9.2871C20.156 9.37815 20.1007 9.46087 20.031 9.53055Z" fill="#00BF00"/></svg>
+        </summary>
+        <div class="accordion__a">Answer content goes here.</div>
+      </details>
+
+      <details class="accordion">
+        <summary>
+          <span class="accordion__q">Is there a specific duration for the initiative?</span>
+          <svg class="accordion__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.031 9.53055L12.531 17.0306C12.4614 17.1003 12.3787 17.1556 12.2876 17.1933C12.1966 17.2311 12.099 17.2505 12.0004 17.2505C11.9019 17.2505 11.8043 17.2311 11.7132 17.1933C11.6222 17.1556 11.5394 17.1003 11.4698 17.0306L3.96979 9.53055C3.82906 9.38982 3.75 9.19895 3.75 8.99993C3.75 8.80091 3.82906 8.61003 3.96979 8.4693C4.11052 8.32857 4.30139 8.24951 4.50042 8.24951C4.69944 8.24951 4.89031 8.32857 5.03104 8.4693L12.0004 15.4396L18.9698 8.4693C19.0395 8.39962 19.1222 8.34435 19.2132 8.30663C19.3043 8.26892 19.4019 8.24951 19.5004 8.24951C19.599 8.24951 19.6965 8.26892 19.7876 8.30663C19.8786 8.34435 19.9614 8.39962 20.031 8.4693C20.1007 8.53899 20.156 8.62171 20.1937 8.71276C20.2314 8.8038 20.2508 8.90138 20.2508 8.99993C20.2508 9.09847 20.2314 9.19606 20.1937 9.2871C20.156 9.37815 20.1007 9.46087 20.031 9.53055Z" fill="#00BF00"/></svg>
+        </summary>
+        <div class="accordion__a">Answer content goes here.</div>
+      </details>
+
+      <details class="accordion">
+        <summary>
+          <span class="accordion__q">How do I add a contributor to the initiative?</span>
+          <svg class="accordion__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.031 9.53055L12.531 17.0306C12.4614 17.1003 12.3787 17.1556 12.2876 17.1933C12.1966 17.2311 12.099 17.2505 12.0004 17.2505C11.9019 17.2505 11.8043 17.2311 11.7132 17.1933C11.6222 17.1556 11.5394 17.1003 11.4698 17.0306L3.96979 9.53055C3.82906 9.38982 3.75 9.19895 3.75 8.99993C3.75 8.80091 3.82906 8.61003 3.96979 8.4693C4.11052 8.32857 4.30139 8.24951 4.50042 8.24951C4.69944 8.24951 4.89031 8.32857 5.03104 8.4693L12.0004 15.4396L18.9698 8.4693C19.0395 8.39962 19.1222 8.34435 19.2132 8.30663C19.3043 8.26892 19.4019 8.24951 19.5004 8.24951C19.599 8.24951 19.6965 8.26892 19.7876 8.30663C19.8786 8.34435 19.9614 8.39962 20.031 8.4693C20.1007 8.53899 20.156 8.62171 20.1937 8.71276C20.2314 8.8038 20.2508 8.90138 20.2508 8.99993C20.2508 9.09847 20.2314 9.19606 20.1937 9.2871C20.156 9.37815 20.1007 9.46087 20.031 9.53055Z" fill="#00BF00"/></svg>
+        </summary>
+        <div class="accordion__a">Answer content goes here.</div>
+      </details>
+
+      <details class="accordion">
+        <summary>
+          <span class="accordion__q">Terms and Conditions</span>
+          <svg class="accordion__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.031 9.53055L12.531 17.0306C12.4614 17.1003 12.3787 17.1556 12.2876 17.1933C12.1966 17.2311 12.099 17.2505 12.0004 17.2505C11.9019 17.2505 11.8043 17.2311 11.7132 17.1933C11.6222 17.1556 11.5394 17.1003 11.4698 17.0306L3.96979 9.53055C3.82906 9.38982 3.75 9.19895 3.75 8.99993C3.75 8.80091 3.82906 8.61003 3.96979 8.4693C4.11052 8.32857 4.30139 8.24951 4.50042 8.24951C4.69944 8.24951 4.89031 8.32857 5.03104 8.4693L12.0004 15.4396L18.9698 8.4693C19.0395 8.39962 19.1222 8.34435 19.2132 8.30663C19.3043 8.26892 19.4019 8.24951 19.5004 8.24951C19.599 8.24951 19.6965 8.26892 19.7876 8.30663C19.8786 8.34435 19.9614 8.39962 20.031 8.4693C20.1007 8.53899 20.156 8.62171 20.1937 8.71276C20.2314 8.8038 20.2508 8.90138 20.2508 8.99993C20.2508 9.09847 20.2314 9.19606 20.1937 9.2871C20.156 9.37815 20.1007 9.46087 20.031 9.53055Z" fill="#00BF00"/></svg>
+        </summary>
+        <div class="accordion__a">Answer content goes here.</div>
+      </details>
+    </section>
+
+    <!-- Apply card -->
+    <section class="apply">
+      <label class="declaration">
+        <input type="checkbox" class="checkbox" id="agree" checked />
+        <span>
+          I have read and agree to the <a href="#" onclick="event.stopPropagation()">terms and conditions</a>
+          of the GOSI Initiative, and I confirm that the information provided is accurate.
+          I authorize GOSI to request the initiative record from licensed entities.
+        </span>
+      </label>
+      <button type="button" class="btn" id="applyBtn">Apply</button>
+    </section>
+
+  </main>
+
+  <script>
+    // Enable "Apply" only when the declaration is checked
+    const agree = document.getElementById('agree');
+    const applyBtn = document.getElementById('applyBtn');
+    const sync = () => { applyBtn.disabled = !agree.checked; };
+    agree.addEventListener('change', sync);
+    sync();
+  </script>
+</body>
+</html>

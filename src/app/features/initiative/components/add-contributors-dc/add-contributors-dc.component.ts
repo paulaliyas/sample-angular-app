@@ -1,29 +1,56 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { Contributor } from '../initiative.models';
 
+/** Drawer — pick eligible contributors to add, up to the places left. */
 @Component({
   selector: 'app-add-contributors-dc',
   templateUrl: './add-contributors-dc.component.html',
   styleUrls: ['./add-contributors-dc.component.scss'],
+  encapsulation: ViewEncapsulation.None,
   standalone: false,
 })
-export class AddContributorsDcComponent implements OnInit {
-  /** Every contributor of the establishment, eligible or not. */
+export class AddContributorsDcComponent implements OnInit, AfterViewInit {
+  /** Eligible contributors who aren't in the initiative yet. */
   @Input() contributors: Contributor[] = [];
-  /** Already added — shown as ticked so this page also works for "Manage". */
-  @Input() selectedContributors: Contributor[] = [];
-  @Input() maxCount = 0;
+  /** Places left before the establishment limit */
+  @Input() remaining = 0;
+  /** Ticked when the drawer opens, e.g. when coming back from the IBAN drawer */
+  @Input() selected: Contributor[] = [];
+  /** A request is on its way — sending again is blocked */
+  @Input() busy = false;
 
-  @Output() save = new EventEmitter<Contributor[]>();
-  @Output() back = new EventEmitter<void>();
+  @Output() add = new EventEmitter<Contributor[]>();
+  @Output() close = new EventEmitter<void>();
+
+  @ViewChild('closeButton') closeButton!: ElementRef<HTMLButtonElement>;
 
   searchText = '';
-  pageSize = 5;
-  currentPage = 1;
+  pageSize = 10;
+  page = 1;
   selectedIds: string[] = [];
 
   ngOnInit(): void {
-    this.selectedIds = this.selectedContributors.map((c) => c.nnid);
+    this.selectedIds = this.selected.map((c) => c.nnid);
+  }
+
+  /** Moves keyboard focus into the drawer, so it isn't left on the page behind */
+  ngAfterViewInit(): void {
+    this.closeButton.nativeElement.focus();
+  }
+
+  get remainingAfterSelection(): number {
+    return this.remaining - this.selectedIds.length;
   }
 
   get filteredContributors(): Contributor[] {
@@ -32,7 +59,7 @@ export class AddContributorsDcComponent implements OnInit {
   }
 
   get pagedContributors(): Contributor[] {
-    const start = (this.currentPage - 1) * this.pageSize;
+    const start = (this.page - 1) * this.pageSize;
     return this.filteredContributors.slice(start, start + this.pageSize);
   }
 
@@ -40,18 +67,17 @@ export class AddContributorsDcComponent implements OnInit {
     return Math.max(1, Math.ceil(this.filteredContributors.length / this.pageSize));
   }
 
-  get pages(): number[] {
-    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  get allPageSelected(): boolean {
+    return this.pagedContributors.length > 0 && this.pagedContributors.every((c) => this.isSelected(c));
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    this.close.emit();
   }
 
   onSearch(): void {
-    this.currentPage = 1;
-  }
-
-  goToPage(page: number): void {
-    if (page >= 1 && page <= this.totalPages) {
-      this.currentPage = page;
-    }
+    this.page = 1;
   }
 
   isSelected(contributor: Contributor): boolean {
@@ -59,19 +85,32 @@ export class AddContributorsDcComponent implements OnInit {
   }
 
   isDisabled(contributor: Contributor): boolean {
-    const limitReached = this.selectedIds.length >= this.maxCount;
-    return !contributor.eligible || (limitReached && !this.isSelected(contributor));
+    return !this.isSelected(contributor) && this.remainingAfterSelection <= 0;
   }
 
   toggle(contributor: Contributor): void {
     if (this.isSelected(contributor)) {
       this.selectedIds = this.selectedIds.filter((id) => id !== contributor.nnid);
-    } else {
+    } else if (!this.isDisabled(contributor)) {
       this.selectedIds = [...this.selectedIds, contributor.nnid];
     }
   }
 
-  onSubmit(): void {
-    this.save.emit(this.contributors.filter((c) => this.isSelected(c)));
+  /** The header checkbox ticks the rows on this page, as many as there are places for */
+  toggleAll(): void {
+    if (this.allPageSelected) {
+      const pageIds = this.pagedContributors.map((c) => c.nnid);
+      this.selectedIds = this.selectedIds.filter((id) => !pageIds.includes(id));
+      return;
+    }
+    const toAdd = this.pagedContributors
+      .filter((c) => !this.isSelected(c))
+      .slice(0, this.remainingAfterSelection)
+      .map((c) => c.nnid);
+    this.selectedIds = [...this.selectedIds, ...toAdd];
+  }
+
+  onAdd(): void {
+    this.add.emit(this.contributors.filter((c) => this.isSelected(c)));
   }
 }

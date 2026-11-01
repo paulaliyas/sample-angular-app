@@ -1,0 +1,49 @@
+app-manage-contributors-dc {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  /* Selection bar (shown while at least one contributor is ticked) */
+  .table-block { display: flex; flex-direction: column; }
+  .selection-bar {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px;
+    background: var(--midnight-04); border-radius: 20px 20px 0 0;
+  }
+  .selection-bar__count { display: flex; align-items: center; gap: 10px; }
+  .count-badge {
+    width: 32px; height: 32px; border-radius: 9999px; display: flex; align-items: center; justify-content: center;
+    background: var(--vivid-green-04); border: 1px solid var(--vivid-green-03);
+    font-size: 16px; line-height: 24px; font-weight: 700; color: var(--rich-blue-01);
+  }
+  .selection-bar__label { font-size: 16px; line-height: 24px; font-weight: 700; color: var(--rich-blue-01); }
+  .selection-bar__actions { display: flex; align-items: center; gap: 20px; }
+  .table-wrap--joined { border-radius: 0 0 20px 20px; }
+  .btn-link { border-radius: 4px; }
+
+  /* Tooltip on the disabled "Add Contributor" button */
+  .tip-wrap { position: relative; display: inline-flex; border-radius: 8px; }
+  .tip-wrap:focus-visible { outline: 2px solid var(--vivid-green-01); outline-offset: 2px; }
+  .tooltip {
+    position: absolute; bottom: calc(100% + 4px); left: 50%; transform: translateX(-50%);
+    width: 232px; display: flex; flex-direction: column; align-items: center;
+    filter: drop-shadow(var(--shadow-md)); pointer-events: none;
+    opacity: 0; visibility: hidden; transition: opacity 0.15s ease; z-index: 10;
+  }
+  .tooltip__body {
+    width: 100%; padding: 8px 12px; border-radius: 8px; background: var(--midnight-01);
+    font-size: 12px; line-height: 18px; font-weight: 700; color: var(--white); text-align: center;
+  }
+  .tooltip svg { display: block; margin-top: -1px; }
+  .tip-wrap:hover .tooltip, .tip-wrap:focus-within .tooltip, .tip-wrap:focus .tooltip { opacity: 1; visibility: visible; }
+  .tip-wrap.is-enabled .tooltip { display: none; }
+
+  /* The disabled Download button keeps its outline look, just dimmed */
+  .btn--outline:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  table { min-width: 980px; }
+  th.th-iban, td.cell--iban { padding-left: 9px; padding-right: 9px; }
+
+  @media (max-width: 600px) {
+    .selection-bar { flex-wrap: wrap; }
+  }
+}

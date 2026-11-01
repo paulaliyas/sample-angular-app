@@ -1,0 +1,50 @@
+// Shared table styles — see initiative-sc.component.scss.
+// Split from it to keep each stylesheet within the component style budget.
+
+app-initiative-sc {
+  /* ===== Table ===== */
+  .table-wrap { background: var(--white); border: 1px solid var(--midnight-04); border-radius: 20px; overflow: hidden; }
+  .table-scroll { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  th {
+    height: 44px; padding: 12px; text-align: left; white-space: nowrap;
+    background: var(--midnight-05); border-bottom: 1px solid var(--midnight-04);
+    font-size: 14px; line-height: 22px; font-weight: 500; color: var(--midnight-02);
+  }
+  td {
+    height: 72px; padding: 16px 12px; white-space: nowrap;
+    border-bottom: 1px solid var(--midnight-04);
+    font-size: 14px; line-height: 22px; color: var(--midnight-02);
+  }
+  th:first-child, td:first-child { padding-left: 14px; padding-right: 14px; }
+  .th-inline { display: inline-flex; align-items: center; gap: 4px; }
+  .th-check { display: flex; align-items: center; gap: 12px; }
+  .no-results { height: 72px; text-align: center; color: var(--midnight-03); }
+
+  .contributor { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+  .contributor__text { display: flex; flex-direction: column; line-height: 22px; min-width: 0; }
+  .contributor__name { font-weight: 500; color: var(--midnight-01); overflow: hidden; text-overflow: ellipsis; }
+  .contributor__id { color: var(--midnight-03); }
+
+  .cell--dates span { display: block; }
+  .date-start { color: var(--midnight-01); }
+  .date-end { color: var(--midnight-03); white-space: pre; }
+
+  .status {
+    display: inline-flex; align-items: center; height: 22px; padding: 4px 8px; border-radius: 40px; white-space: nowrap;
+    background: var(--vivid-green-04); font-size: 12px; line-height: 18px; font-weight: 500; color: var(--rich-blue-01);
+  }
+  .status--warning { background: var(--warning-02); }
+  .status--success { background: var(--vivid-green-04); }
+  .status--error { background: var(--error-02); }
+
+  /* Checkbox — exact Figma vector (20x20 box, tick overflows to 25px) */
+  .cb {
+    appearance: none; -webkit-appearance: none; flex-shrink: 0; cursor: pointer;
+    width: 25px; height: 20px; margin: 0 -5px 0 0; border: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2225%22 height=%2220%22 viewBox=%220 0 25 20%22 fill=%22none%22%3E%3Crect x=%220.75%22 y=%220.75%22 width=%2218.5%22 height=%2218.5%22 rx=%221.25%22 stroke=%22%2300004E%22 stroke-width=%221.5%22/%3E%3C/svg%3E") no-repeat 0 0 / 25px 20px;
+  }
+  .cb:checked { background-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2225%22 height=%2220%22 viewBox=%220 0 25 20%22 fill=%22none%22%3E%3Crect x=%220.75%22 y=%220.75%22 width=%2218.5%22 height=%2218.5%22 rx=%221.25%22 stroke=%22%2300004E%22 stroke-width=%221.5%22/%3E%3Cpath d=%22M24 2L10.9375 14L5 8.54545%22 stroke=%22%2300BF00%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E%3C/svg%3E"); }
+  .cb:disabled { opacity: 0.4; cursor: not-allowed; }
+  .cb:focus-visible { outline: 2px solid var(--vivid-green-01); outline-offset: 2px; }
+}

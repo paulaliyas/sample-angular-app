@@ -1,0 +1,63 @@
+<main class="content">
+  <app-how-it-works-dc [currentStep]="4"></app-how-it-works-dc>
+
+  <section class="card summary" aria-labelledby="request-title">
+    <div class="summary__head">
+      <div class="summary__titles">
+        <h2 id="request-title" class="block-title">Request Summary</h2>
+        <p class="block-sub">Please review the details below before submitting the request. You can go back to edit if needed.</p>
+      </div>
+    </div>
+    <dl class="details">
+      <div class="details__row"><dt>Establishment Name</dt><dd><bdi>{{ establishment.name }}</bdi></dd></div>
+      <div class="details__row"><dt>Establishment Number</dt><dd>{{ establishment.registrationNumber }}</dd></div>
+      <div class="details__row">
+        <dt>Terms &amp; Conditions</dt>
+        <dd><span class="tag"><app-icon-dc name="check-circle"></app-icon-dc><span>Accepted</span></span></dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="card summary" aria-labelledby="contrib-title">
+    <div class="summary__head">
+      <h2 id="contrib-title" class="block-title">Contributors Summary</h2>
+      <button type="button" class="btn-link" (click)="edit.emit()"><app-icon-dc name="edit"></app-icon-dc><span>Edit</span></button>
+    </div>
+    <dl class="details">
+      <div class="details__row"><dt>Strategy</dt><dd>{{ strategyTitle }}</dd></div>
+      <div class="details__row"><dt>Total estimated monthly benefit</dt><dd>SAR {{ totalBenefit | number: '1.0-2' : 'en-US' }}</dd></div>
+      <div class="details__row">
+        <dt>Number of contributors</dt>
+        <dd>
+          <span class="count">
+            <span class="count__num">{{ contributorCount }}</span>
+            <span class="count__of">of {{ maxCount }} ({{ maxPercent | number: '1.0-0' }}% of eligible contributors)</span>
+          </span>
+        </dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="next" aria-labelledby="next-title">
+    <h2 id="next-title" class="section-title">What happens next?</h2>
+    <ol class="steps">
+      <li class="step">
+        <span class="step__num">1</span>
+        <p class="step__desc">Your request will be submitted for processing</p>
+      </li>
+      <li class="step">
+        <span class="step__num">2</span>
+        <p class="step__desc">Contributors with valid IBAN will be validated with “SIMAH”</p>
+      </li>
+      <li class="step">
+        <span class="step__num">3</span>
+        <p class="step__desc">Approved contributors will be eligible for the next benefit payment</p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="card submit-bar">
+    <button type="button" class="btn btn--secondary" (click)="back.emit()">Back</button>
+    <button type="button" class="btn btn--primary" [disabled]="busy" (click)="submitRequest.emit()">Submit</button>
+  </section>
+</main>

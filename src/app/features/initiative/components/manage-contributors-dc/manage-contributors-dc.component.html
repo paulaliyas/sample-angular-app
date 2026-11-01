@@ -1,0 +1,118 @@
+<div class="toolbar">
+  <div class="toolbar__left">
+    <label class="search">
+      <app-icon-dc name="search"></app-icon-dc>
+      <input
+        type="search"
+        placeholder="Search by name, ID / Iqama number"
+        aria-label="Search contributors"
+        [(ngModel)]="searchText"
+        (ngModelChange)="onSearch()"
+      />
+    </label>
+    <!-- TODO: the filter panel isn't designed yet -->
+    <button type="button" class="filter"><app-icon-dc name="filter"></app-icon-dc><span>Filter</span></button>
+  </div>
+
+  <div class="toolbar__right">
+    <button type="button" class="btn btn--outline" [disabled]="members.length === 0" (click)="downloadList()">
+      <app-icon-dc name="download"></app-icon-dc><span>Download List</span>
+    </button>
+
+    <!-- The wrapper takes focus while the button is disabled, so the tooltip can still be reached -->
+    <span class="tip-wrap" [class.is-enabled]="!limitReached" [attr.tabindex]="limitReached ? 0 : null" aria-describedby="limit-tip">
+      <button type="button" class="btn btn--primary" [disabled]="limitReached" (click)="add.emit()">
+        <app-icon-dc name="user-add"></app-icon-dc><span>Add Contributor</span>
+      </button>
+      <span class="tooltip" role="tooltip" id="limit-tip">
+        <span class="tooltip__body">You've reached the establishment limit. Remove contributors to add new ones.</span>
+        <app-icon-dc name="tooltip-arrow"></app-icon-dc>
+      </span>
+    </span>
+  </div>
+</div>
+
+<div class="table-block">
+  <div class="selection-bar" *ngIf="selectedIds.length > 0" role="region" aria-live="polite" aria-label="Selected contributors">
+    <div class="selection-bar__count">
+      <span class="count-badge">{{ selectedIds.length }}</span>
+      <span class="selection-bar__label">Contributors Selected</span>
+    </div>
+    <div class="selection-bar__actions">
+      <button type="button" class="btn-link" (click)="deselectAll()">Deselect All</button>
+      <button type="button" class="btn btn--danger" [disabled]="busy" (click)="onRemove()">
+        <app-icon-dc name="trash"></app-icon-dc><span>Remove from Initiative</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="table-wrap" [class.table-wrap--joined]="selectedIds.length > 0">
+    <div class="table-scroll">
+      <table>
+        <colgroup>
+          <col />
+          <col style="width: 106px" />
+          <col style="width: 111px" />
+          <col style="width: 88px" />
+          <col style="width: 138px" />
+          <col style="width: 160px" />
+          <col style="width: 98px" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th>
+              <span class="th-check">
+                <input
+                  type="checkbox"
+                  class="cb"
+                  aria-label="Select all contributors"
+                  [checked]="allPageSelected"
+                  [disabled]="pagedMembers.length === 0"
+                  (change)="toggleAll()"
+                />
+                <span class="th-inline">Contributor <app-icon-dc name="arrow-down"></app-icon-dc></span>
+              </span>
+            </th>
+            <th>Request ID</th>
+            <th>Joining Date</th>
+            <th><span class="th-inline">Benefit <app-icon-dc name="info-circle"></app-icon-dc></span></th>
+            <th>Benefit Date</th>
+            <th class="th-iban">IBAN</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let m of pagedMembers">
+            <td>
+              <label class="contributor">
+                <input type="checkbox" class="cb" [checked]="isSelected(m)" [attr.aria-label]="'Select ' + m.name" (change)="toggle(m)" />
+                <span class="contributor__text">
+                  <span class="contributor__name">{{ m.name }}</span>
+                  <span class="contributor__id">ID No: {{ m.nnid }}</span>
+                </span>
+              </label>
+            </td>
+            <td>{{ m.requestId }}</td>
+            <td>{{ m.joiningDate }}</td>
+            <td>{{ m.benefitAmount | number: '1.2-2' : 'en-US' }}</td>
+            <td class="cell--dates">
+              <span class="date-start">Start : {{ m.benefitStart }}</span>
+              <span class="date-end">End   :  {{ m.benefitEnd }}</span>
+            </td>
+            <td class="cell--iban">{{ m.maskedIban || 'N/A' }}</td>
+            <!-- TODO: only "Active" is in the design so far -->
+            <td><span class="status">Active</span></td>
+          </tr>
+
+          <tr *ngIf="filteredMembers.length === 0">
+            <td colspan="7" class="no-results">
+              {{ members.length === 0 ? 'There are no contributors in the initiative.' : 'No contributors match your search.' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <app-pagination-dc [page]="page" [totalPages]="totalPages" (pageChange)="page = $event"></app-pagination-dc>
+  </div>
+</div>

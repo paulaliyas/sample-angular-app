@@ -1,0 +1,52 @@
+<main class="content">
+  <section class="hero" aria-labelledby="hero-title">
+    <span class="hero__pattern"><app-icon-dc name="hero-pattern"></app-icon-dc></span>
+
+    <div class="hero__inner">
+      <div class="hero__title">
+        <p class="hero__title-sm">Your Establishment is</p>
+        <h1 id="hero-title" class="hero__title-lg">Eligible for the Aviation Sector</h1>
+      </div>
+
+      <div class="hero__badges">
+        <div class="badge">
+          <span class="badge__label">Establishment name</span>
+          <span class="badge__value"><bdi>{{ establishment.name }}</bdi></span>
+        </div>
+        <div class="badge">
+          <span class="badge__label">Establishment number</span>
+          <span class="badge__value">{{ establishment.registrationNumber }}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <app-how-it-works-dc [currentStep]="1" [attached]="true"></app-how-it-works-dc>
+
+  <section class="faq" aria-labelledby="faq-title">
+    <h2 id="faq-title" class="section-title">Frequently asked questions</h2>
+
+    <details class="accordion" *ngFor="let faq of faqs">
+      <summary>
+        <span class="accordion__q">{{ faq.question }}</span>
+        <span class="accordion__icon"><app-icon-dc name="chevron-down"></app-icon-dc></span>
+      </summary>
+      <div class="accordion__a">{{ faq.answer }}</div>
+    </details>
+  </section>
+
+  <section class="apply">
+    <label class="declaration">
+      <input type="checkbox" class="checkbox" [(ngModel)]="declarationAccepted" />
+      <span>
+        I have read and agree to the
+        <!-- TODO: link to the terms and conditions page -->
+        <a href="#" (click)="$event.preventDefault()">terms and conditions</a>
+        of the GOSI Initiative, and I confirm that the information provided is accurate.
+        I authorize GOSI to request the initiative record from licensed entities.
+      </span>
+    </label>
+
+    <button type="button" class="btn btn--primary" [disabled]="!declarationAccepted" (click)="onApply()">Apply</button>
+  </section>
+</main>

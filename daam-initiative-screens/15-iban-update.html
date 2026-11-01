@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IBAN Update – Daam Initiative</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ===== Design tokens (Figma variables) ===== */
+    :root {
+      --midnight-01: #00122d;
+      --midnight-02: #334157;
+      --midnight-03: #808896;
+      --midnight-04: #e5e7ea;
+      --midnight-05: #f3f4f5;
+      --white: #ffffff;
+      --rich-blue-01: #00004e;
+      --vivid-green-01: #00bf00;
+      --vivid-green-04: #bfefbf;
+      --warning-02: #ffe2cc;
+      --shadow-md: 0 0 12px rgba(196, 203, 210, 0.3);
+
+      --font: "Ping AR + LT", "IBM Plex Sans Arabic", system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; padding: 24px; font-family: var(--font); background: #e9ebee; color: var(--midnight-01); -webkit-font-smoothing: antialiased; }
+    p { margin: 0; }
+    button, input { font-family: inherit; }
+
+    /* ===== Outer container ===== */
+    .content {
+      max-width: 1063px; margin: 0 auto; padding: 24px;
+      background: var(--midnight-05); border-radius: 24px;
+      display: flex; flex-direction: column; gap: 20px;
+    }
+
+    /* ===== Status tabs ===== */
+    .tabs { display: flex; gap: 8px; overflow-x: auto; }
+    .tab {
+      height: 36px; padding: 0 12px 12px; border: 0; border-bottom: 2px solid transparent; background: none; cursor: pointer;
+      font-size: 16px; line-height: 24px; font-weight: 400; color: var(--midnight-01); white-space: nowrap;
+    }
+    .tab--active { font-weight: 700; color: var(--rich-blue-01); border-bottom-color: var(--vivid-green-01); }
+
+    /* ===== Toolbar ===== */
+    .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .toolbar__left { display: flex; gap: 16px; height: 48px; }
+    .toolbar__right { display: flex; gap: 12px; align-items: center; }
+    .search {
+      width: 309px; height: 100%; display: flex; align-items: center; gap: 8px; padding: 8px 16px;
+      background: var(--white); border: 1px solid var(--midnight-03); border-radius: 40px;
+    }
+    .search svg { flex-shrink: 0; }
+    .search input {
+      flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; padding: 0;
+      font-size: 14px; line-height: 22px; color: var(--midnight-01);
+    }
+    .search input::placeholder { color: var(--midnight-03); }
+    .search:focus-within { border-color: var(--vivid-green-01); }
+    .filter {
+      height: 100%; display: flex; align-items: center; gap: 12px; padding: 16px 12px;
+      background: var(--white); border: 1px solid var(--midnight-03); border-radius: 8px; cursor: pointer;
+      font-size: 14px; line-height: 22px; font-weight: 500; color: var(--midnight-01);
+    }
+    .btn {
+      height: 48px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      border-radius: 8px; cursor: pointer; white-space: nowrap;
+      font-size: 16px; line-height: 24px; font-weight: 500; color: var(--rich-blue-01);
+    }
+    .btn svg { flex-shrink: 0; }
+    .btn--outline { padding: 8px 14px; background: var(--white); border: 1px solid var(--vivid-green-01); }
+    .btn--outline:hover { filter: brightness(0.96); }
+    .btn--primary:disabled { padding: 8px 24px; border: 0; background: var(--midnight-03); color: var(--midnight-04); cursor: not-allowed; }
+
+    /* ===== Table ===== */
+    .table-wrap { background: var(--white); border: 1px solid var(--midnight-04); border-radius: 10px; overflow: hidden; }
+    .table-scroll { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; table-layout: fixed; min-width: 960px; }
+    .cell--name { font-weight: 500; color: var(--midnight-01); overflow: hidden; text-overflow: ellipsis; }
+    th {
+      height: 44px; padding: 12px; text-align: left; white-space: nowrap;
+      background: var(--midnight-05); border-bottom: 1px solid var(--midnight-04);
+      font-size: 14px; line-height: 22px; font-weight: 500; color: var(--midnight-02);
+    }
+    td {
+      height: 72px; padding: 16px 12px; white-space: nowrap;
+      border-bottom: 1px solid var(--midnight-04);
+      font-size: 14px; line-height: 22px; color: var(--midnight-02);
+    }
+    th:first-child, td:first-child { padding-left: 14px; padding-right: 14px; }
+    th.th-iban, td.cell--iban { padding-left: 9px; padding-right: 9px; }
+    .th-inline { display: inline-flex; align-items: center; gap: 4px; }
+    .th-check { display: flex; align-items: center; gap: 12px; }
+
+    .contributor { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+    .contributor__text { display: flex; flex-direction: column; line-height: 22px; min-width: 0; }
+    .contributor__name { font-weight: 500; color: var(--midnight-01); overflow: hidden; text-overflow: ellipsis; }
+    .contributor__id { color: var(--midnight-03); }
+
+    .cell--dates span { display: block; }
+    .date-start { color: var(--midnight-01); }
+    .date-end { color: var(--midnight-03); white-space: pre; }
+
+    .status {
+      display: inline-flex; align-items: center; height: 22px; padding: 4px 8px; border-radius: 40px;
+      font-size: 12px; line-height: 18px; font-weight: 500; color: var(--rich-blue-01); white-space: nowrap;
+    }
+    .status--review { background: var(--warning-02); }
+
+    /* Pagination */
+    .pagination { display: flex; align-items: center; gap: 12px; padding: 12px 24px 16px; }
+    .pagination__side { flex: 1 1 0; display: flex; }
+    .pagination__side--end { justify-content: flex-end; }
+    .btn-page {
+      width: 100px; height: 36px; padding: 8px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      background: var(--white); border: 1px solid var(--vivid-green-01); border-radius: 6px; cursor: pointer;
+      font-size: 14px; line-height: 22px; font-weight: 500; color: var(--rich-blue-01);
+    }
+    .btn-page:hover { filter: brightness(0.96); }
+    .pages { display: flex; gap: 2px; }
+    .page {
+      width: 40px; height: 40px; padding: 8px; border: 0; border-radius: 20px; background: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; line-height: 22px; font-weight: 500; color: var(--midnight-02);
+    }
+    .page--gap { cursor: default; }
+    .page--active { background: var(--midnight-05); color: var(--midnight-01); }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 900px) {
+      .toolbar { flex-wrap: wrap; }
+      .toolbar__left { flex: 1 1 100%; }
+      .search { flex: 1; width: auto; }
+    }
+    @media (max-width: 600px) {
+      body { padding: 0; }
+      .content { padding: 16px; border-radius: 0; }
+      .toolbar__right { flex-wrap: wrap; width: 100%; }
+      .toolbar__right > * { flex: 1; }
+      .pagination { flex-wrap: wrap; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <main class="content">
+
+    <!-- Status tabs -->
+    <div class="tabs" role="tablist">
+      <button type="button" class="tab" role="tab" aria-selected="false">Request (4)</button>
+      <button type="button" class="tab" role="tab" aria-selected="false">Manage Contributors (600)</button>
+      <button type="button" class="tab tab--active" role="tab" aria-selected="true">IBAN Update (128)</button>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <div class="toolbar__left">
+        <label class="search">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M17.9438 17.058L14.0321 13.1471C15.1659 11.7859 15.7312 10.04 15.6106 8.27263C15.4899 6.50524 14.6925 4.85241 13.3843 3.65797C12.076 2.46353 10.3576 1.81944 8.58657 1.85969C6.81553 1.89994 5.12818 2.62143 3.87554 3.87407C2.62289 5.12671 1.9014 6.81406 1.86115 8.5851C1.8209 10.3561 2.46499 12.0745 3.65943 13.3828C4.85387 14.691 6.5067 15.4884 8.27409 15.6091C10.0415 15.7298 11.7874 15.1644 13.1485 14.0306L17.0595 17.9424C17.1175 18.0004 17.1865 18.0465 17.2623 18.0779C17.3382 18.1094 17.4195 18.1255 17.5016 18.1255C17.5838 18.1255 17.6651 18.1094 17.741 18.0779C17.8168 18.0465 17.8858 18.0004 17.9438 17.9424C18.0019 17.8843 18.048 17.8154 18.0794 17.7395C18.1108 17.6636 18.127 17.5823 18.127 17.5002C18.127 17.4181 18.1108 17.3367 18.0794 17.2609C18.048 17.185 18.0019 17.1161 17.9438 17.058ZM3.12664 8.75018C3.12664 7.63766 3.45654 6.55012 4.07463 5.6251C4.69271 4.70007 5.57121 3.9791 6.59905 3.55336C7.62688 3.12761 8.75788 3.01622 9.84903 3.23326C10.9402 3.4503 11.9424 3.98603 12.7291 4.7727C13.5158 5.55937 14.0515 6.56165 14.2686 7.6528C14.4856 8.74394 14.3742 9.87494 13.9485 10.9028C13.5227 11.9306 12.8018 12.8091 11.8767 13.4272C10.9517 14.0453 9.86416 14.3752 8.75164 14.3752C7.26031 14.3735 5.83053 13.7804 4.77599 12.7258C3.72146 11.6713 3.1283 10.2415 3.12664 8.75018Z" fill="#808896"/></svg>
+          <input type="search" placeholder="Search by name, ID / Iqama number" aria-label="Search contributors" />
+        </label>
+        <button type="button" class="filter"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.125 6.87502H5.70312C5.84081 7.41278 6.15356 7.88942 6.59207 8.22979C7.03057 8.57017 7.56989 8.75492 8.125 8.75492C8.68011 8.75492 9.21943 8.57017 9.65793 8.22979C10.0964 7.88942 10.4092 7.41278 10.5469 6.87502H16.875C17.0408 6.87502 17.1997 6.80917 17.3169 6.69196C17.4342 6.57475 17.5 6.41578 17.5 6.25002C17.5 6.08426 17.4342 5.92529 17.3169 5.80808C17.1997 5.69087 17.0408 5.62502 16.875 5.62502H10.5469C10.4092 5.08726 10.0964 4.61062 9.65793 4.27024C9.21943 3.92987 8.68011 3.74512 8.125 3.74512C7.56989 3.74512 7.03057 3.92987 6.59207 4.27024C6.15356 4.61062 5.84081 5.08726 5.70312 5.62502H3.125C2.95924 5.62502 2.80027 5.69087 2.68306 5.80808C2.56585 5.92529 2.5 6.08426 2.5 6.25002C2.5 6.41578 2.56585 6.57475 2.68306 6.69196C2.80027 6.80917 2.95924 6.87502 3.125 6.87502ZM8.125 5.00002C8.37223 5.00002 8.6139 5.07333 8.81946 5.21068C9.02502 5.34803 9.18524 5.54326 9.27985 5.77167C9.37446 6.00007 9.39921 6.25141 9.35098 6.49388C9.30275 6.73636 9.1837 6.95909 9.00888 7.1339C8.83407 7.30872 8.61134 7.42777 8.36886 7.476C8.12639 7.52423 7.87505 7.49948 7.64665 7.40487C7.41824 7.31026 7.22301 7.15004 7.08566 6.94448C6.94831 6.73892 6.875 6.49725 6.875 6.25002C6.875 5.9185 7.0067 5.60056 7.24112 5.36614C7.47554 5.13172 7.79348 5.00002 8.125 5.00002ZM16.875 13.125H15.5469C15.4092 12.5873 15.0964 12.1106 14.6579 11.7702C14.2194 11.4299 13.6801 11.2451 13.125 11.2451C12.5699 11.2451 12.0306 11.4299 11.5921 11.7702C11.1536 12.1106 10.8408 12.5873 10.7031 13.125H3.125C2.95924 13.125 2.80027 13.1909 2.68306 13.3081C2.56585 13.4253 2.5 13.5843 2.5 13.75C2.5 13.9158 2.56585 14.0748 2.68306 14.192C2.80027 14.3092 2.95924 14.375 3.125 14.375H10.7031C10.8408 14.9128 11.1536 15.3894 11.5921 15.7298C12.0306 16.0702 12.5699 16.2549 13.125 16.2549C13.6801 16.2549 14.2194 16.0702 14.6579 15.7298C15.0964 15.3894 15.4092 14.9128 15.5469 14.375H16.875C17.0408 14.375 17.1997 14.3092 17.3169 14.192C17.4342 14.0748 17.5 13.9158 17.5 13.75C17.5 13.5843 17.4342 13.4253 17.3169 13.3081C17.1997 13.1909 17.0408 13.125 16.875 13.125ZM13.125 15C12.8778 15 12.6361 14.9267 12.4305 14.7894C12.225 14.652 12.0648 14.4568 11.9701 14.2284C11.8755 14 11.8508 13.7486 11.899 13.5062C11.9472 13.2637 12.0663 13.041 12.2411 12.8661C12.4159 12.6913 12.6387 12.5723 12.8811 12.524C13.1236 12.4758 13.3749 12.5006 13.6034 12.5952C13.8318 12.6898 14.027 12.85 14.1643 13.0556C14.3017 13.2611 14.375 13.5028 14.375 13.75C14.375 14.0815 14.2433 14.3995 14.0089 14.6339C13.7745 14.8683 13.4565 15 13.125 15Z" fill="#00122D"/></svg><span>Filter</span></button>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrap">
+      <div class="table-scroll">
+        <table>
+          <colgroup>
+            <col />
+            <col style="width:131px" />
+            <col style="width:123px" />
+            <col style="width:110px" />
+            <col style="width:160px" />
+            <col style="width:145px" />
+          </colgroup>
+          <thead>
+            <tr>
+              <th>Contributor</th>
+              <th>Request ID</th>
+              <th>Joining Date</th>
+              <th><span class="th-inline">Benefit <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 1.5C6.71442 1.5 5.45772 1.88122 4.3888 2.59545C3.31988 3.30968 2.48676 4.32484 1.99479 5.51256C1.50282 6.70028 1.37409 8.00721 1.6249 9.26809C1.8757 10.529 2.49477 11.6872 3.40381 12.5962C4.31285 13.5052 5.47104 14.1243 6.73192 14.3751C7.99279 14.6259 9.29973 14.4972 10.4874 14.0052C11.6752 13.5132 12.6903 12.6801 13.4046 11.6112C14.1188 10.5423 14.5 9.28558 14.5 8C14.4982 6.27665 13.8128 4.62441 12.5942 3.40582C11.3756 2.18722 9.72335 1.50182 8 1.5ZM8 13.5C6.91221 13.5 5.84884 13.1774 4.94437 12.5731C4.0399 11.9687 3.33495 11.1098 2.91867 10.1048C2.50238 9.09977 2.39347 7.9939 2.60568 6.927C2.8179 5.86011 3.34173 4.8801 4.11092 4.11091C4.8801 3.34172 5.86011 2.8179 6.92701 2.60568C7.9939 2.39346 9.09977 2.50238 10.1048 2.91866C11.1098 3.33494 11.9687 4.03989 12.5731 4.94436C13.1774 5.84883 13.5 6.9122 13.5 8C13.4983 9.45818 12.9184 10.8562 11.8873 11.8873C10.8562 12.9184 9.45819 13.4983 8 13.5ZM9 11C9 11.1326 8.94732 11.2598 8.85356 11.3536C8.75979 11.4473 8.63261 11.5 8.5 11.5C8.23479 11.5 7.98043 11.3946 7.7929 11.2071C7.60536 11.0196 7.5 10.7652 7.5 10.5V8C7.36739 8 7.24022 7.94732 7.14645 7.85355C7.05268 7.75979 7 7.63261 7 7.5C7 7.36739 7.05268 7.24021 7.14645 7.14645C7.24022 7.05268 7.36739 7 7.5 7C7.76522 7 8.01957 7.10536 8.20711 7.29289C8.39465 7.48043 8.5 7.73478 8.5 8V10.5C8.63261 10.5 8.75979 10.5527 8.85356 10.6464C8.94732 10.7402 9 10.8674 9 11ZM7 5.25C7 5.10166 7.04399 4.95666 7.1264 4.83332C7.20881 4.70999 7.32595 4.61386 7.46299 4.55709C7.60003 4.50032 7.75083 4.48547 7.89632 4.51441C8.04181 4.54335 8.17544 4.61478 8.28033 4.71967C8.38522 4.82456 8.45665 4.9582 8.48559 5.10368C8.51453 5.24917 8.49968 5.39997 8.44291 5.53701C8.38615 5.67406 8.29002 5.79119 8.16668 5.8736C8.04334 5.95601 7.89834 6 7.75 6C7.55109 6 7.36032 5.92098 7.21967 5.78033C7.07902 5.63968 7 5.44891 7 5.25Z" fill="#00122D"/></svg></span></th>
+              <th class="th-iban">IBAN</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr>
+                <td class="cell--name">Mohammed Abdullah Al-Khudhair</td>
+                <td>1384766220</td>
+                <td>2026/10/26</td>
+                <td>7500.00</td>
+                <td class="cell--iban">SA1234*********1234</td>
+                <td><span class="status status--review">Under Review</span></td>
+              </tr>
+              <tr>
+                <td class="cell--name">Fahad Mohammed Al-Shammari</td>
+                <td>1384766220</td>
+                <td>2026/10/26</td>
+                <td>6200.00</td>
+                <td class="cell--iban">SA1234*********1234</td>
+                <td><span class="status status--review">Under Review</span></td>
+              </tr>
+              <tr>
+                <td class="cell--name">Nasser Ibrahim Al-Qahtani</td>
+                <td>1384766220</td>
+                <td>2026/10/26</td>
+                <td>9100.00</td>
+                <td class="cell--iban">SA1234*********1234</td>
+                <td><span class="status status--review">Under Review</span></td>
+              </tr>
+              <tr>
+                <td class="cell--name">Saud Abdulrahman Al-Zahrani</td>
+                <td>1384766220</td>
+                <td>2026/10/26</td>
+                <td>3500.00</td>
+                <td class="cell--iban">SA1234*********1234</td>
+                <td><span class="status status--review">Under Review</span></td>
+              </tr>
+              <tr>
+                <td class="cell--name">Khalid Abdullah Al-Subaie</td>
+                <td>1384766220</td>
+                <td>2026/10/26</td>
+                <td>1300.00</td>
+                <td class="cell--iban">SA1234*********1234</td>
+                <td><span class="status status--review">Under Review</span></td>
+              </tr>
+              <tr>
+                <td class="cell--name">Abdulaziz Sulaiman Al-Dosari</td>
+                <td>1384766220</td>
+                <td>2026/10/26</td>
+                <td>5600.00</td>
+                <td class="cell--iban">SA1234*********1234</td>
+                <td><span class="status status--review">Under Review</span></td>
+              </tr>
+              <tr>
+                <td class="cell--name">Turki Mohammed Al-Harbi</td>
+                <td>1384766220</td>
+                <td>2026/10/26</td>
+                <td>4000.00</td>
+                <td class="cell--iban">SA1234*********1234</td>
+                <td><span class="status status--review">Under Review</span></td>
+              </tr>
+              <tr>
+                <td class="cell--name">Turki Mohammed Al-Harbi</td>
+                <td>1384766220</td>
+                <td>2026/10/26</td>
+                <td>4000.00</td>
+                <td class="cell--iban">SA1234*********1234</td>
+                <td><span class="status status--review">Under Review</span></td>
+              </tr>
+              <tr>
+                <td class="cell--name">Turki Mohammed Al-Harbi</td>
+                <td>1384766220</td>
+                <td>2026/10/26</td>
+                <td>4000.00</td>
+                <td class="cell--iban">SA1234*********1234</td>
+                <td><span class="status status--review">Under Review</span></td>
+              </tr>
+              <tr>
+                <td class="cell--name">Turki Mohammed Al-Harbi</td>
+                <td>1384766220</td>
+                <td>2026/10/26</td>
+                <td>4000.00</td>
+                <td class="cell--iban">SA1234*********1234</td>
+                <td><span class="status status--review">Under Review</span></td>
+              </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <nav class="pagination" aria-label="Pagination">
+        <div class="pagination__side">
+          <button type="button" class="btn-page"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M17.5005 9.99986C17.5005 10.1656 17.4346 10.3246 17.3174 10.4418C17.2002 10.559 17.0413 10.6249 16.8755 10.6249H4.63409L9.19268 15.1827C9.25075 15.2407 9.29681 15.3097 9.32824 15.3855C9.35966 15.4614 9.37584 15.5427 9.37584 15.6249C9.37584 15.707 9.35966 15.7883 9.32824 15.8642C9.29681 15.94 9.25075 16.009 9.19268 16.067C9.13461 16.1251 9.06567 16.1712 8.9898 16.2026C8.91393 16.234 8.83261 16.2502 8.75049 16.2502C8.66837 16.2502 8.58705 16.234 8.51118 16.2026C8.43531 16.1712 8.36637 16.1251 8.3083 16.067L2.6833 10.442C2.62519 10.384 2.57909 10.3151 2.54764 10.2392C2.51619 10.1633 2.5 10.082 2.5 9.99986C2.5 9.91772 2.51619 9.8364 2.54764 9.76052C2.57909 9.68465 2.62519 9.61572 2.6833 9.55767L8.3083 3.93267C8.42558 3.8154 8.58464 3.74951 8.75049 3.74951C8.91634 3.74951 9.0754 3.8154 9.19268 3.93267C9.30996 4.04995 9.37584 4.20901 9.37584 4.37486C9.37584 4.54071 9.30996 4.69977 9.19268 4.81705L4.63409 9.37486H16.8755C17.0413 9.37486 17.2002 9.44071 17.3174 9.55792C17.4346 9.67513 17.5005 9.8341 17.5005 9.99986Z" fill="#00BF00"/></svg><span>Previous</span></button>
+        </div>
+        <div class="pages"><button type="button" class="page">1</button><button type="button" class="page page--active" aria-current="page">2</button><button type="button" class="page">3</button><span class="page page--gap">…</span><button type="button" class="page">8</button><button type="button" class="page">9</button><button type="button" class="page">10</button></div>
+        <div class="pagination__side pagination__side--end">
+          <button type="button" class="btn-page"><span>Next</span><svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M17.3172 10.442L11.6922 16.067C11.5749 16.1843 11.4159 16.2502 11.25 16.2502C11.0841 16.2502 10.9251 16.1843 10.8078 16.067C10.6905 15.9498 10.6247 15.7907 10.6247 15.6249C10.6247 15.459 10.6905 15.2999 10.8078 15.1827L15.3664 10.6249H3.125C2.95924 10.6249 2.80027 10.559 2.68306 10.4418C2.56585 10.3246 2.5 10.1656 2.5 9.99986C2.5 9.8341 2.56585 9.67513 2.68306 9.55792C2.80027 9.44071 2.95924 9.37486 3.125 9.37486H15.3664L10.8078 4.81705C10.6905 4.69977 10.6247 4.54071 10.6247 4.37486C10.6247 4.20901 10.6905 4.04995 10.8078 3.93267C10.9251 3.8154 11.0841 3.74951 11.25 3.74951C11.4159 3.74951 11.5749 3.8154 11.6922 3.93267L17.3172 9.55767C17.3753 9.61572 17.4214 9.68465 17.4529 9.76052C17.4843 9.8364 17.5005 9.91772 17.5005 9.99986C17.5005 10.082 17.4843 10.1633 17.4529 10.2392C17.4214 10.3151 17.3753 10.384 17.3172 10.442Z" fill="#00BF00"/></svg></button>
+        </div>
+      </nav>
+    </div>
+
+  </main>
+
+  <script>
+    // Tabs
+    document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(x => { x.classList.toggle('tab--active', x === t); x.setAttribute('aria-selected', x === t); });
+    }));
+    // Pagination
+    document.querySelectorAll('button.page').forEach(p => p.addEventListener('click', () => {
+      document.querySelectorAll('button.page').forEach(x => { x.classList.toggle('page--active', x === p); x.toggleAttribute('aria-current', x === p); });
+    }));
+  </script>
+</body>
+</html>

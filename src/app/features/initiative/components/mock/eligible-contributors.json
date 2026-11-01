@@ -1,0 +1,187 @@
+[
+  {
+    "nnid": "98765432101",
+    "name": "Mohammed Abdullah Al-Khudhair",
+    "joiningDate": "2019/03/14",
+    "wage": 7500,
+    "benefitAmount": 7500,
+    "iban": "SA4120000000608010167519",
+    "maskedIban": "SA4120*********7519",
+    "bankName": "Riyad Bank"
+  },
+  {
+    "nnid": "98765432102",
+    "name": "Fahad Mohammed Al-Shammari",
+    "joiningDate": "2021/06/01",
+    "wage": 6200,
+    "benefitAmount": 6200,
+    "iban": "SA7380000000608010167520",
+    "maskedIban": "SA7380*********7520",
+    "bankName": "Al Rajhi Bank"
+  },
+  {
+    "nnid": "98765432103",
+    "name": "Abdullah Khalid Al-Harbi",
+    "joiningDate": "2023/01/22",
+    "wage": 4800,
+    "benefitAmount": 4800
+  },
+  {
+    "nnid": "98765432104",
+    "name": "Nasser Ibrahim Al-Qahtani",
+    "joiningDate": "2017/09/10",
+    "wage": 9100,
+    "benefitAmount": 9100,
+    "iban": "SA5810000000608010167521",
+    "maskedIban": "SA5810*********7521",
+    "bankName": "Saudi National Bank"
+  },
+  {
+    "nnid": "98765432105",
+    "name": "Saud Abdulrahman Al-Zahrani",
+    "joiningDate": "2024/02/05",
+    "wage": 3500,
+    "benefitAmount": 3500,
+    "iban": "SA1805000000608010167522",
+    "maskedIban": "SA1805*********7522",
+    "bankName": "Alinma Bank"
+  },
+  {
+    "nnid": "98765432106",
+    "name": "Mohammed Yousef Al-Otaibi",
+    "joiningDate": "2018/11/30",
+    "wage": 8700,
+    "benefitAmount": 8700,
+    "iban": "SA9545000000608010167523",
+    "maskedIban": "SA9545*********7523",
+    "bankName": "SAB"
+  },
+  {
+    "nnid": "98765432107",
+    "name": "Khalid Abdullah Al-Subaie",
+    "joiningDate": "2025/04/17",
+    "wage": 1300,
+    "benefitAmount": 1300
+  },
+  {
+    "nnid": "98765432108",
+    "name": "Abdulaziz Sulaiman Al-Dosari",
+    "joiningDate": "2020/08/09",
+    "wage": 5600,
+    "benefitAmount": 5600,
+    "iban": "SA8715000000608010167524",
+    "maskedIban": "SA8715*********7524",
+    "bankName": "Bank AlBilad"
+  },
+  {
+    "nnid": "98765432109",
+    "name": "Faisal Abdullah Al-Ghamdi",
+    "joiningDate": "2016/05/25",
+    "wage": 7200,
+    "benefitAmount": 7200,
+    "iban": "SA6755000000608010167525",
+    "maskedIban": "SA6755*********7525",
+    "bankName": "Banque Saudi Fransi"
+  },
+  {
+    "nnid": "98765432110",
+    "name": "Turki Mohammed Al-Harbi",
+    "joiningDate": "2022/12/12",
+    "wage": 4000,
+    "benefitAmount": 4000
+  },
+  {
+    "nnid": "98765432111",
+    "name": "Omar Saleh Al-Mutairi",
+    "joiningDate": "2019/07/03",
+    "wage": 6800,
+    "benefitAmount": 6800,
+    "iban": "SA5360000000608010167526",
+    "maskedIban": "SA5360*********7526",
+    "bankName": "Bank AlJazira"
+  },
+  {
+    "nnid": "98765432112",
+    "name": "Sultan Fahad Al-Anazi",
+    "joiningDate": "2021/10/19",
+    "wage": 5200,
+    "benefitAmount": 5200,
+    "iban": "SA3965000000608010167527",
+    "maskedIban": "SA3965*********7527",
+    "bankName": "Saudi Investment Bank"
+  },
+  {
+    "nnid": "98765432113",
+    "name": "Majed Nasser Al-Shehri",
+    "joiningDate": "2015/02/28",
+    "wage": 9800,
+    "benefitAmount": 9800
+  },
+  {
+    "nnid": "98765432114",
+    "name": "Bandar Ali Al-Malki",
+    "joiningDate": "2023/06/14",
+    "wage": 3900,
+    "benefitAmount": 3900,
+    "iban": "SA1830000000608010167528",
+    "maskedIban": "SA1830*********7528",
+    "bankName": "Arab National Bank"
+  },
+  {
+    "nnid": "98765432115",
+    "name": "Yazeed Hamad Al-Rashidi",
+    "joiningDate": "2020/01/08",
+    "wage": 6100,
+    "benefitAmount": 6100,
+    "iban": "SA6220000000608010167529",
+    "maskedIban": "SA6220*********7529",
+    "bankName": "Riyad Bank"
+  },
+  {
+    "nnid": "98765432116",
+    "name": "Rakan Saad Al-Juhani",
+    "joiningDate": "2024/09/21",
+    "wage": 2800,
+    "benefitAmount": 2800,
+    "iban": "SA9480000000608010167530",
+    "maskedIban": "SA9480*********7530",
+    "bankName": "Al Rajhi Bank"
+  },
+  {
+    "nnid": "98765432117",
+    "name": "Ziyad Talal Al-Asmari",
+    "joiningDate": "2018/04/16",
+    "wage": 8200,
+    "benefitAmount": 8200
+  },
+  {
+    "nnid": "98765432118",
+    "name": "Hamza Adel Al-Zahrani",
+    "joiningDate": "2022/03/03",
+    "wage": 4500,
+    "benefitAmount": 4500,
+    "iban": "SA7910000000608010167531",
+    "maskedIban": "SA7910*********7531",
+    "bankName": "Saudi National Bank"
+  },
+  {
+    "nnid": "98765432119",
+    "name": "Abdulrahman Saeed Al-Qarni",
+    "joiningDate": "2017/12/27",
+    "wage": 7900,
+    "benefitAmount": 7900,
+    "iban": "SA3905000000608010167532",
+    "maskedIban": "SA3905*********7532",
+    "bankName": "Alinma Bank"
+  },
+  {
+    "nnid": "98765432120",
+    "name": "Waleed Mansour Al-Balawi",
+    "joiningDate": "2025/01/11",
+    "wage": 2200,
+    "benefitAmount": 2200,
+    "iban": "SA1945000000608010167533",
+    "maskedIban": "SA1945*********7533",
+    "bankName": "SAB"
+  }
+]

@@ -1,29 +1,99 @@
-<ng-container [ngSwitch]="step">
-  <app-about-initiative-dc
-    *ngSwitchCase="'about'"
-    (apply)="onApply()"
-  ></app-about-initiative-dc>
+<div class="sc-message" role="alert" *ngIf="error">
+  <span>{{ error }}</span>
+  <button type="button" class="btn-link" *ngIf="!loaded" (click)="load()">Try again</button>
+</div>
 
-  <app-establishment-details-dc
-    *ngSwitchCase="'establishment'"
+<p class="sc-message" *ngIf="loading">Loading…</p>
+
+<ng-container *ngIf="loaded" [ngSwitch]="step">
+  <app-apply-dc
+    *ngSwitchCase="'apply'"
     [establishment]="establishment"
-    (save)="onSaveApplication()"
-    (back)="goTo('about')"
-  ></app-establishment-details-dc>
+    [faqs]="faqs"
+    (apply)="onApply()"
+  ></app-apply-dc>
 
-  <app-contributors-dc
-    *ngSwitchCase="'contributors'"
-    [contributors]="addedContributors"
-    (manage)="onManageContributors()"
-    (remove)="onRemoveContributor($event)"
-  ></app-contributors-dc>
-
-  <app-add-contributors-dc
-    *ngSwitchCase="'add-contributors'"
-    [contributors]="allContributors"
-    [selectedContributors]="addedContributors"
+  <app-choose-contributors-dc
+    *ngSwitchCase="'choose-contributors'"
+    [contributors]="eligibleContributors"
     [maxCount]="maxContributors"
-    (save)="onSaveContributors($event)"
-    (back)="goTo('contributors')"
-  ></app-add-contributors-dc>
+    [selection]="selection"
+    [preparedSelection]="preparedSelection"
+    (strategyChange)="onStrategyChange($event)"
+    (next)="onChooseContributors($event)"
+    (cancel)="goTo('apply')"
+  ></app-choose-contributors-dc>
+
+  <app-bank-account-dc
+    *ngSwitchCase="'bank-account'"
+    [contributors]="applicationContributors"
+    [bankNames]="bankNames"
+    (ibanEntered)="onIbanEntered($event)"
+    (next)="onBankAccountNext($event)"
+    (back)="goTo('choose-contributors')"
+  ></app-bank-account-dc>
+
+  <app-request-summary-dc
+    *ngSwitchCase="'summary'"
+    [establishment]="establishment"
+    [strategyTitle]="strategyTitle"
+    [contributorCount]="applicationContributors.length"
+    [maxCount]="maxContributors"
+    [eligibleCount]="eligibleContributors.length"
+    [totalBenefit]="totalBenefit"
+    [busy]="saving"
+    (edit)="goTo('choose-contributors')"
+    (back)="goTo('bank-account')"
+    (submitRequest)="onSubmitRequest()"
+  ></app-request-summary-dc>
+
+  <main class="content" *ngSwitchCase="'dashboard'">
+    <div class="tabs" role="tablist">
+      <button type="button" class="tab" role="tab" [class.tab--active]="dashboardTab === 'requests'" [attr.aria-selected]="dashboardTab === 'requests'" (click)="dashboardTab = 'requests'">
+        Request ({{ requests.length }})
+      </button>
+      <button type="button" class="tab" role="tab" [class.tab--active]="dashboardTab === 'members'" [attr.aria-selected]="dashboardTab === 'members'" (click)="dashboardTab = 'members'">
+        Manage Contributors ({{ members.length }})
+      </button>
+      <button type="button" class="tab" role="tab" [class.tab--active]="dashboardTab === 'iban-updates'" [attr.aria-selected]="dashboardTab === 'iban-updates'" (click)="dashboardTab = 'iban-updates'">
+        IBAN Update ({{ ibanUpdates.length }})
+      </button>
+    </div>
+
+    <ng-container [ngSwitch]="dashboardTab">
+      <app-requests-dc *ngSwitchCase="'requests'" [requests]="requests"></app-requests-dc>
+
+      <app-manage-contributors-dc
+        *ngSwitchCase="'members'"
+        [members]="members"
+        [maxCount]="maxContributors"
+        [busy]="saving"
+        (add)="openDrawer('add-contributors')"
+        (remove)="onRemoveMembers($event)"
+      ></app-manage-contributors-dc>
+
+      <app-iban-update-dc *ngSwitchCase="'iban-updates'" [updates]="ibanUpdates"></app-iban-update-dc>
+    </ng-container>
+  </main>
 </ng-container>
+
+<app-add-contributors-dc
+  *ngIf="drawer === 'add-contributors'"
+  [contributors]="candidates"
+  [remaining]="remainingPlaces"
+  [selected]="pendingAdditions"
+  [busy]="saving"
+  (add)="onAddContributors($event)"
+  (close)="closeDrawer()"
+></app-add-contributors-dc>
+
+<app-add-missing-iban-dc
+  *ngIf="drawer === 'missing-iban'"
+  [contributors]="pendingWithoutIban"
+  [drafts]="ibanDrafts"
+  [bankNames]="bankNames"
+  [busy]="saving"
+  (ibanEntered)="onIbanEntered($event)"
+  (submitIbans)="onMissingIbansSubmitted($event)"
+  (back)="onMissingIbansBack($event)"
+></app-add-missing-iban-dc>

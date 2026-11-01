@@ -1,0 +1,44 @@
+// Shared IBAN row and field styles — see initiative-sc.component.scss.
+// Split from it to keep each stylesheet within the component style budget.
+
+app-initiative-sc {
+  /* ===== IBAN rows (Bank Account Update + Add Missing IBAN) ===== */
+  .rows { list-style: none; padding: 0; }
+  .row { display: flex; align-items: center; gap: 18px; padding: 24px 0; }
+  .row + .row { border-top: 1px solid var(--midnight-04); }
+  .row .contributor { width: 250px; flex-shrink: 0; display: flex; flex-direction: column; align-items: stretch; gap: 2px; white-space: nowrap; overflow: hidden; cursor: default; }
+  .row .contributor__name { font-size: 14px; line-height: 22px; }
+  .row .contributor__id { font-size: 12px; line-height: 18px; }
+
+  /* Input field — empty: 56px, value only. Filled: 64px, label above value. */
+  .field {
+    height: 56px; padding: 16px 12px; display: flex; align-items: center; gap: 12px;
+    border: 1px solid var(--midnight-03); border-radius: 8px; overflow: hidden; cursor: text;
+  }
+  .field--iban { flex: 1 1 0; min-width: 0; background: var(--white); }
+  .field--bank { width: 190px; flex-shrink: 0; background: var(--midnight-04); cursor: default; }
+  .field__inner { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+  .field__label { display: none; font-size: 12px; line-height: 18px; color: var(--midnight-03); }
+  .field__input {
+    width: 100%; height: 24px; padding: 0; border: 0; outline: 0; background: transparent;
+    font-size: 16px; line-height: 24px; font-weight: 500;
+  }
+  .field--iban .field__input, .field--iban .field__input::placeholder { color: var(--rich-blue-01); opacity: 1; }
+  .field--bank .field__input, .field--bank .field__input::placeholder { color: var(--midnight-03); opacity: 1; cursor: default; }
+  .field__icon { display: none; flex-shrink: 0; width: 24px; height: 24px; }
+  .field--iban.is-verified .field__icon { display: block; }
+  .field--iban:focus-within { border-color: var(--vivid-green-01); }
+
+  /* Filled state: when the IBAN has a value, both fields in the row grow to 64px and show labels */
+  .row:has(.field--iban .field__input:not(:placeholder-shown)) .field { height: 64px; padding: 12px; }
+  .row:has(.field--iban .field__input:not(:placeholder-shown)) .field__label { display: block; }
+
+  @media (max-width: 900px) {
+    .row { flex-wrap: wrap; gap: 12px; }
+    .row .contributor { width: 100%; }
+  }
+
+  @media (max-width: 600px) {
+    .field--iban, .field--bank { flex-basis: 100%; width: 100%; }
+  }
+}
