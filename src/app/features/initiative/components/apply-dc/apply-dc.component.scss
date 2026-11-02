@@ -17,7 +17,7 @@ app-apply-dc {
 
   .hero__pattern {
     position: absolute;
-    left: 507px;
+    inset-inline-start: 507px;
     top: 24px;
     width: 482px;
     height: 228px;
@@ -158,7 +158,7 @@ app-apply-dc {
   /* ===== Responsive ===== */
   @media (max-width: 900px) {
     .hero__inner { flex-direction: column; align-items: flex-start; }
-    .hero__pattern { left: auto; right: -120px; }
+    .hero__pattern { inset-inline-start: auto; inset-inline-end: -120px; }
   }
 
   @media (max-width: 600px) {

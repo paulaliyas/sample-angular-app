@@ -7,7 +7,7 @@ app-initiative-sc {
   .table-scroll { overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; table-layout: fixed; }
   th {
-    height: 44px; padding: 12px; text-align: left; white-space: nowrap;
+    height: 44px; padding: 12px; text-align: start; white-space: nowrap;
     background: var(--midnight-05); border-bottom: 1px solid var(--midnight-04);
     font-size: 14px; line-height: 22px; font-weight: 500; color: var(--midnight-02);
   }

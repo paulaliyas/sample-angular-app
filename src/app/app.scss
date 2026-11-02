@@ -1,5 +1,10 @@
 .nav { display: flex; align-items: center; justify-content: space-between; padding: 1rem 2rem; background: #3f51b5; color: #fff; }
 .nav h1 { font-size: 1.25rem; margin: 0; }
-.nav a { color: #fff; margin-left: 1rem; text-decoration: none; opacity: 0.8; }
+.nav a { color: #fff; margin-inline-start: 1rem; text-decoration: none; opacity: 0.8; }
 .nav a.active { opacity: 1; font-weight: 600; border-bottom: 2px solid #fff; }
 main { padding: 2rem; max-width: 1200px; margin: 0 auto; }
+.nav nav { display: flex; align-items: center; }
+.lang-toggle { display: inline-flex; margin-inline-start: 1.5rem; border: 1px solid rgba(255, 255, 255, 0.6); border-radius: 6px; overflow: hidden; }
+.lang-toggle button { padding: 0.25rem 0.75rem; border: 0; background: transparent; color: #fff; font: inherit; font-size: 0.875rem; cursor: pointer; opacity: 0.8; }
+.lang-toggle button.active { background: #fff; color: #3f51b5; opacity: 1; font-weight: 600; }
+.lang-toggle button:focus-visible { outline: 2px solid #fff; outline-offset: -2px; }

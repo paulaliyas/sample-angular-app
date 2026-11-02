@@ -4,6 +4,10 @@
     <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
     <a routerLink="/todos" routerLinkActive="active">Todos</a>
     <a routerLink="/initiative" routerLinkActive="active">Initiative</a>
+    <span class="lang-toggle" role="group" aria-label="Language">
+      <button type="button" [class.active]="lang === 'en'" [attr.aria-pressed]="lang === 'en'" (click)="setLang('en')">EN</button>
+      <button type="button" [class.active]="lang === 'ar'" [attr.aria-pressed]="lang === 'ar'" (click)="setLang('ar')">AR</button>
+    </span>
   </nav>
 </header>
 <main>

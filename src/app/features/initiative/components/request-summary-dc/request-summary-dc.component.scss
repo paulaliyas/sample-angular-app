@@ -11,7 +11,7 @@ app-request-summary-dc {
   }
   .details__row + .details__row { border-top: 1px solid var(--midnight-04); }
   .details dt { color: var(--midnight-02); }
-  .details dd { margin: 0; font-weight: 700; color: var(--midnight-01); text-align: right; }
+  .details dd { margin: 0; font-weight: 700; color: var(--midnight-01); text-align: end; }
 
   .tag {
     display: inline-flex; align-items: center; gap: 4px; height: 31px; padding: 6px 12px;

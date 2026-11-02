@@ -43,7 +43,7 @@ app-bank-account-dc {
   @media (max-width: 600px) {
     .update { padding: 16px; }
     .task-list { padding: 16px 16px 0; }
-    .actions { order: 4; margin-left: auto; }
+    .actions { order: 4; margin-inline-start: auto; }
     .field--bank { order: 3; }
   }
 }

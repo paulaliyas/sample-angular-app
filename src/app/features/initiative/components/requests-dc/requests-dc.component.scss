@@ -11,7 +11,7 @@ app-requests-dc {
   .request__data { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
   .datum { display: flex; flex-direction: column; white-space: nowrap; }
   /* 1px × 37px divider between data items (Figma: #E5E7EA) */
-  .datum + .datum { padding-left: 16px; border-left: 1px solid var(--midnight-04); min-height: 37px; justify-content: center; }
+  .datum + .datum { padding-inline-start: 16px; border-inline-start: 1px solid var(--midnight-04); min-height: 37px; justify-content: center; }
   .datum dt { font-size: 14px; line-height: 22px; color: var(--midnight-03); }
   .datum dd { font-size: 16px; line-height: 24px; font-weight: 500; color: var(--rich-blue-01); }
 
@@ -40,7 +40,7 @@ app-requests-dc {
 
   @media (max-width: 600px) {
     .request__head { align-items: flex-start; }
-    .datum + .datum { padding-left: 0; border-left: 0; }
+    .datum + .datum { padding-inline-start: 0; border-inline-start: 0; }
     .request__data { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; }
     .request.is-open { padding: 16px; }
     .request__body .search { width: 100%; }
