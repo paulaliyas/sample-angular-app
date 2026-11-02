@@ -53,6 +53,11 @@ export class ChooseContributorsDcComponent implements OnInit, OnChanges {
     return this.strategies.find((s) => s.value === this.strategy)!.title;
   }
 
+  /** Share of the Saudi contributors the establishment can enrol (e.g. 600 of 1000 → 60) */
+  get benefitPercent(): number {
+    return this.contributors.length ? Math.round((this.maxCount / this.contributors.length) * 100) : 0;
+  }
+
   get notSelectedCount(): number {
     return this.contributors.length - this.selectedIds.length;
   }

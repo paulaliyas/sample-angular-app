@@ -1,4 +1,15 @@
 app-choose-contributors-dc {
+  /* ===== Establishment benefit ===== */
+  .benefit { border-top: 0; padding: 18px 24px; display: flex; flex-direction: column; gap: 16px; }
+  .benefit__stats { display: flex; gap: 20px; }
+  .stat {
+    flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 10px;
+    padding: 9px 12px; border: 1px solid var(--rich-blue-04); border-radius: 10px;
+  }
+  .stat__label, .stat__value { font-size: 14px; line-height: 22px; }
+  .stat__label { color: var(--midnight-03); }
+  .stat__value { font-weight: 700; color: var(--rich-blue-01); margin-top: -8px; } // 2px gap from the label in Figma
+
   /* ===== Prepare list (strategy) ===== */
   .prepare { border-top: 0; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
 
@@ -61,6 +72,8 @@ app-choose-contributors-dc {
   }
   @media (max-width: 600px) {
     .option { flex-basis: 100%; }
+    .benefit { padding: 16px; }
+    .benefit__stats { flex-direction: column; gap: 12px; }
     .panel { padding: 16px; }
     .submit-bar { flex-wrap: wrap; }
     .spacer { display: none; }

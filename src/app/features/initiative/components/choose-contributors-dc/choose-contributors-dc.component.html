@@ -2,6 +2,27 @@
   <div class="stack">
     <app-how-it-works-dc [currentStep]="2"></app-how-it-works-dc>
 
+    <section class="card benefit" aria-labelledby="benefit-title">
+      <h2 id="benefit-title" class="section-title">Establishment Benefit</h2>
+      <dl class="benefit__stats">
+        <div class="stat">
+          <app-icon-dc name="user-saudi"></app-icon-dc>
+          <dt class="stat__label">Total Saudi Contributors</dt>
+          <dd class="stat__value">{{ contributors.length }}</dd>
+        </div>
+        <div class="stat">
+          <app-icon-dc name="percent"></app-icon-dc>
+          <dt class="stat__label">Establishment Benefit Percentage</dt>
+          <dd class="stat__value">{{ benefitPercent }}%</dd>
+        </div>
+        <div class="stat">
+          <app-icon-dc name="shield-check"></app-icon-dc>
+          <dt class="stat__label">Eligible Contributors after Percentage</dt>
+          <dd class="stat__value">{{ maxCount }}</dd>
+        </div>
+      </dl>
+    </section>
+
     <section class="card prepare" aria-labelledby="prepare-title">
       <div class="block-head">
         <h2 id="prepare-title" class="block-title">How should we prepare your list?</h2>
