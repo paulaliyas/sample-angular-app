@@ -19,6 +19,13 @@ import requests from './mock/dashboard-requests.json';
 import eligibility from './mock/eligibility.json';
 import eligibleContributors from './mock/eligible-contributors.json';
 import faqs from './mock/faqs.json';
+import { generateContributors, generateMembers } from './mock/large-data';
+
+/**
+ * Mock only: extra generated contributors, for testing the tables and pagination with large lists.
+ * Set to 0 to use only the JSON mock. With it on, the establishment limit is 60% of all contributors.
+ */
+const MOCK_EXTRA_CONTRIBUTORS = 600;
 
 /** Adds months, staying in the target month: Nov 30 + 3 months → Feb 28, not Mar 2. */
 export function addMonths(date: Date, months: number): Date {
@@ -41,7 +48,8 @@ export class InitiativeApiService {
   latencyMs = 300;
 
   // In-memory "backend" state
-  private contributors: Contributor[] = structuredClone(eligibleContributors);
+  private contributors: Contributor[] = [...structuredClone(eligibleContributors), ...generateContributors(MOCK_EXTRA_CONTRIBUTORS)];
+  private maxContributors = MOCK_EXTRA_CONTRIBUTORS > 0 ? Math.round(this.contributors.length * 0.6) : eligibility.maxContributors;
   private members: InitiativeMember[] = [];
   private requests: InitiativeRequest[] = [];
   private ibanUpdates: IbanUpdate[] = [];
@@ -56,7 +64,7 @@ export class InitiativeApiService {
 
   /** Mock only: start with the dashboard sample data, as an establishment that has already enrolled */
   seedDashboard(): void {
-    this.members = structuredClone(members);
+    this.members = [...structuredClone(members), ...generateMembers(generateContributors(MOCK_EXTRA_CONTRIBUTORS))];
     this.requests = structuredClone(requests) as InitiativeRequest[];
     this.ibanUpdates = structuredClone(ibanUpdates);
   }
@@ -64,7 +72,7 @@ export class InitiativeApiService {
   // TODO: GET establishment eligibility
   getEligibility(): Observable<Eligibility> {
     // Once a request has been sent, the establishment is enrolled
-    return this.respond(() => ({ ...eligibility, enrolled: this.requests.length > 0 }));
+    return this.respond(() => ({ ...eligibility, maxContributors: this.maxContributors, enrolled: this.requests.length > 0 }));
   }
 
   // TODO: GET initiative FAQs
@@ -88,7 +96,7 @@ export class InitiativeApiService {
       if (strategy === 'lowest') return a.wage - b.wage;
       return a.joiningDate.localeCompare(b.joiningDate);
     });
-    return this.respond(() => sorted.slice(0, eligibility.maxContributors));
+    return this.respond(() => sorted.slice(0, this.maxContributors));
   }
 
   /** Empty when the IBAN isn't recognised */
