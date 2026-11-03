@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { Contributor } from '../initiative.models';
+import { matchesSearch, memoize } from '../list-utils';
 
 /**
  * Step 3 — add the missing IBANs and, if needed, correct existing ones.
@@ -64,10 +65,14 @@ export class BankAccountDcComponent implements OnInit {
   }
 
   get filteredContributors(): Contributor[] {
-    const text = this.searchText.trim().toLowerCase();
-    const list = this.tab === 'missing' ? this.missing : this.existing;
-    return list.filter((c) => c.name.toLowerCase().includes(text) || c.nnid.includes(text));
+    return this.filter(this.tab === 'missing' ? this.missing : this.existing, this.searchText);
   }
+
+  // Cached: this getter runs on every change detection, and lists can be thousands of rows
+  private filter = memoize((list: Contributor[], search: string) => {
+    const text = search.trim().toLowerCase();
+    return list.filter((c) => matchesSearch(c, text));
+  });
 
   get pagedContributors(): Contributor[] {
     const start = (this.page - 1) * this.pageSize;

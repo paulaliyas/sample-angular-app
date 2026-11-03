@@ -11,6 +11,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { Contributor } from '../initiative.models';
+import { idSet, matchesSearch, memoize } from '../list-utils';
 
 /** Drawer — pick eligible contributors to add, up to the places left. */
 @Component({
@@ -54,9 +55,15 @@ export class AddContributorsDcComponent implements OnInit, AfterViewInit {
   }
 
   get filteredContributors(): Contributor[] {
-    const text = this.searchText.trim().toLowerCase();
-    return this.contributors.filter((c) => c.name.toLowerCase().includes(text) || c.nnid.includes(text));
+    return this.filter(this.contributors, this.searchText);
   }
+
+  // Cached: these getters run on every change detection, and lists can be thousands of rows
+  private selectedSet = idSet();
+  private filter = memoize((contributors: Contributor[], search: string) => {
+    const text = search.trim().toLowerCase();
+    return contributors.filter((c) => matchesSearch(c, text));
+  });
 
   get pagedContributors(): Contributor[] {
     const start = (this.page - 1) * this.pageSize;
@@ -81,7 +88,7 @@ export class AddContributorsDcComponent implements OnInit, AfterViewInit {
   }
 
   isSelected(contributor: Contributor): boolean {
-    return this.selectedIds.includes(contributor.nnid);
+    return this.selectedSet(this.selectedIds).has(contributor.nnid);
   }
 
   isDisabled(contributor: Contributor): boolean {

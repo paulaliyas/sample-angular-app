@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { Contributor, ContributorSelection, SelectionStrategy, STRATEGY_OPTIONS } from '../initiative.models';
+import { idSet, matchesSearch, memoize } from '../list-utils';
 
 /** Step 2 — pick a strategy that pre-fills the list, then fine-tune it. */
 @Component({
@@ -63,15 +64,24 @@ export class ChooseContributorsDcComponent implements OnInit, OnChanges {
   }
 
   get withoutIbanCount(): number {
-    return this.contributors.filter((c) => this.isSelected(c) && !c.iban).length;
+    return this.countWithoutIban(this.contributors, this.selectedIds);
   }
 
   get filteredContributors(): Contributor[] {
-    const text = this.searchText.trim().toLowerCase();
-    return this.contributors
-      .filter((c) => this.isSelected(c) === (this.tab === 'selected'))
-      .filter((c) => c.name.toLowerCase().includes(text) || c.nnid.includes(text));
+    return this.filter(this.contributors, this.selectedIds, this.tab, this.searchText);
   }
+
+  // Cached: these getters run on every change detection, and lists can be thousands of rows
+  private selectedSet = idSet();
+  private countWithoutIban = memoize((contributors: Contributor[], ids: string[]) => {
+    const selected = this.selectedSet(ids);
+    return contributors.filter((c) => selected.has(c.nnid) && !c.iban).length;
+  });
+  private filter = memoize((contributors: Contributor[], ids: string[], tab: string, search: string) => {
+    const selected = this.selectedSet(ids);
+    const text = search.trim().toLowerCase();
+    return contributors.filter((c) => selected.has(c.nnid) === (tab === 'selected') && matchesSearch(c, text));
+  });
 
   get pagedContributors(): Contributor[] {
     const start = (this.page - 1) * this.pageSize;
@@ -98,7 +108,7 @@ export class ChooseContributorsDcComponent implements OnInit, OnChanges {
   }
 
   isSelected(contributor: Contributor): boolean {
-    return this.selectedIds.includes(contributor.nnid);
+    return this.selectedSet(this.selectedIds).has(contributor.nnid);
   }
 
   isDisabled(contributor: Contributor): boolean {

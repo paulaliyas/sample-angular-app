@@ -1,5 +1,6 @@
 import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { IbanUpdate } from '../initiative.models';
+import { matchesSearch, memoize } from '../list-utils';
 
 /** Dashboard tab — IBANs that were added or changed, waiting to be validated. */
 @Component({
@@ -17,9 +18,14 @@ export class IbanUpdateDcComponent {
   page = 1;
 
   get filteredUpdates(): IbanUpdate[] {
-    const text = this.searchText.trim().toLowerCase();
-    return this.updates.filter((u) => u.contributor.name.toLowerCase().includes(text) || u.contributor.nnid.includes(text));
+    return this.filter(this.updates, this.searchText);
   }
+
+  // Cached: this getter runs on every change detection, and lists can be thousands of rows
+  private filter = memoize((updates: IbanUpdate[], search: string) => {
+    const text = search.trim().toLowerCase();
+    return updates.filter((u) => matchesSearch(u.contributor, text));
+  });
 
   get pagedUpdates(): IbanUpdate[] {
     const start = (this.page - 1) * this.pageSize;

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
 import { InitiativeMember } from '../initiative.models';
+import { idSet, matchesSearch, memoize } from '../list-utils';
 
 /** Dashboard tab — the contributors in the initiative; select to remove, or add more up to the limit. */
 @Component({
@@ -28,9 +29,15 @@ export class ManageContributorsDcComponent {
   }
 
   get filteredMembers(): InitiativeMember[] {
-    const text = this.searchText.trim().toLowerCase();
-    return this.members.filter((m) => m.name.toLowerCase().includes(text) || m.nnid.includes(text));
+    return this.filter(this.members, this.searchText);
   }
+
+  // Cached: these getters run on every change detection, and lists can be thousands of rows
+  private selectedSet = idSet();
+  private filter = memoize((members: InitiativeMember[], search: string) => {
+    const text = search.trim().toLowerCase();
+    return members.filter((m) => matchesSearch(m, text));
+  });
 
   get pagedMembers(): InitiativeMember[] {
     const start = (this.page - 1) * this.pageSize;
@@ -50,7 +57,7 @@ export class ManageContributorsDcComponent {
   }
 
   isSelected(member: InitiativeMember): boolean {
-    return this.selectedIds.includes(member.nnid);
+    return this.selectedSet(this.selectedIds).has(member.nnid);
   }
 
   toggle(member: InitiativeMember): void {
