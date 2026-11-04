@@ -1,0 +1,20 @@
+<div class="modal-backdrop" (click)="close.emit()">
+  <section class="terms" role="dialog" aria-modal="true" aria-labelledby="terms-dialog-title" (click)="$event.stopPropagation()">
+    <header class="terms__head">
+      <h2 id="terms-dialog-title" class="terms__heading">Terms &amp; Conditions</h2>
+      <button #closeButton type="button" class="terms__close" aria-label="Close" (click)="close.emit()">
+        <app-icon-dc name="close-small"></app-icon-dc>
+      </button>
+    </header>
+
+    <div class="terms__body" tabindex="0" aria-label="Terms and conditions text">
+      <h3 class="terms__title">{{ title }}</h3>
+      <div class="terms__text">
+        <ng-container *ngFor="let section of sections">
+          <h4 class="terms__section">{{ section.title }}</h4>
+          <p *ngFor="let clause of section.clauses">{{ clause }}</p>
+        </ng-container>
+      </div>
+    </div>
+  </section>
+</div>

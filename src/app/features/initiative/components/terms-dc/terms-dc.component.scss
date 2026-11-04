@@ -1,0 +1,46 @@
+app-terms-dc {
+  .modal-backdrop {
+    position: fixed; inset: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: center; padding: 24px;
+    background: rgba(0, 18, 45, 0.4);
+  }
+
+  .terms {
+    width: 100%; max-width: 800px; max-height: min(757px, 100%);
+    display: flex; flex-direction: column; overflow: hidden;
+    background: var(--white); border-radius: 24px;
+  }
+
+  .terms__head {
+    flex-shrink: 0; padding: 16px 20px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    background: var(--midnight-05);
+  }
+  .terms__heading { font-size: 18px; line-height: 26px; font-weight: 700; color: var(--midnight-02); }
+  .terms__close {
+    width: 24px; height: 24px; padding: 0; border: 0; border-radius: 4px; background: none; cursor: pointer; flex-shrink: 0;
+  }
+  .terms__close:hover { filter: brightness(0.8); }
+  .terms__close:focus-visible { outline: 2px solid var(--vivid-green-01); outline-offset: 2px; }
+
+  /* Scrolls inside the popup; the thin scrollbar matches the design (5px, midnight-03 thumb) */
+  .terms__body {
+    flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain;
+    padding: 24px 8px 44px 16px; // 24px + the text block's 20px bottom space in Figma
+    display: flex; flex-direction: column; gap: 20px;
+    scrollbar-width: thin; scrollbar-color: var(--midnight-03) rgba(51, 65, 87, 0.1);
+  }
+  .terms__body::-webkit-scrollbar { width: 5px; }
+  .terms__body::-webkit-scrollbar-track { background: rgba(51, 65, 87, 0.1); }
+  .terms__body::-webkit-scrollbar-thumb { background: var(--midnight-03); border-radius: 40px; }
+  .terms__body:focus-visible { outline: 2px solid var(--vivid-green-01); outline-offset: -2px; }
+
+  .terms__title { margin: 0; font-size: 16px; line-height: 24px; font-weight: 700; color: var(--midnight-01); }
+  .terms__text { display: flex; flex-direction: column; gap: 22px; font-size: 14px; line-height: 24px; font-weight: 500; color: var(--midnight-02); }
+  .terms__section { font-size: 14px; line-height: 24px; font-weight: 700; margin: 0; }
+
+  @media (max-width: 600px) {
+    .modal-backdrop { padding: 0; align-items: flex-end; }
+    .terms { max-height: 90vh; border-radius: 24px 24px 0 0; }
+  }
+}

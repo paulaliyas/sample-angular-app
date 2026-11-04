@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { AddContributorsDcComponent } from './add-contributors-dc/add-contributors-dc.component';
 import { AddMissingIbanDcComponent } from './add-missing-iban-dc/add-missing-iban-dc.component';
 import { ApplyDcComponent } from './apply-dc/apply-dc.component';
+import { TermsDcComponent } from './terms-dc/terms-dc.component';
 import { BankAccountDcComponent } from './bank-account-dc/bank-account-dc.component';
 import { ChooseContributorsDcComponent } from './choose-contributors-dc/choose-contributors-dc.component';
 import { HowItWorksDcComponent } from './how-it-works-dc/how-it-works-dc.component';
@@ -25,6 +26,7 @@ import { RequestsDcComponent } from './requests-dc/requests-dc.component';
     InitiativeScComponent,
     // Application steps
     ApplyDcComponent,
+    TermsDcComponent,
     ChooseContributorsDcComponent,
     BankAccountDcComponent,
     RequestSummaryDcComponent,

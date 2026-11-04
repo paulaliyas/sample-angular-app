@@ -40,8 +40,7 @@
       <input type="checkbox" class="checkbox" [(ngModel)]="declarationAccepted" />
       <span>
         I have read and agree to the
-        <!-- TODO: link to the terms and conditions page -->
-        <a href="#" (click)="$event.preventDefault()">terms and conditions</a>
+        <button #termsLink type="button" class="link-inline" aria-haspopup="dialog" (click)="openTerms($event)">terms and conditions</button>
         of the GOSI Initiative, and I confirm that the information provided is accurate.
         I authorize GOSI to request the initiative record from licensed entities.
       </span>
@@ -50,3 +49,5 @@
     <button type="button" class="btn btn--primary" [disabled]="!declarationAccepted" (click)="onApply()">Apply</button>
   </section>
 </main>
+
+<app-terms-dc *ngIf="showTerms" (close)="closeTerms()"></app-terms-dc>

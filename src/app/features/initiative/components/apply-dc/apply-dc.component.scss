@@ -131,7 +131,11 @@ app-apply-dc {
     color: var(--midnight-02);
   }
 
-  .declaration a { color: var(--rich-blue-01); text-decoration: underline; }
+  .declaration .link-inline {
+    padding: 0; border: 0; background: none; cursor: pointer;
+    font: inherit; color: var(--rich-blue-01); text-decoration: underline;
+  }
+  .declaration .link-inline:focus-visible { outline: 2px solid var(--vivid-green-01); outline-offset: 2px; border-radius: 2px; }
 
   /* Checkbox — exact Figma vector (box 16x16, tick overflows to 19px) */
   .checkbox {
