@@ -46,6 +46,15 @@
               <span class="option__desc">{{ option.description }}</span>
             </span>
           </span>
+          <span class="estimate">
+            <span class="estimate__value" *ngIf="option.value !== 'custom'; else basedOnSelection">
+              <span>{{ estimatedBenefit(option.value) | number: '1.0-0' : 'en-US' }}</span>
+              <app-icon-dc name="riyal"></app-icon-dc>
+              <span class="visually-hidden">SAR</span>
+            </span>
+            <ng-template #basedOnSelection><span class="estimate__value estimate__value--text">Based on selection</span></ng-template>
+            <span class="estimate__label">Est. Benefit Amount</span>
+          </span>
         </label>
       </div>
 

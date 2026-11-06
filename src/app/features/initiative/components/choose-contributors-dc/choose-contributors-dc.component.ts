@@ -59,6 +59,17 @@ export class ChooseContributorsDcComponent implements OnInit, OnChanges {
     return this.contributors.length ? Math.round((this.maxCount / this.contributors.length) * 100) : 0;
   }
 
+  /** Estimated benefit amount shown on each strategy card */
+  // TODO: replace these static values with the totals from the API
+  estimatedBenefit(strategy: SelectionStrategy): number {
+    const amounts: Partial<Record<SelectionStrategy, number>> = {
+      highest: 1500000,
+      lowest: 900000,
+      joining: 1090000,
+    };
+    return amounts[strategy] ?? 0;
+  }
+
   get notSelectedCount(): number {
     return this.contributors.length - this.selectedIds.length;
   }

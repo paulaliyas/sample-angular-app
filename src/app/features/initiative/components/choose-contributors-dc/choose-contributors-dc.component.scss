@@ -40,6 +40,16 @@ app-choose-contributors-dc {
   .option__title { font-size: 18px; line-height: 26px; font-weight: 700; color: var(--rich-blue-01); }
   .option__desc { font-size: 14px; line-height: 22px; color: var(--midnight-02); }
 
+  .estimate { display: flex; flex-direction: column; align-items: flex-start; }
+  .estimate__value {
+    display: flex; align-items: flex-start; gap: 4px;
+    font-size: 16px; line-height: 24px; font-weight: 700; color: var(--vivid-green-01); white-space: nowrap;
+  }
+  .estimate__value svg { flex-shrink: 0; }
+  .estimate .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .estimate__value--text { font-size: 14px; line-height: 22px; }
+  .estimate__label { font-size: 12px; line-height: 18px; color: var(--midnight-03); white-space: nowrap; }
+
   .note { display: flex; gap: 8px; align-items: center; font-size: 12px; line-height: 18px; color: var(--midnight-02); }
   .note svg { flex-shrink: 0; }
 
