@@ -1,34 +1,202 @@
 [
   {
-    "question": "What is the Daam Initiative for the Aviation Sector?",
-    "answer": "Answer content goes here."
+    "question": "What is the Saudi Employee’s Support Initiative in Eligible Establishments Subject to the Social Insurance Law through the Unemployment Insurance Law (SANED)?",
+    "answer": "An initiative that supports the wages of Saudi employees working in eligible establishments subject to the Social Insurance Law, through the Unemployment Insurance Law (SANED), once the eligibility requirements are met within the period specified for the Initiative."
   },
   {
-    "question": "What are the initiative's eligibility conditions?",
-    "answer": "Answer content goes here."
+    "question": "Who is eligible for this Initiative?",
+    "answer": "Saudi contributors covered by SANED who are actively employed at an establishment that the Ministerial Committee has determined as eligible for support."
   },
   {
-    "question": "What percentage is covered by the employer?",
-    "answer": "Answer content goes here."
+    "question": "I am an employee; can I submit a request for the initiative?",
+    "answer": "No. Contributors are registered by the eligible establishment only; employees cannot apply individually."
   },
   {
-    "question": "What percentage is covered by the contributor?",
-    "answer": "Answer content goes here."
+    "question": "How can I check the eligibility of my establishment?",
+    "answer": "Sign in to GOSI Business and open the Initiative service. The eligibility status of your establishment is shown on the first page."
   },
   {
-    "question": "How is the employer compensated for the initiative amount?",
-    "answer": "Answer content goes here."
+    "question": "When will the financial support commence?",
+    "answer": "The support is paid monthly according to the disbursement date set by the Ministerial Committee, after the establishment's request is approved."
   },
   {
-    "question": "Is there a specific duration for the initiative?",
-    "answer": "Answer content goes here."
+    "question": "What is the duration of the compensation payment?",
+    "answer": "The initial support period does not exceed three months, and may be extended if the establishment's continued impact is confirmed in accordance with the approved controls."
   },
   {
-    "question": "How do I add a contributor to the initiative?",
-    "answer": "Answer content goes here."
+    "question": "Is the Initiative available for every employee in the eligible establishments?",
+    "answer": "No. The number of contributors an establishment can register is subject to the approved ratio set by the Ministerial Committee, and each contributor must meet the eligibility conditions."
   },
   {
-    "question": "Terms and Conditions",
-    "answer": "Answer content goes here."
+    "question": "Is the beneficiary required to be Saudi?",
+    "answer": "Yes. The contributor must be Saudi, covered by SANED, and actively employed at the eligible establishment."
+  },
+  {
+    "question": "Who decides which establishments are eligible?",
+    "answer": "The Ministerial Committee, based on the lists submitted by the regulatory sector responsible for the establishments, in accordance with the approved criteria and controls."
+  },
+  {
+    "question": "What happens if my establishment no longer meets the eligibility criteria?",
+    "answer": "Support stops for any establishment that no longer meets the eligibility criteria."
+  },
+  {
+    "question": "How is the support amount calculated?",
+    "answer": "It is calculated according to the compensation calculation mechanism in the Unemployment Insurance Law (SANED) of 1435 AH, and varies according to each contributor's insurance data."
+  },
+  {
+    "question": "Is the support amount the same for every contributor?",
+    "answer": "No. The amount varies according to each contributor's insurance data."
+  },
+  {
+    "question": "How often is the support paid?",
+    "answer": "The support is paid monthly to the Saudi employees registered by the establishment."
+  },
+  {
+    "question": "Who receives the support payment?",
+    "answer": "The support is paid to the Saudi employees registered by the establishment, into the IBAN added for each contributor."
+  },
+  {
+    "question": "Do I need to add an IBAN for each contributor?",
+    "answer": "Yes. The establishment must add a valid IBAN for each registered contributor."
+  },
+  {
+    "question": "What happens if a contributor has no IBAN?",
+    "answer": "The contributor can still be selected, but the support cannot be paid until a valid IBAN is added."
+  },
+  {
+    "question": "Can I update a contributor's IBAN after applying?",
+    "answer": "Yes. You can update IBANs from the Initiative dashboard. Each update is submitted as a request for review."
+  },
+  {
+    "question": "How many contributors can I register?",
+    "answer": "The maximum is shown on the Choose Contributors step. It is based on the approved ratio set by the Ministerial Committee."
+  },
+  {
+    "question": "How should I choose which contributors to register?",
+    "answer": "Pick a strategy on the Choose Contributors step: highest wage, lowest wage, joining date, or build your own list. You can still add or remove contributors afterwards."
+  },
+  {
+    "question": "Can I change the list prepared by a strategy?",
+    "answer": "Yes. After the list is prepared, you can tick or untick contributors before moving to the next step."
+  },
+  {
+    "question": "What does the estimated benefit amount on each strategy mean?",
+    "answer": "It is an estimate of the total monthly support for the list that strategy would prepare. The final amount depends on each contributor's insurance data."
+  },
+  {
+    "question": "Can a contributor with a suspended contribution period be selected?",
+    "answer": "No. Contributors with a suspended contribution period are not eligible, as SANED coverage is not in effect during the suspension period."
+  },
+  {
+    "question": "Is there a minimum contribution period?",
+    "answer": "The contributor must have a continuous contribution period at the establishment that started before the reference date set for the Initiative."
+  },
+  {
+    "question": "Can a contributor receive this support together with other benefits?",
+    "answer": "Eligibility is subject to the rules governing the combination of benefits under SANED."
+  },
+  {
+    "question": "If a contributor is eligible, is the support guaranteed?",
+    "answer": "No. Meeting the contributor eligibility requirements alone is not sufficient; the establishment must also be eligible for support."
+  },
+  {
+    "question": "When does support stop for a contributor?",
+    "answer": "When the contributor is excluded from the establishment, reaches the statutory retirement age and meets the pension conditions, or no longer meets any of the eligibility conditions."
+  },
+  {
+    "question": "What happens if a contributor leaves the establishment?",
+    "answer": "Support stops for that contributor once they are excluded from the eligible establishment."
+  },
+  {
+    "question": "What happens when a contributor reaches retirement age?",
+    "answer": "Support stops when the contributor reaches the statutory retirement age and meets the pension eligibility conditions."
+  },
+  {
+    "question": "Do contributions continue during the support period?",
+    "answer": "Yes. Contribution and insurance coverage in all branches continue during the support period."
+  },
+  {
+    "question": "Does the employer still pay wages during the support period?",
+    "answer": "The support covers part of the wage. After the support period ends, the employer must pay the full wages due to the beneficiary employees."
+  },
+  {
+    "question": "Can I add contributors after my application is approved?",
+    "answer": "Yes. Use Add Contributors on the Initiative dashboard, within the maximum allowed for your establishment."
+  },
+  {
+    "question": "Can I remove contributors after applying?",
+    "answer": "Yes. Use Manage Contributors on the Initiative dashboard. Removals are submitted as a request for review."
+  },
+  {
+    "question": "How do I track my requests?",
+    "answer": "Open the Requests tab on the Initiative dashboard to see each request with its status: under review, approved or rejected."
+  },
+  {
+    "question": "How long does it take to review a request?",
+    "answer": "Requests are reviewed by GOSI. You can follow the status of each request on the Initiative dashboard."
+  },
+  {
+    "question": "What if my request is rejected?",
+    "answer": "Check the request details on the dashboard, correct the information, and submit a new request if the establishment is still eligible."
+  },
+  {
+    "question": "Who is responsible for the accuracy of the submitted information?",
+    "answer": "The establishment confirms that all information it submits is accurate and bears full responsibility for it."
+  },
+  {
+    "question": "What does the declaration on the application authorize?",
+    "answer": "It authorizes GOSI to request the Initiative record from licensed entities in accordance with the applicable laws, regulations, decisions and policies."
+  },
+  {
+    "question": "Is ticking the declaration a legal signature?",
+    "answer": "Yes. Approving the declaration electronically through GOSI Business is considered a valid electronic signature under the Electronic Transactions Law, and is legally binding on the establishment."
+  },
+  {
+    "question": "Where can I read the full Terms and Conditions?",
+    "answer": "Select the terms and conditions link in the declaration on the first page of the application."
+  },
+  {
+    "question": "How is my establishment's data protected?",
+    "answer": "GOSI protects data in accordance with the Personal Data Protection Law and its implementing regulations, and uses it only for the purposes of the Initiative."
+  },
+  {
+    "question": "Can the Terms and Conditions change?",
+    "answer": "Yes. GOSI may update them in line with the Ministerial Committee's decisions or applicable regulations. Continuing to use the service after an update means accepting the updated terms."
+  },
+  {
+    "question": "Which law governs the Initiative's Terms and Conditions?",
+    "answer": "The laws and regulations in force in the Kingdom of Saudi Arabia."
+  },
+  {
+    "question": "Where do I apply for the Initiative?",
+    "answer": "Through GOSI Business, from the Initiative service."
+  },
+  {
+    "question": "Who in my establishment can submit the application?",
+    "answer": "A GOSI Business user with permission to manage the establishment's services."
+  },
+  {
+    "question": "Can the support period be extended?",
+    "answer": "Yes. It may be extended if the establishment's continued impact is confirmed in accordance with the approved controls."
+  },
+  {
+    "question": "Are non-Saudi employees covered by the Initiative?",
+    "answer": "No. The Initiative supports Saudi employees only."
+  },
+  {
+    "question": "Do contributors need to do anything to receive the support?",
+    "answer": "No. The establishment registers them and adds their IBANs; the support is then paid directly to them."
+  },
+  {
+    "question": "Can I see which contributors are currently in the Initiative?",
+    "answer": "Yes. The Contributors tab on the Initiative dashboard lists everyone currently in the Initiative."
+  },
+  {
+    "question": "Is there a fee to join the Initiative?",
+    "answer": "No. There is no fee to apply for the Initiative."
+  },
+  {
+    "question": "Who can I contact if I have more questions?",
+    "answer": "Contact GOSI customer care through the channels listed on the GOSI website or in GOSI Business."
   }
 ]

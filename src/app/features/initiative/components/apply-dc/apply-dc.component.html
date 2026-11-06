@@ -26,13 +26,15 @@
   <section class="faq" aria-labelledby="faq-title">
     <h2 id="faq-title" class="section-title">Frequently asked questions</h2>
 
-    <details class="accordion" *ngFor="let faq of faqs">
+    <details class="accordion" *ngFor="let faq of pagedFaqs; trackBy: trackFaq">
       <summary>
         <span class="accordion__q">{{ faq.question }}</span>
         <span class="accordion__icon"><app-icon-dc name="chevron-down"></app-icon-dc></span>
       </summary>
       <div class="accordion__a">{{ faq.answer }}</div>
     </details>
+
+    <app-pagination-dc [page]="faqPage" [totalPages]="faqTotalPages" (pageChange)="faqPage = $event"></app-pagination-dc>
   </section>
 
   <section class="apply">

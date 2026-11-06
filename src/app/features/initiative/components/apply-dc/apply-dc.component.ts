@@ -18,6 +18,25 @@ export class ApplyDcComponent {
   declarationAccepted = false;
   showTerms = false;
 
+  /** FAQ pagination: 8 questions a page, as in the design */
+  // TODO: if the API returns the FAQs page by page, request each page instead of slicing here
+  faqPageSize = 8;
+  faqPage = 1;
+
+  get faqTotalPages(): number {
+    return Math.max(1, Math.ceil(this.faqs.length / this.faqPageSize));
+  }
+
+  get pagedFaqs(): Faq[] {
+    const start = (this.faqPage - 1) * this.faqPageSize;
+    return this.faqs.slice(start, start + this.faqPageSize);
+  }
+
+  /** A new page gets fresh (closed) accordions instead of reusing the open ones */
+  trackFaq(_index: number, faq: Faq): string {
+    return faq.question;
+  }
+
   @ViewChild('termsLink') termsLink!: ElementRef<HTMLButtonElement>;
 
   /** The link sits inside the checkbox label, so the click must not tick the box */
