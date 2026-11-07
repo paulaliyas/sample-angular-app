@@ -13,9 +13,10 @@ export class RequestsDcComponent {
   @Input() requests: InitiativeRequest[] = [];
 
   statuses: Record<RequestStatus, { label: string; css: string }> = {
-    'under-review': { label: 'Under Review', css: 'status--warning' },
-    approved: { label: 'Approved', css: 'status--success' },
-    rejected: { label: 'Rejected', css: 'status--error' },
+    // label: translation key
+    'under-review': { label: 'initiative.requests.status.under-review', css: 'status--warning' },
+    approved: { label: 'initiative.requests.status.approved', css: 'status--success' },
+    rejected: { label: 'initiative.requests.status.rejected', css: 'status--error' },
   };
 
   searchText = '';

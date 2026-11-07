@@ -38,12 +38,14 @@ export interface StrategyOption {
   icon: string;
 }
 
-export const STRATEGY_OPTIONS: StrategyOption[] = [
-  { value: 'highest', title: 'Highest Wage', tag: 'Max financial support', icon: 'money', description: 'Contributors with the highest benefit are selected first.' },
-  { value: 'lowest', title: 'Lowest Wage', tag: 'Prioritize Low Wages', icon: 'wage-low', description: 'Contributors with the lowest wages are selected first.' },
-  { value: 'joining', title: 'Joining Date', tag: 'Longest service', icon: 'service', description: 'Contributors with the earliest joining date are selected first.' },
-  { value: 'custom', title: 'Customize Selection', tag: 'Build your Own', icon: 'custom', description: 'Start with an empty list and choose contributors yourself.' },
-];
+/** Texts are translation keys (see i18n/en.json → initiative.strategy) */
+export const STRATEGY_OPTIONS: StrategyOption[] = (['highest', 'lowest', 'joining', 'custom'] as const).map((value) => ({
+  value,
+  title: `initiative.strategy.${value}.title`,
+  tag: `initiative.strategy.${value}.tag`,
+  description: `initiative.strategy.${value}.description`,
+  icon: { highest: 'money', lowest: 'wage-low', joining: 'service', custom: 'custom' }[value],
+}));
 
 export interface ContributorSelection {
   strategy: SelectionStrategy;

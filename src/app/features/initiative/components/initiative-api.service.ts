@@ -18,6 +18,7 @@ import members from './mock/dashboard-members.json';
 import requests from './mock/dashboard-requests.json';
 import eligibility from './mock/eligibility.json';
 import eligibleContributors from './mock/eligible-contributors.json';
+import faqsAr from './mock/faqs.ar.json';
 import faqs from './mock/faqs.json';
 import { generateContributors, generateMembers } from './mock/large-data';
 
@@ -75,9 +76,9 @@ export class InitiativeApiService {
     return this.respond(() => ({ ...eligibility, maxContributors: this.maxContributors, enrolled: this.requests.length > 0 }));
   }
 
-  // TODO: GET initiative FAQs
-  getFaqs(): Observable<Faq[]> {
-    return this.respond(() => faqs);
+  // TODO: GET initiative FAQs in the given language
+  getFaqs(lang: 'en' | 'ar' = 'en'): Observable<Faq[]> {
+    return this.respond(() => (lang === 'ar' ? faqsAr : faqs));
   }
 
   // TODO: GET eligible contributors

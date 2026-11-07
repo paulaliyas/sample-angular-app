@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewEncapsulation, inject } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { InitiativeMember } from '../initiative.models';
 import { idSet, matchesSearch, memoize } from '../list-utils';
 
@@ -11,6 +12,8 @@ import { idSet, matchesSearch, memoize } from '../list-utils';
   standalone: false,
 })
 export class ManageContributorsDcComponent {
+  private readonly translate = inject(TranslateService);
+
   @Input() members: InitiativeMember[] = [];
   @Input() maxCount = 0;
   /** A request is on its way — sending again is blocked */
@@ -86,12 +89,18 @@ export class ManageContributorsDcComponent {
 
   // TODO: swap for the API's export once there is one
   downloadList(): void {
-    const header = ['Name', 'ID No', 'Request ID', 'Joining Date', 'Benefit (SAR)', 'Benefit Start', 'Benefit End', 'IBAN'];
-    const rows = this.members.map((m) => [m.name, m.nnid, m.requestId, m.joiningDate, m.benefitAmount.toFixed(2), m.benefitStart, m.benefitEnd, m.maskedIban ?? 'N/A']);
+    // Column names in the current language
+    const header = [
+      'manage.csv.name', 'manage.csv.idNo', 'common.requestId', 'common.joiningDate',
+      'manage.csv.benefit', 'manage.csv.benefitStart', 'manage.csv.benefitEnd', 'common.iban',
+    ].map((key) => this.translate.instant(`initiative.${key}`) as string);
+    const notAvailable = this.translate.instant('initiative.common.notAvailable') as string;
+    const rows = this.members.map((m) => [m.name, m.nnid, m.requestId, m.joiningDate, m.benefitAmount.toFixed(2), m.benefitStart, m.benefitEnd, m.maskedIban ?? notAvailable]);
     const csv = [header, ...rows].map((row) => row.map((cell) => `"${cell}"`).join(',')).join('\n');
 
     const link = document.createElement('a');
-    link.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+    // The BOM makes Excel read the Arabic text as UTF-8
+    link.href = URL.createObjectURL(new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' }));
     link.download = 'initiative-contributors.csv';
     link.click();
     URL.revokeObjectURL(link.href);

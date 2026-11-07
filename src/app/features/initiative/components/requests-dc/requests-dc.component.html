@@ -1,22 +1,22 @@
 <div class="toolbar">
   <label class="search">
     <app-icon-dc name="search"></app-icon-dc>
-    <input type="search" placeholder="Search by name, ID / Iqama number" aria-label="Search requests" [(ngModel)]="searchText" />
+    <input type="search" [placeholder]="'initiative.common.search' | translate" [attr.aria-label]="'initiative.common.searchRequests' | translate" [(ngModel)]="searchText" />
   </label>
   <!-- TODO: the filter panel isn't designed yet -->
-  <button type="button" class="filter"><app-icon-dc name="filter"></app-icon-dc><span>Filter</span></button>
+  <button type="button" class="filter"><app-icon-dc name="filter"></app-icon-dc><span>{{ 'initiative.common.filter' | translate }}</span></button>
 </div>
 
-<section class="requests" aria-label="Requests">
+<section class="requests" [attr.aria-label]="'initiative.requests.label' | translate">
   <article class="request" *ngFor="let r of filteredRequests" [class.is-open]="isOpen(r)">
     <div class="request__head">
       <dl class="request__data">
-        <div class="datum"><dt>Transaction ID</dt><dd>{{ r.transactionId }}</dd></div>
-        <div class="datum"><dt>Date</dt><dd>{{ r.date }}</dd></div>
-        <div class="datum"><dt>Requested Contributors</dt><dd>{{ r.lines.length }}</dd></div>
+        <div class="datum"><dt>{{ 'initiative.requests.transactionId' | translate }}</dt><dd>{{ r.transactionId }}</dd></div>
+        <div class="datum"><dt>{{ 'initiative.requests.date' | translate }}</dt><dd>{{ r.date }}</dd></div>
+        <div class="datum"><dt>{{ 'initiative.requests.requestedContributors' | translate }}</dt><dd>{{ r.lines.length }}</dd></div>
         <div class="datum">
-          <dt>Status</dt>
-          <dd><span class="status" [ngClass]="statuses[r.status].css">{{ statuses[r.status].label }}</span></dd>
+          <dt>{{ 'initiative.common.status' | translate }}</dt>
+          <dd><span class="status" [ngClass]="statuses[r.status].css">{{ statuses[r.status].label | translate }}</span></dd>
         </div>
       </dl>
       <button
@@ -24,7 +24,7 @@
         class="request__toggle"
         [attr.aria-expanded]="isOpen(r)"
         [attr.aria-controls]="'req-' + r.transactionId"
-        [attr.aria-label]="'Show details for transaction ' + r.transactionId"
+        [attr.aria-label]="'initiative.requests.showDetails' | translate: { id: r.transactionId }"
         (click)="toggle(r)"
       >
         <app-icon-dc [name]="isOpen(r) ? 'chevron-up' : 'chevron-down'"></app-icon-dc>
@@ -36,8 +36,8 @@
         <app-icon-dc name="search"></app-icon-dc>
         <input
           type="search"
-          placeholder="Search by name, ID / Iqama number"
-          [attr.aria-label]="'Search contributors in transaction ' + r.transactionId"
+          [placeholder]="'initiative.common.search' | translate"
+          [attr.aria-label]="'initiative.requests.searchIn' | translate: { id: r.transactionId }"
           [(ngModel)]="lineSearch[r.transactionId]"
         />
       </label>
@@ -48,11 +48,11 @@
             <colgroup><col class="col-person" /><col /><col /><col /><col /></colgroup>
             <thead>
               <tr>
-                <th>Contributor</th>
-                <th>Joining Date</th>
-                <th>IBAN</th>
-                <th>Benefit Date</th>
-                <th><span class="th-inline">Action <app-icon-dc name="arrow-down"></app-icon-dc></span></th>
+                <th>{{ 'initiative.common.contributor' | translate }}</th>
+                <th>{{ 'initiative.common.joiningDate' | translate }}</th>
+                <th>{{ 'initiative.common.iban' | translate }}</th>
+                <th>{{ 'initiative.common.benefitDate' | translate }}</th>
+                <th><span class="th-inline">{{ 'initiative.common.action' | translate }} <app-icon-dc name="arrow-down"></app-icon-dc></span></th>
               </tr>
             </thead>
             <tbody>
@@ -60,24 +60,24 @@
                 <td>
                   <span class="person">
                     <span class="person__name">{{ line.contributor.name }}</span>
-                    <span class="person__id">ID No: {{ line.contributor.nnid }}</span>
+                    <span class="person__id">{{ 'initiative.common.idNo' | translate: { id: line.contributor.nnid } }}</span>
                   </span>
                 </td>
                 <td>{{ line.contributor.joiningDate }}</td>
-                <td>{{ line.contributor.maskedIban || 'N/A' }}</td>
+                <td>{{ line.contributor.maskedIban || ('initiative.common.notAvailable' | translate) }}</td>
                 <td class="cell--dates">
-                  <span class="date-start">Start : {{ line.benefitStart }}</span>
-                  <span class="date-end">End   :  {{ line.benefitEnd }}</span>
+                  <span class="date-start">{{ 'initiative.common.start' | translate: { date: line.benefitStart } }}</span>
+                  <span class="date-end">{{ 'initiative.common.end' | translate: { date: line.benefitEnd } }}</span>
                 </td>
                 <td>
                   <span class="status" [class.status--success]="line.action === 'added'" [class.status--error]="line.action === 'removed'">
-                    {{ line.action === 'added' ? 'Added' : 'Removed' }}
+                    {{ (line.action === 'added' ? 'initiative.requests.added' : 'initiative.requests.removed') | translate }}
                   </span>
                 </td>
               </tr>
 
               <tr *ngIf="linesOf(r).length === 0">
-                <td colspan="5" class="no-results">No contributors match your search.</td>
+                <td colspan="5" class="no-results">{{ 'initiative.common.noMatches' | translate }}</td>
               </tr>
             </tbody>
           </table>
@@ -87,6 +87,6 @@
   </article>
 
   <p class="requests__empty" *ngIf="filteredRequests.length === 0">
-    {{ requests.length === 0 ? 'There are no requests yet.' : 'No requests match your search.' }}
+    {{ (requests.length === 0 ? 'initiative.requests.empty' : 'initiative.requests.noMatches') | translate }}
   </p>
 </section>

@@ -1,5 +1,7 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Output, ViewChild, ViewEncapsulation } from '@angular/core';
-import { TERMS_SECTIONS, TERMS_TITLE } from './terms.content';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Output, ViewChild, ViewEncapsulation, inject } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { currentLang } from '../i18n/initiative-translations';
+import { TERMS, TermsContent } from './terms.content';
 
 /** Terms & Conditions popup, opened from the declaration on the Apply step. */
 @Component({
@@ -14,8 +16,12 @@ export class TermsDcComponent implements AfterViewInit {
 
   @ViewChild('closeButton') closeButton!: ElementRef<HTMLButtonElement>;
 
-  title = TERMS_TITLE;
-  sections = TERMS_SECTIONS;
+  private readonly translate = inject(TranslateService);
+
+  /** Follows the language toggle while the popup is open */
+  get content(): TermsContent {
+    return TERMS[currentLang(this.translate)];
+  }
 
   /** Moves keyboard focus into the popup, so it isn't left on the page behind */
   ngAfterViewInit(): void {

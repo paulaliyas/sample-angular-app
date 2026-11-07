@@ -1,38 +1,38 @@
 <div class="drawer-backdrop" (click)="onBack()">
   <section class="drawer" role="dialog" aria-modal="true" aria-labelledby="iban-drawer-title" (click)="$event.stopPropagation()">
     <header class="drawer__head">
-      <h2 id="iban-drawer-title" class="drawer__title">Add Missing IBAN</h2>
-      <button #closeButton type="button" class="btn-close" aria-label="Close" (click)="onBack()"><app-icon-dc name="close"></app-icon-dc></button>
+      <h2 id="iban-drawer-title" class="drawer__title">{{ 'initiative.missingDrawer.title' | translate }}</h2>
+      <button #closeButton type="button" class="btn-close" [attr.aria-label]="'initiative.common.close' | translate" (click)="onBack()"><app-icon-dc name="close"></app-icon-dc></button>
     </header>
 
     <div class="toolbar">
       <label class="search">
         <app-icon-dc name="search"></app-icon-dc>
-        <input type="search" placeholder="Search by name, ID / Iqama number" aria-label="Search contributors" [(ngModel)]="searchText" />
+        <input type="search" [placeholder]="'initiative.common.search' | translate" [attr.aria-label]="'initiative.common.searchContributors' | translate" [(ngModel)]="searchText" />
       </label>
       <!-- TODO: the filter panel isn't designed yet -->
-      <button type="button" class="filter"><app-icon-dc name="filter"></app-icon-dc><span>Filter</span></button>
+      <button type="button" class="filter"><app-icon-dc name="filter"></app-icon-dc><span>{{ 'initiative.common.filter' | translate }}</span></button>
     </div>
 
     <ul class="rows">
       <li class="row" *ngFor="let c of filteredContributors">
         <div class="contributor">
           <span class="contributor__name">{{ c.name }}</span>
-          <span class="contributor__id">ID No: {{ c.nnid }}</span>
+          <span class="contributor__id">{{ 'initiative.common.idNo' | translate: { id: c.nnid } }}</span>
         </div>
 
         <label class="field field--iban">
           <span class="field__inner">
-            <span class="field__label">IBAN</span>
+            <span class="field__label">{{ 'initiative.common.iban' | translate }}</span>
             <input
               #ibanInput
               type="text"
               class="field__input"
-              placeholder="IBAN"
+              [placeholder]="'initiative.common.iban' | translate"
               autocomplete="off"
               spellcheck="false"
               [value]="ibans[c.nnid]"
-              [attr.aria-label]="'IBAN for ' + c.name"
+              [attr.aria-label]="'initiative.common.ibanFor' | translate: { name: c.name }"
               (input)="onInput(c, ibanInput)"
               (change)="onChange(c)"
             />
@@ -41,26 +41,26 @@
 
         <label class="field field--bank">
           <span class="field__inner">
-            <span class="field__label">Bank name</span>
+            <span class="field__label">{{ 'initiative.common.bankName' | translate }}</span>
             <input
               type="text"
               class="field__input"
-              placeholder="Bank name"
+              [placeholder]="'initiative.common.bankName' | translate"
               readonly
               tabindex="-1"
               [value]="bankOf(c)"
-              [attr.aria-label]="'Bank name for ' + c.name"
+              [attr.aria-label]="'initiative.common.bankNameFor' | translate: { name: c.name }"
             />
           </span>
         </label>
       </li>
 
-      <li class="row no-results" *ngIf="filteredContributors.length === 0">No contributors match your search.</li>
+      <li class="row no-results" *ngIf="filteredContributors.length === 0">{{ 'initiative.common.noMatches' | translate }}</li>
     </ul>
 
     <footer class="drawer__foot">
-      <button type="button" class="btn btn--secondary" (click)="onBack()">Back</button>
-      <button type="button" class="btn btn--primary" [disabled]="!allFilled || busy" (click)="onSubmit()">Submit</button>
+      <button type="button" class="btn btn--secondary" (click)="onBack()">{{ 'initiative.common.back' | translate }}</button>
+      <button type="button" class="btn btn--primary" [disabled]="!allFilled || busy" (click)="onSubmit()">{{ 'initiative.common.submit' | translate }}</button>
     </footer>
   </section>
 </div>

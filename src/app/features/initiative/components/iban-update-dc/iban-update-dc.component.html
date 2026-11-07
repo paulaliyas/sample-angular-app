@@ -4,14 +4,14 @@
       <app-icon-dc name="search"></app-icon-dc>
       <input
         type="search"
-        placeholder="Search by name, ID / Iqama number"
-        aria-label="Search contributors"
+        [placeholder]="'initiative.common.search' | translate"
+        [attr.aria-label]="'initiative.common.searchContributors' | translate"
         [(ngModel)]="searchText"
         (ngModelChange)="onSearch()"
       />
     </label>
     <!-- TODO: the filter panel isn't designed yet -->
-    <button type="button" class="filter"><app-icon-dc name="filter"></app-icon-dc><span>Filter</span></button>
+    <button type="button" class="filter"><app-icon-dc name="filter"></app-icon-dc><span>{{ 'initiative.common.filter' | translate }}</span></button>
   </div>
 </div>
 
@@ -28,12 +28,12 @@
       </colgroup>
       <thead>
         <tr>
-          <th>Contributor</th>
-          <th>Request ID</th>
-          <th>Joining Date</th>
-          <th><span class="th-inline">Benefit <app-icon-dc name="info-circle"></app-icon-dc></span></th>
-          <th class="th-iban">IBAN</th>
-          <th>Status</th>
+          <th>{{ 'initiative.common.contributor' | translate }}</th>
+          <th>{{ 'initiative.common.requestId' | translate }}</th>
+          <th>{{ 'initiative.common.joiningDate' | translate }}</th>
+          <th><span class="th-inline">{{ 'initiative.common.benefit' | translate }} <app-icon-dc name="info-circle"></app-icon-dc></span></th>
+          <th class="th-iban">{{ 'initiative.common.iban' | translate }}</th>
+          <th>{{ 'initiative.common.status' | translate }}</th>
         </tr>
       </thead>
       <tbody>
@@ -44,12 +44,12 @@
           <td>{{ u.contributor.benefitAmount | number: '1.2-2' : 'en-US' }}</td>
           <td class="cell--iban">{{ u.contributor.maskedIban }}</td>
           <!-- TODO: only "Under Review" is in the design so far -->
-          <td><span class="status status--warning">Under Review</span></td>
+          <td><span class="status status--warning">{{ 'initiative.ibanUpdates.underReview' | translate }}</span></td>
         </tr>
 
         <tr *ngIf="filteredUpdates.length === 0">
           <td colspan="6" class="no-results">
-            {{ updates.length === 0 ? 'There are no IBAN updates.' : 'No contributors match your search.' }}
+            {{ (updates.length === 0 ? 'initiative.ibanUpdates.empty' : 'initiative.common.noMatches') | translate }}
           </td>
         </tr>
       </tbody>

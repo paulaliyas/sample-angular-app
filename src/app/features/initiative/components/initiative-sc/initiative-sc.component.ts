@@ -1,6 +1,8 @@
 import { Component, DestroyRef, ElementRef, OnInit, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { forkJoin, Observable, Subscription } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
+import { currentLang } from '../i18n/initiative-translations';
 import { InitiativeApiService } from '../initiative-api.service';
 import {
   Contributor,
@@ -50,6 +52,7 @@ export class InitiativeScComponent implements OnInit {
   loaded = false;
   /** A request is being sent — its button is disabled so it can't be sent twice */
   saving = false;
+  /** Translation key of the error to show */
   error = '';
 
   // From the API
@@ -79,10 +82,17 @@ export class InitiativeScComponent implements OnInit {
     private api: InitiativeApiService,
     private host: ElementRef<HTMLElement>,
     private destroyRef: DestroyRef,
+    private translate: TranslateService,
   ) {}
 
   ngOnInit(): void {
     this.load();
+    // The FAQs come from the API per language, so fetch them again when the language changes
+    this.translate.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      if (this.loaded && this.faqs.length) {
+        this.call(this.api.getFaqs(currentLang(this.translate)), (faqs) => (this.faqs = faqs));
+      }
+    });
   }
 
   get establishment(): Establishment | null {
@@ -128,7 +138,7 @@ export class InitiativeScComponent implements OnInit {
           this.loadEnrolment(() => this.showFirstScreen('apply'));
         }
       },
-      "We couldn't load the initiative.",
+      'initiative.errors.load',
     );
   }
 
@@ -148,7 +158,7 @@ export class InitiativeScComponent implements OnInit {
     this.strategyRequest = this.call(
       this.api.getStrategySelection(strategy),
       (contributors) => (this.preparedSelection = contributors),
-      "We couldn't prepare the list.",
+      'initiative.errors.prepareList',
     );
   }
 
@@ -180,14 +190,14 @@ export class InitiativeScComponent implements OnInit {
         this.dashboardTab = 'requests';
         this.goTo('dashboard');
       },
-      "We couldn't submit the request.",
+      'initiative.errors.submit',
     );
   }
 
   /* ===== Dashboard ===== */
 
   onRemoveMembers(removed: InitiativeMember[]): void {
-    this.save(this.api.removeContributors(removed), () => {}, "We couldn't remove the contributors.");
+    this.save(this.api.removeContributors(removed), () => {}, 'initiative.errors.remove');
   }
 
   /** Add Contributors drawer → Missing IBAN drawer when any of them has no IBAN */
@@ -234,7 +244,7 @@ export class InitiativeScComponent implements OnInit {
   /* ===== Helpers ===== */
 
   private addMembers(contributors: Contributor[]): void {
-    this.save(this.api.addContributors(contributors), () => this.closeDrawer(), "We couldn't add the contributors.");
+    this.save(this.api.addContributors(contributors), () => this.closeDrawer(), 'initiative.errors.add');
   }
 
   private showFirstScreen(step: string): void {
@@ -246,13 +256,13 @@ export class InitiativeScComponent implements OnInit {
   /** What the enrolment path needs */
   private loadEnrolment(done: () => void): void {
     this.call(
-      forkJoin({ faqs: this.api.getFaqs(), contributors: this.api.getEligibleContributors() }),
+      forkJoin({ faqs: this.api.getFaqs(currentLang(this.translate)), contributors: this.api.getEligibleContributors() }),
       ({ faqs, contributors }) => {
         this.faqs = faqs;
         this.eligibleContributors = contributors;
         done();
       },
-      "We couldn't load the initiative.",
+      'initiative.errors.load',
     );
   }
 
@@ -272,7 +282,7 @@ export class InitiativeScComponent implements OnInit {
         this.eligibleContributors = contributors;
         done();
       },
-      "We couldn't load the initiative.",
+      'initiative.errors.load',
     );
   }
 

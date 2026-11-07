@@ -3,21 +3,21 @@
     <app-how-it-works-dc [currentStep]="2"></app-how-it-works-dc>
 
     <section class="card benefit" aria-labelledby="benefit-title">
-      <h2 id="benefit-title" class="section-title">Establishment Benefit</h2>
+      <h2 id="benefit-title" class="section-title">{{ 'initiative.choose.benefitTitle' | translate }}</h2>
       <dl class="benefit__stats">
         <div class="stat">
           <app-icon-dc name="user-saudi"></app-icon-dc>
-          <dt class="stat__label">Total Saudi Contributors</dt>
+          <dt class="stat__label">{{ 'initiative.choose.totalSaudi' | translate }}</dt>
           <dd class="stat__value">{{ contributors.length }}</dd>
         </div>
         <div class="stat">
           <app-icon-dc name="percent"></app-icon-dc>
-          <dt class="stat__label">Establishment Benefit Percentage</dt>
+          <dt class="stat__label">{{ 'initiative.choose.benefitPercent' | translate }}</dt>
           <dd class="stat__value">{{ benefitPercent }}%</dd>
         </div>
         <div class="stat">
           <app-icon-dc name="shield-check"></app-icon-dc>
-          <dt class="stat__label">Eligible Contributors after Percentage</dt>
+          <dt class="stat__label">{{ 'initiative.choose.eligibleAfterPercent' | translate }}</dt>
           <dd class="stat__value">{{ maxCount }}</dd>
         </div>
       </dl>
@@ -25,8 +25,8 @@
 
     <section class="card prepare" aria-labelledby="prepare-title">
       <div class="block-head">
-        <h2 id="prepare-title" class="block-title">How should we prepare your list?</h2>
-        <p class="block-sub">Pick one option. You can still add or remove contributors after the list is ready.</p>
+        <h2 id="prepare-title" class="block-title">{{ 'initiative.choose.prepareTitle' | translate }}</h2>
+        <p class="block-sub">{{ 'initiative.choose.prepareSub' | translate }}</p>
       </div>
 
       <div class="options" role="radiogroup" aria-labelledby="prepare-title">
@@ -40,44 +40,44 @@
           />
           <span class="option__radio"><app-icon-dc name="radio-check"></app-icon-dc></span>
           <span class="option__body">
-            <span class="tag"><app-icon-dc [name]="option.icon"></app-icon-dc><span>{{ option.tag }}</span></span>
+            <span class="tag"><app-icon-dc [name]="option.icon"></app-icon-dc><span>{{ option.tag | translate }}</span></span>
             <span class="option__text">
-              <span class="option__title">{{ option.title }}</span>
-              <span class="option__desc">{{ option.description }}</span>
+              <span class="option__title">{{ option.title | translate }}</span>
+              <span class="option__desc">{{ option.description | translate }}</span>
             </span>
           </span>
           <span class="estimate">
             <span class="estimate__value" *ngIf="option.value !== 'custom'; else basedOnSelection">
               <span>{{ estimatedBenefit(option.value) | number: '1.0-0' : 'en-US' }}</span>
               <app-icon-dc name="riyal"></app-icon-dc>
-              <span class="visually-hidden">SAR</span>
+              <span class="visually-hidden">{{ 'initiative.common.sar' | translate: { amount: '' } }}</span>
             </span>
-            <ng-template #basedOnSelection><span class="estimate__value estimate__value--text">Based on selection</span></ng-template>
-            <span class="estimate__label">Est. Benefit Amount</span>
+            <ng-template #basedOnSelection><span class="estimate__value estimate__value--text">{{ 'initiative.choose.basedOnSelection' | translate }}</span></ng-template>
+            <span class="estimate__label">{{ 'initiative.choose.estBenefit' | translate }}</span>
           </span>
         </label>
       </div>
 
       <p class="note">
         <app-icon-dc name="info"></app-icon-dc>
-        <span>The list is filled up to the maximum allowed for your establishment.</span>
+        <span>{{ 'initiative.choose.limitNote' | translate }}</span>
       </p>
     </section>
   </div>
 
   <section class="card details" aria-labelledby="strategy-title">
     <div class="block-head">
-      <h2 id="strategy-title" class="block-title">{{ strategyTitle }} Strategy</h2>
-      <p class="block-sub">Initiative contributors details based on your selection</p>
+      <h2 id="strategy-title" class="block-title">{{ 'initiative.choose.strategyHeading' | translate: { name: (strategyTitle | translate) } }}</h2>
+      <p class="block-sub">{{ 'initiative.choose.strategySub' | translate }}</p>
     </div>
 
     <div class="panel">
       <div class="tabs" role="tablist">
         <button type="button" class="tab" role="tab" [class.tab--active]="tab === 'selected'" [attr.aria-selected]="tab === 'selected'" (click)="showTab('selected')">
-          Selected ({{ selectedIds.length }})
+          {{ 'initiative.choose.selectedTab' | translate: { count: selectedIds.length } }}
         </button>
         <button type="button" class="tab" role="tab" [class.tab--active]="tab === 'not-selected'" [attr.aria-selected]="tab === 'not-selected'" (click)="showTab('not-selected')">
-          Not Selected ({{ notSelectedCount }})
+          {{ 'initiative.choose.notSelectedTab' | translate: { count: notSelectedCount } }}
         </button>
       </div>
 
@@ -86,14 +86,14 @@
           <app-icon-dc name="search"></app-icon-dc>
           <input
             type="search"
-            placeholder="Search by name, ID / Iqama number"
-            aria-label="Search contributors"
+            [placeholder]="'initiative.common.search' | translate"
+            [attr.aria-label]="'initiative.common.searchContributors' | translate"
             [(ngModel)]="searchText"
             (ngModelChange)="onSearch()"
           />
         </label>
         <!-- TODO: the filter panel isn't designed yet -->
-        <button type="button" class="filter"><app-icon-dc name="filter"></app-icon-dc><span>Filter</span></button>
+        <button type="button" class="filter"><app-icon-dc name="filter"></app-icon-dc><span>{{ 'initiative.common.filter' | translate }}</span></button>
       </div>
 
       <div class="table-wrap">
@@ -102,10 +102,10 @@
             <colgroup><col class="col-contributor" /><col /><col /><col /></colgroup>
             <thead>
               <tr>
-                <th>Contributor Details</th>
-                <th>Joining Date</th>
-                <th><span class="th-inline">Contributory Wage <app-icon-dc name="sort"></app-icon-dc></span></th>
-                <th>IBAN</th>
+                <th>{{ 'initiative.common.contributorDetails' | translate }}</th>
+                <th>{{ 'initiative.common.joiningDate' | translate }}</th>
+                <th><span class="th-inline">{{ 'initiative.common.contributoryWage' | translate }} <app-icon-dc name="sort"></app-icon-dc></span></th>
+                <th>{{ 'initiative.common.iban' | translate }}</th>
               </tr>
             </thead>
             <tbody>
@@ -117,22 +117,22 @@
                       class="cb"
                       [checked]="isSelected(c)"
                       [disabled]="isDisabled(c)"
-                      [attr.aria-label]="'Select ' + c.name"
+                      [attr.aria-label]="'initiative.common.select' | translate: { name: c.name }"
                       (change)="toggle(c)"
                     />
                     <span class="contributor__text">
                       <span class="contributor__name">{{ c.name }}</span>
-                      <span class="contributor__id">NNID: {{ c.nnid }}</span>
+                      <span class="contributor__id">{{ 'initiative.common.nnid' | translate: { id: c.nnid } }}</span>
                     </span>
                   </label>
                 </td>
                 <td>{{ c.joiningDate }}</td>
                 <td>{{ c.wage | number: '1.2-2' : 'en-US' }}</td>
-                <td class="cell--iban">{{ c.maskedIban || 'N/A' }}</td>
+                <td class="cell--iban">{{ c.maskedIban || ('initiative.common.notAvailable' | translate) }}</td>
               </tr>
 
               <tr *ngIf="filteredContributors.length === 0">
-                <td colspan="4" class="no-results">No contributors to show.</td>
+                <td colspan="4" class="no-results">{{ 'initiative.common.noContributors' | translate }}</td>
               </tr>
             </tbody>
           </table>
@@ -147,12 +147,12 @@
     <div class="counter">
       <p class="counter__label">
         <span class="counter__num">{{ selectedIds.length }}</span>
-        <span class="counter__text">of {{ maxCount }} selected · {{ withoutIbanCount }} without IBAN</span>
+        <span class="counter__text">{{ 'initiative.choose.counter' | translate: { max: maxCount, missing: withoutIbanCount } }}</span>
       </p>
-      <p class="counter__hint">Contributors without an IBAN are added as "N/A".</p>
+      <p class="counter__hint">{{ 'initiative.choose.counterHint' | translate }}</p>
     </div>
     <div class="spacer"></div>
-    <button type="button" class="btn btn--secondary" (click)="cancel.emit()">Cancel</button>
-    <button type="button" class="btn btn--primary" [disabled]="selectedIds.length === 0" (click)="onNext()">Next</button>
+    <button type="button" class="btn btn--secondary" (click)="cancel.emit()">{{ 'initiative.common.cancel' | translate }}</button>
+    <button type="button" class="btn btn--primary" [disabled]="selectedIds.length === 0" (click)="onNext()">{{ 'initiative.common.next' | translate }}</button>
   </section>
 </main>

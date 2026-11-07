@@ -1,7 +1,7 @@
-<nav class="pagination" aria-label="Pagination">
+<nav class="pagination" [attr.aria-label]="'initiative.pagination.label' | translate">
   <div class="pagination__side">
     <button type="button" class="btn-page" [disabled]="page <= 1" (click)="goTo(page - 1)">
-      <app-icon-dc name="arrow-left"></app-icon-dc><span>Previous</span>
+      <app-icon-dc name="arrow-left"></app-icon-dc><span>{{ 'initiative.pagination.previous' | translate }}</span>
     </button>
   </div>
 
@@ -13,7 +13,7 @@
         class="page"
         [class.page--active]="item === page"
         [attr.aria-current]="item === page ? 'page' : null"
-        [attr.aria-label]="'Page ' + item"
+        [attr.aria-label]="'initiative.pagination.page' | translate: { page: item }"
         (click)="goTo(item)"
       >
         {{ item }}
@@ -24,7 +24,7 @@
 
   <div class="pagination__side pagination__side--end">
     <button type="button" class="btn-page" [disabled]="page >= totalPages" (click)="goTo(page + 1)">
-      <span>Next</span><app-icon-dc name="arrow-right"></app-icon-dc>
+      <span>{{ 'initiative.pagination.next' | translate }}</span><app-icon-dc name="arrow-right"></app-icon-dc>
     </button>
   </div>
 </nav>

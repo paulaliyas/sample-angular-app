@@ -1,8 +1,8 @@
 <div class="drawer-backdrop" (click)="close.emit()">
   <section class="drawer" role="dialog" aria-modal="true" aria-labelledby="add-drawer-title" (click)="$event.stopPropagation()">
     <header class="drawer__head">
-      <h2 id="add-drawer-title" class="drawer__title">Add contributors</h2>
-      <button #closeButton type="button" class="btn-close" aria-label="Close" (click)="close.emit()"><app-icon-dc name="close"></app-icon-dc></button>
+      <h2 id="add-drawer-title" class="drawer__title">{{ 'initiative.addDrawer.title' | translate }}</h2>
+      <button #closeButton type="button" class="btn-close" [attr.aria-label]="'initiative.common.close' | translate" (click)="close.emit()"><app-icon-dc name="close"></app-icon-dc></button>
     </header>
 
     <div class="toolbar">
@@ -10,14 +10,14 @@
         <app-icon-dc name="search"></app-icon-dc>
         <input
           type="search"
-          placeholder="Search by name, ID / Iqama number"
-          aria-label="Search contributors"
+          [placeholder]="'initiative.common.search' | translate"
+          [attr.aria-label]="'initiative.common.searchContributors' | translate"
           [(ngModel)]="searchText"
           (ngModelChange)="onSearch()"
         />
       </label>
       <!-- TODO: the filter panel isn't designed yet -->
-      <button type="button" class="filter"><app-icon-dc name="filter"></app-icon-dc><span>Filter</span></button>
+      <button type="button" class="filter"><app-icon-dc name="filter"></app-icon-dc><span>{{ 'initiative.common.filter' | translate }}</span></button>
     </div>
 
     <div class="table-wrap">
@@ -36,17 +36,17 @@
                   <input
                     type="checkbox"
                     class="cb"
-                    aria-label="Select all contributors"
+                    [attr.aria-label]="'initiative.common.selectAll' | translate"
                     [checked]="allPageSelected"
                     [disabled]="pagedContributors.length === 0"
                     (change)="toggleAll()"
                   />
-                  <span class="th-inline">Contributor</span>
+                  <span class="th-inline">{{ 'initiative.common.contributor' | translate }}</span>
                 </span>
               </th>
-              <th>Joining Date</th>
-              <th><span class="th-inline">Contributory Wage <app-icon-dc name="sort"></app-icon-dc></span></th>
-              <th>IBAN</th>
+              <th>{{ 'initiative.common.joiningDate' | translate }}</th>
+              <th><span class="th-inline">{{ 'initiative.common.contributoryWage' | translate }} <app-icon-dc name="sort"></app-icon-dc></span></th>
+              <th>{{ 'initiative.common.iban' | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -58,23 +58,23 @@
                     class="cb"
                     [checked]="isSelected(c)"
                     [disabled]="isDisabled(c)"
-                    [attr.aria-label]="'Select ' + c.name"
+                    [attr.aria-label]="'initiative.common.select' | translate: { name: c.name }"
                     (change)="toggle(c)"
                   />
                   <span class="contributor__text">
                     <span class="contributor__name">{{ c.name }}</span>
-                    <span class="contributor__id">ID No: {{ c.nnid }}</span>
+                    <span class="contributor__id">{{ 'initiative.common.idNo' | translate: { id: c.nnid } }}</span>
                   </span>
                 </label>
               </td>
               <td>{{ c.joiningDate }}</td>
               <td>{{ c.wage | number: '1.2-2' : 'en-US' }}</td>
-              <td>{{ c.maskedIban || 'N/A' }}</td>
+              <td>{{ c.maskedIban || ('initiative.common.notAvailable' | translate) }}</td>
             </tr>
 
             <tr *ngIf="filteredContributors.length === 0">
               <td colspan="4" class="no-results">
-                {{ contributors.length === 0 ? 'There are no more eligible contributors to add.' : 'No contributors match your search.' }}
+                {{ (contributors.length === 0 ? 'initiative.addDrawer.empty' : 'initiative.common.noMatches') | translate }}
               </td>
             </tr>
           </tbody>
@@ -87,12 +87,12 @@
     <footer class="drawer__foot">
       <p class="counter" aria-live="polite">
         <span class="counter__num">{{ selectedIds.length }}</span>
-        <span class="counter__sel">selected</span>
-        <span class="counter__rest">/ {{ remainingAfterSelection }} remains</span>
+        <span class="counter__sel">{{ 'initiative.addDrawer.selected' | translate }}</span>
+        <span class="counter__rest">{{ 'initiative.addDrawer.remains' | translate: { count: remainingAfterSelection } }}</span>
       </p>
       <div class="spacer"></div>
-      <button type="button" class="btn btn--secondary" (click)="close.emit()">Cancel</button>
-      <button type="button" class="btn btn--primary" [disabled]="selectedIds.length === 0 || busy" (click)="onAdd()">Add contributors</button>
+      <button type="button" class="btn btn--secondary" (click)="close.emit()">{{ 'initiative.common.cancel' | translate }}</button>
+      <button type="button" class="btn btn--primary" [disabled]="selectedIds.length === 0 || busy" (click)="onAdd()">{{ 'initiative.addDrawer.add' | translate }}</button>
     </footer>
   </section>
 </div>

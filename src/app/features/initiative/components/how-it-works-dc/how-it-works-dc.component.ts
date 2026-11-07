@@ -15,9 +15,10 @@ export class HowItWorksDcComponent {
   @Input() attached = false;
 
   steps = [
-    { title: 'Apply', description: 'Review details and accept terms and conditions.' },
-    { title: 'Choose Contributors', description: 'Select eligible Saudi contributors' },
-    { title: 'Bank Account Update', description: 'Update contributors missing IBAN' },
-    { title: 'Summary', description: 'Review transaction details and confirm' },
+    // Translation keys (initiative.howItWorks.steps)
+    { title: 'initiative.howItWorks.steps.apply.title', description: 'initiative.howItWorks.steps.apply.description' },
+    { title: 'initiative.howItWorks.steps.choose.title', description: 'initiative.howItWorks.steps.choose.description' },
+    { title: 'initiative.howItWorks.steps.bank.title', description: 'initiative.howItWorks.steps.bank.description' },
+    { title: 'initiative.howItWorks.steps.summary.title', description: 'initiative.howItWorks.steps.summary.description' },
   ];
 }

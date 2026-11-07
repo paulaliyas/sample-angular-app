@@ -1,5 +1,5 @@
 <section class="card how" [class.how--attached]="attached" aria-labelledby="how-title">
-  <h2 id="how-title" class="section-title">How it works</h2>
+  <h2 id="how-title" class="section-title">{{ 'initiative.howItWorks.title' | translate }}</h2>
   <ol class="steps">
     <li
       *ngFor="let step of steps; let i = index"
@@ -13,8 +13,8 @@
         <ng-template #stepNumber>{{ i + 1 }}</ng-template>
       </span>
       <div class="step__text">
-        <span class="step__title">{{ step.title }}</span>
-        <span class="step__desc">{{ step.description }}</span>
+        <span class="step__title">{{ step.title | translate }}</span>
+        <span class="step__desc">{{ step.description | translate }}</span>
       </div>
     </li>
   </ol>

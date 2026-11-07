@@ -1,0 +1,181 @@
+{
+  "initiative": {
+    "common": {
+      "search": "Search by name, ID / Iqama number",
+      "searchContributors": "Search contributors",
+      "searchRequests": "Search requests",
+      "filter": "Filter",
+      "cancel": "Cancel",
+      "next": "Next",
+      "back": "Back",
+      "submit": "Submit",
+      "edit": "Edit",
+      "close": "Close",
+      "apply": "Apply",
+      "tryAgain": "Try again",
+      "loading": "Loading…",
+      "notAvailable": "N/A",
+      "idNo": "ID No: {{id}}",
+      "nnid": "NNID: {{id}}",
+      "iban": "IBAN",
+      "bankName": "Bank name",
+      "contributor": "Contributor",
+      "contributorDetails": "Contributor Details",
+      "joiningDate": "Joining Date",
+      "contributoryWage": "Contributory Wage",
+      "requestId": "Request ID",
+      "benefit": "Benefit",
+      "benefitDate": "Benefit Date",
+      "status": "Status",
+      "action": "Action",
+      "start": "Start : {{date}}",
+      "end": "End   :  {{date}}",
+      "select": "Select {{name}}",
+      "selectAll": "Select all contributors",
+      "ibanFor": "IBAN for {{name}}",
+      "bankNameFor": "Bank name for {{name}}",
+      "noContributors": "No contributors to show.",
+      "noMatches": "No contributors match your search.",
+      "sar": "SAR {{amount}}"
+    },
+    "errors": {
+      "load": "We couldn't load the initiative.",
+      "prepareList": "We couldn't prepare the list.",
+      "submit": "We couldn't submit the request.",
+      "remove": "We couldn't remove the contributors.",
+      "add": "We couldn't add the contributors."
+    },
+    "pagination": {
+      "label": "Pagination",
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page {{page}}"
+    },
+    "howItWorks": {
+      "title": "How it works",
+      "steps": {
+        "apply": { "title": "Apply", "description": "Review details and accept terms and conditions." },
+        "choose": { "title": "Choose Contributors", "description": "Select eligible Saudi contributors" },
+        "bank": { "title": "Bank Account Update", "description": "Update contributors missing IBAN" },
+        "summary": { "title": "Summary", "description": "Review transaction details and confirm" }
+      }
+    },
+    "apply": {
+      "heroSmall": "Your Establishment is",
+      "heroLarge": "Eligible for the Aviation Sector",
+      "establishmentName": "Establishment name",
+      "establishmentNumber": "Establishment number",
+      "faqTitle": "Frequently asked questions",
+      "declarationBefore": "I have read and agree to the",
+      "termsLink": "terms and conditions",
+      "declarationAfter": "of the GOSI Initiative, and I confirm that the information provided is accurate. I authorize GOSI to request the initiative record from licensed entities."
+    },
+    "terms": {
+      "heading": "Terms & Conditions",
+      "bodyLabel": "Terms and conditions text"
+    },
+    "strategy": {
+      "highest": { "title": "Highest Wage", "tag": "Max financial support", "description": "Contributors with the highest benefit are selected first." },
+      "lowest": { "title": "Lowest Wage", "tag": "Prioritize Low Wages", "description": "Contributors with the lowest wages are selected first." },
+      "joining": { "title": "Joining Date", "tag": "Longest service", "description": "Contributors with the earliest joining date are selected first." },
+      "custom": { "title": "Customize Selection", "tag": "Build your Own", "description": "Start with an empty list and choose contributors yourself." }
+    },
+    "choose": {
+      "benefitTitle": "Establishment Benefit",
+      "totalSaudi": "Total Saudi Contributors",
+      "benefitPercent": "Establishment Benefit Percentage",
+      "eligibleAfterPercent": "Eligible Contributors after Percentage",
+      "prepareTitle": "How should we prepare your list?",
+      "prepareSub": "Pick one option. You can still add or remove contributors after the list is ready.",
+      "basedOnSelection": "Based on selection",
+      "estBenefit": "Est. Benefit Amount",
+      "limitNote": "The list is filled up to the maximum allowed for your establishment.",
+      "strategyHeading": "{{name}} Strategy",
+      "strategySub": "Initiative contributors details based on your selection",
+      "selectedTab": "Selected ({{count}})",
+      "notSelectedTab": "Not Selected ({{count}})",
+      "counter": "of {{max}} selected · {{missing}} without IBAN",
+      "counterHint": "Contributors without an IBAN are added as \"N/A\"."
+    },
+    "bank": {
+      "title": "Update Missing IBAN",
+      "stillMissing": "{{count}} contributors don't have an IBAN yet.",
+      "missingTab": "Missing IBAN ({{count}})",
+      "existingTab": "Existing IBAN ({{count}})",
+      "editFor": "Edit IBAN for {{name}}",
+      "saveFor": "Save IBAN for {{name}}",
+      "cancelFor": "Cancel editing IBAN for {{name}}"
+    },
+    "summary": {
+      "requestTitle": "Request Summary",
+      "requestSub": "Please review the details below before submitting the request. You can go back to edit if needed.",
+      "establishmentName": "Establishment Name",
+      "establishmentNumber": "Establishment Number",
+      "terms": "Terms & Conditions",
+      "accepted": "Accepted",
+      "contributorsTitle": "Contributors Summary",
+      "strategy": "Strategy",
+      "totalBenefit": "Total estimated monthly benefit",
+      "contributorCount": "Number of contributors",
+      "countOf": "of {{max}} ({{percent}}% of eligible contributors)",
+      "nextTitle": "What happens next?",
+      "next1": "Your request will be submitted for processing",
+      "next2": "Contributors with valid IBAN will be validated with “SIMAH”",
+      "next3": "Approved contributors will be eligible for the next benefit payment"
+    },
+    "dashboard": {
+      "requestsTab": "Request ({{count}})",
+      "membersTab": "Manage Contributors ({{count}})",
+      "ibanTab": "IBAN Update ({{count}})"
+    },
+    "requests": {
+      "label": "Requests",
+      "transactionId": "Transaction ID",
+      "date": "Date",
+      "requestedContributors": "Requested Contributors",
+      "showDetails": "Show details for transaction {{id}}",
+      "searchIn": "Search contributors in transaction {{id}}",
+      "added": "Added",
+      "removed": "Removed",
+      "empty": "There are no requests yet.",
+      "noMatches": "No requests match your search.",
+      "status": {
+        "under-review": "Under Review",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      }
+    },
+    "manage": {
+      "download": "Download List",
+      "addContributor": "Add Contributor",
+      "limitTip": "You've reached the establishment limit. Remove contributors to add new ones.",
+      "selectedLabel": "Selected contributors",
+      "selected": "Contributors Selected",
+      "deselectAll": "Deselect All",
+      "remove": "Remove from Initiative",
+      "active": "Active",
+      "empty": "There are no contributors in the initiative.",
+      "csv": {
+        "name": "Name",
+        "idNo": "ID No",
+        "benefit": "Benefit (SAR)",
+        "benefitStart": "Benefit Start",
+        "benefitEnd": "Benefit End"
+      }
+    },
+    "ibanUpdates": {
+      "underReview": "Under Review",
+      "empty": "There are no IBAN updates."
+    },
+    "addDrawer": {
+      "title": "Add contributors",
+      "empty": "There are no more eligible contributors to add.",
+      "selected": "selected",
+      "remains": "/ {{count}} remains",
+      "add": "Add contributors"
+    },
+    "missingDrawer": {
+      "title": "Add Missing IBAN"
+    }
+  }
+}

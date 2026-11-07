@@ -4,19 +4,19 @@
 
     <section class="update" aria-labelledby="update-title">
       <div class="update__head">
-        <h2 id="update-title" class="block-title">Update Missing IBAN</h2>
+        <h2 id="update-title" class="block-title">{{ 'initiative.bank.title' | translate }}</h2>
         <div class="toast" role="status" *ngIf="stillMissingCount > 0">
           <app-icon-dc name="warning"></app-icon-dc>
-          <p>{{ stillMissingCount }} contributors don't have an IBAN yet.</p>
+          <p>{{ 'initiative.bank.stillMissing' | translate: { count: stillMissingCount } }}</p>
         </div>
       </div>
 
       <div class="tabs" role="tablist">
         <button type="button" class="tab" role="tab" [class.tab--active]="tab === 'missing'" [attr.aria-selected]="tab === 'missing'" (click)="showTab('missing')">
-          Missing IBAN ({{ missingCount }})
+          {{ 'initiative.bank.missingTab' | translate: { count: missingCount } }}
         </button>
         <button type="button" class="tab" role="tab" [class.tab--active]="tab === 'existing'" [attr.aria-selected]="tab === 'existing'" (click)="showTab('existing')">
-          Existing IBAN ({{ existingCount }})
+          {{ 'initiative.bank.existingTab' | translate: { count: existingCount } }}
         </button>
       </div>
 
@@ -25,14 +25,14 @@
           <app-icon-dc name="search"></app-icon-dc>
           <input
             type="search"
-            placeholder="Search by name, ID / Iqama number"
-            aria-label="Search contributors"
+            [placeholder]="'initiative.common.search' | translate"
+            [attr.aria-label]="'initiative.common.searchContributors' | translate"
             [(ngModel)]="searchText"
             (ngModelChange)="onSearch()"
           />
         </label>
         <!-- TODO: the filter panel isn't designed yet -->
-        <button type="button" class="filter"><app-icon-dc name="filter"></app-icon-dc><span>Filter</span></button>
+        <button type="button" class="filter"><app-icon-dc name="filter"></app-icon-dc><span>{{ 'initiative.common.filter' | translate }}</span></button>
       </div>
 
       <div class="task-list">
@@ -40,22 +40,22 @@
           <li class="row" *ngFor="let c of pagedContributors" [class.is-editing]="editingId === c.nnid">
             <div class="contributor">
               <span class="contributor__name">{{ c.name }}</span>
-              <span class="contributor__id">ID No: {{ c.nnid }}</span>
+              <span class="contributor__id">{{ 'initiative.common.idNo' | translate: { id: c.nnid } }}</span>
             </div>
 
             <label class="field field--iban" [class.is-verified]="isVerified(c)" [class.is-locked]="isLocked(c)">
               <span class="field__inner">
-                <span class="field__label">IBAN</span>
+                <span class="field__label">{{ 'initiative.common.iban' | translate }}</span>
                 <input
                   #ibanInput
                   type="text"
                   class="field__input"
-                  placeholder="IBAN"
+                  [placeholder]="'initiative.common.iban' | translate"
                   autocomplete="off"
                   spellcheck="false"
                   [value]="valueOf(c)"
                   [readOnly]="isLocked(c)"
-                  [attr.aria-label]="'IBAN for ' + c.name"
+                  [attr.aria-label]="'initiative.common.ibanFor' | translate: { name: c.name }"
                   (input)="onInput(c, ibanInput)"
                   (change)="onChange(c)"
                   (keydown.enter)="saveEdit()"
@@ -67,15 +67,15 @@
 
             <label class="field field--bank">
               <span class="field__inner">
-                <span class="field__label">Bank name</span>
+                <span class="field__label">{{ 'initiative.common.bankName' | translate }}</span>
                 <input
                   type="text"
                   class="field__input"
-                  placeholder="Bank name"
+                  [placeholder]="'initiative.common.bankName' | translate"
                   readonly
                   tabindex="-1"
                   [value]="bankOf(c)"
-                  [attr.aria-label]="'Bank name for ' + c.name"
+                  [attr.aria-label]="'initiative.common.bankNameFor' | translate: { name: c.name }"
                 />
               </span>
             </label>
@@ -85,7 +85,7 @@
                 type="button"
                 class="btn-icon btn-edit"
                 [disabled]="editingId !== null"
-                [attr.aria-label]="'Edit IBAN for ' + c.name"
+                [attr.aria-label]="'initiative.bank.editFor' | translate: { name: c.name }"
                 (click)="startEdit(c, ibanInput)"
               >
                 <app-icon-dc name="pencil"></app-icon-dc>
@@ -94,18 +94,18 @@
                 type="button"
                 class="btn-icon btn-save"
                 [disabled]="!editValue.trim()"
-                [attr.aria-label]="'Save IBAN for ' + c.name"
+                [attr.aria-label]="'initiative.bank.saveFor' | translate: { name: c.name }"
                 (click)="saveEdit()"
               >
                 <app-icon-dc name="save"></app-icon-dc>
               </button>
-              <button type="button" class="btn-icon btn-cancel" [attr.aria-label]="'Cancel editing IBAN for ' + c.name" (click)="cancelEdit()">
+              <button type="button" class="btn-icon btn-cancel" [attr.aria-label]="'initiative.bank.cancelFor' | translate: { name: c.name }" (click)="cancelEdit()">
                 <app-icon-dc name="cancel"></app-icon-dc>
               </button>
             </div>
           </li>
 
-          <li class="row no-results" *ngIf="filteredContributors.length === 0">No contributors to show.</li>
+          <li class="row no-results" *ngIf="filteredContributors.length === 0">{{ 'initiative.common.noContributors' | translate }}</li>
         </ul>
 
         <app-pagination-dc [page]="page" [totalPages]="totalPages" (pageChange)="goToPage($event)"></app-pagination-dc>
@@ -114,7 +114,7 @@
   </div>
 
   <section class="card submit-bar">
-    <button type="button" class="btn btn--secondary" (click)="back.emit()">Cancel</button>
-    <button type="button" class="btn btn--primary" [disabled]="editingId !== null" (click)="onNext()">Next</button>
+    <button type="button" class="btn btn--secondary" (click)="back.emit()">{{ 'initiative.common.cancel' | translate }}</button>
+    <button type="button" class="btn btn--primary" [disabled]="editingId !== null" (click)="onNext()">{{ 'initiative.common.next' | translate }}</button>
   </section>
 </main>

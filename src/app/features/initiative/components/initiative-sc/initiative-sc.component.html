@@ -1,9 +1,9 @@
 <div class="sc-message" role="alert" *ngIf="error">
-  <span>{{ error }}</span>
-  <button type="button" class="btn-link" *ngIf="!loaded" (click)="load()">Try again</button>
+  <span>{{ error | translate }}</span>
+  <button type="button" class="btn-link" *ngIf="!loaded" (click)="load()">{{ 'initiative.common.tryAgain' | translate }}</button>
 </div>
 
-<p class="sc-message" *ngIf="loading">Loading…</p>
+<p class="sc-message" *ngIf="loading">{{ 'initiative.common.loading' | translate }}</p>
 
 <ng-container *ngIf="loaded" [ngSwitch]="step">
   <app-apply-dc
@@ -50,13 +50,13 @@
   <main class="content" *ngSwitchCase="'dashboard'">
     <div class="tabs" role="tablist">
       <button type="button" class="tab" role="tab" [class.tab--active]="dashboardTab === 'requests'" [attr.aria-selected]="dashboardTab === 'requests'" (click)="dashboardTab = 'requests'">
-        Request ({{ requests.length }})
+        {{ 'initiative.dashboard.requestsTab' | translate: { count: requests.length } }}
       </button>
       <button type="button" class="tab" role="tab" [class.tab--active]="dashboardTab === 'members'" [attr.aria-selected]="dashboardTab === 'members'" (click)="dashboardTab = 'members'">
-        Manage Contributors ({{ members.length }})
+        {{ 'initiative.dashboard.membersTab' | translate: { count: members.length } }}
       </button>
       <button type="button" class="tab" role="tab" [class.tab--active]="dashboardTab === 'iban-updates'" [attr.aria-selected]="dashboardTab === 'iban-updates'" (click)="dashboardTab = 'iban-updates'">
-        IBAN Update ({{ ibanUpdates.length }})
+        {{ 'initiative.dashboard.ibanTab' | translate: { count: ibanUpdates.length } }}
       </button>
     </div>
 
