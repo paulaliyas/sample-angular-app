@@ -12,7 +12,18 @@
         </div>
         <div class="stat">
           <app-icon-dc name="percent"></app-icon-dc>
-          <dt class="stat__label">{{ 'initiative.choose.benefitPercent' | translate }}</dt>
+          <dt class="stat__label stat__label--info">
+            <span>{{ 'initiative.choose.benefitPercent' | translate }}</span>
+            <span class="info-tip">
+              <button type="button" class="info-tip__trigger" aria-describedby="benefit-percent-tip">
+                <app-icon-dc name="info-lg"></app-icon-dc>
+              </button>
+              <span id="benefit-percent-tip" role="tooltip" class="info-tip__bubble">
+                <span class="info-tip__text">{{ 'initiative.choose.benefitPercentInfo' | translate }}</span>
+                <app-icon-dc name="tooltip-arrow"></app-icon-dc>
+              </span>
+            </span>
+          </dt>
           <dd class="stat__value">{{ benefitPercent }}%</dd>
         </div>
         <div class="stat">

@@ -9,6 +9,28 @@ app-choose-contributors-dc {
   .stat__label, .stat__value { font-size: 14px; line-height: 22px; }
   .stat__label { color: var(--midnight-03); }
   .stat__value { font-weight: 700; color: var(--rich-blue-01); margin-top: -8px; } // 2px gap from the label in Figma
+  .stat__label--info { display: flex; align-items: center; gap: 10px; }
+
+  /* Info tooltip (Figma 1748:40465): shown on hover or keyboard focus, above the icon */
+  .info-tip { position: relative; display: inline-flex; }
+  .info-tip__trigger {
+    display: inline-flex; padding: 0; border: 0; background: none; cursor: pointer; border-radius: 50%;
+  }
+  .info-tip__trigger:focus-visible { outline: 2px solid var(--vivid-blue); outline-offset: 2px; }
+  .info-tip__bubble {
+    position: absolute; bottom: calc(100% + 4px); left: 50%; transform: translateX(-50%); z-index: 20;
+    width: 313px; max-width: calc(100vw - 32px);
+    display: flex; flex-direction: column; align-items: center;
+    filter: drop-shadow(0 0 12px rgba(196, 203, 210, 0.3));
+    visibility: hidden; opacity: 0; transition: opacity 0.15s ease, visibility 0.15s;
+  }
+  .info-tip__text {
+    width: 100%; padding: 8px 12px; border-radius: 8px; background: var(--midnight-01);
+    color: var(--white); font-size: 12px; line-height: 18px; font-weight: 700; text-align: center;
+  }
+  .info-tip__bubble svg { display: block; margin-top: -1px; } // same as the Add Contributor tooltip
+  .info-tip:hover .info-tip__bubble,
+  .info-tip:focus-within .info-tip__bubble { visibility: visible; opacity: 1; }
 
   /* ===== Prepare list (strategy) ===== */
   .prepare { border-top: 0; padding: 20px; display: flex; flex-direction: column; gap: 16px; }

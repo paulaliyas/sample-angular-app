@@ -84,6 +84,7 @@
       "benefitTitle": "Establishment Benefit",
       "totalSaudi": "Total Saudi Contributors",
       "benefitPercent": "Establishment Benefit Percentage",
+      "benefitPercentInfo": "Determination of the support percentage due to the establishment based on the criteria and regulations specified by the Ministerial Committee formed by the Royal Order.",
       "eligibleAfterPercent": "Eligible Contributors after Percentage",
       "prepareTitle": "How should we prepare your list?",
       "prepareSub": "Pick one option. You can still add or remove contributors after the list is ready.",
@@ -120,7 +121,7 @@
       "countOf": "of {{max}} ({{percent}}% of eligible contributors)",
       "nextTitle": "What happens next?",
       "next1": "Your request will be submitted for processing",
-      "next2": "Contributors with valid IBAN will be validated with “SIMAH”",
+      "next2": "Contributors with valid IBAN will be validated with “SAMA”",
       "next3": "Approved contributors will be eligible for the next benefit payment"
     },
     "dashboard": {
