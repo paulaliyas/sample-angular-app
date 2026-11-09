@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { Contributor } from '../initiative.models';
 
-/** Drawer — the contributors being added have no IBAN; every one needs a valid IBAN to submit. */
+/** Drawer — IBANs for the contributors being added (existing ones filled in); every one needs an IBAN to submit. */
 @Component({
   selector: 'app-add-missing-iban-dc',
   templateUrl: './add-missing-iban-dc.component.html',
@@ -44,6 +44,8 @@ export class AddMissingIbanDcComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.contributors.forEach((c) => (this.ibans[c.nnid] = this.drafts[c.nnid] ?? c.iban ?? ''));
+    // Contributors who already have an IBAN show it filled in, so look up its bank too
+    this.contributors.forEach((c) => this.onChange(c));
   }
 
   /** Moves keyboard focus into the drawer, so it isn't left on the page behind */

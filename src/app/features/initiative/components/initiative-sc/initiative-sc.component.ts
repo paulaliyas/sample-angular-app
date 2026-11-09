@@ -120,10 +120,6 @@ export class InitiativeScComponent implements OnInit {
     return Math.max(0, this.maxContributors - this.members.length);
   }
 
-  get pendingWithoutIban(): Contributor[] {
-    return this.pendingAdditions.filter((c) => !c.iban);
-  }
-
   /** Eligibility first; its "enrolled" flag decides which path's data to load and which screen to show */
   load(): void {
     this.loading = true;
@@ -200,14 +196,10 @@ export class InitiativeScComponent implements OnInit {
     this.save(this.api.removeContributors(removed), () => {}, 'initiative.errors.remove');
   }
 
-  /** Add Contributors drawer → Missing IBAN drawer when any of them has no IBAN */
+  /** Add Contributors drawer → IBAN drawer, where Submit adds them and returns to the list */
   onAddContributors(selected: Contributor[]): void {
     this.pendingAdditions = selected;
-    if (this.pendingWithoutIban.length > 0) {
-      this.drawer = 'missing-iban';
-    } else {
-      this.addMembers(selected);
-    }
+    this.drawer = 'missing-iban';
   }
 
   onMissingIbansSubmitted(withIbans: Contributor[]): void {

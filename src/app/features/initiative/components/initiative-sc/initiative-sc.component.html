@@ -89,7 +89,7 @@
 
 <app-add-missing-iban-dc
   *ngIf="drawer === 'missing-iban'"
-  [contributors]="pendingWithoutIban"
+  [contributors]="pendingAdditions"
   [drafts]="ibanDrafts"
   [bankNames]="bankNames"
   [busy]="saving"
