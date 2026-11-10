@@ -7,7 +7,7 @@
       </button>
     </header>
 
-    <div class="terms__body" tabindex="0" [attr.aria-label]="'initiative.terms.bodyLabel' | translate">
+    <div #body class="terms__body" tabindex="0" (scroll)="checkEnd()" [attr.aria-label]="'initiative.terms.bodyLabel' | translate">
       <h3 class="terms__title">{{ content.title }}</h3>
       <div class="terms__text">
         <ng-container *ngFor="let section of content.sections">

@@ -67,6 +67,8 @@ export class InitiativeScComponent implements OnInit {
   requests: InitiativeRequest[] = [];
   ibanUpdates: IbanUpdate[] = [];
 
+  /** The terms popup was scrolled to the end — enables the declaration checkbox for the rest of the session */
+  termsRead = false;
   /** From Choose Contributors */
   selection: ContributorSelection | null = null;
   /** The chosen contributors with the IBANs from Bank Account Update */

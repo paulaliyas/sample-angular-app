@@ -39,7 +39,14 @@
 
   <section class="apply">
     <label class="declaration">
-      <input type="checkbox" class="checkbox" [(ngModel)]="declarationAccepted" />
+      <!-- While disabled the wrapper takes focus, so keyboard users can reach the tooltip too -->
+      <span class="check-tip" [attr.tabindex]="termsRead ? null : 0" [attr.aria-describedby]="termsRead ? null : 'terms-read-tip'">
+        <input type="checkbox" class="checkbox" [(ngModel)]="declarationAccepted" [disabled]="!termsRead" />
+        <span *ngIf="!termsRead" id="terms-read-tip" role="tooltip" class="check-tip__bubble">
+          <span class="check-tip__text">{{ 'initiative.apply.termsHint' | translate }}</span>
+          <app-icon-dc name="tooltip-arrow"></app-icon-dc>
+        </span>
+      </span>
       <span>
         {{ 'initiative.apply.declarationBefore' | translate }}
         <button #termsLink type="button" class="link-inline" aria-haspopup="dialog" (click)="openTerms($event)">{{ 'initiative.apply.termsLink' | translate }}</button>
@@ -47,8 +54,8 @@
       </span>
     </label>
 
-    <button type="button" class="btn btn--primary" [disabled]="!declarationAccepted" (click)="onApply()">{{ 'initiative.common.apply' | translate }}</button>
+    <button type="button" class="btn btn--primary" [disabled]="!termsRead || !declarationAccepted" (click)="onApply()">{{ 'initiative.common.apply' | translate }}</button>
   </section>
 </main>
 
-<app-terms-dc *ngIf="showTerms" (close)="closeTerms()"></app-terms-dc>
+<app-terms-dc *ngIf="showTerms" (readToEnd)="onTermsReadToEnd()" (close)="closeTerms()"></app-terms-dc>

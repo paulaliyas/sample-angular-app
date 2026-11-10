@@ -6,6 +6,9 @@ app-initiative-sc {
   .drawer-backdrop {
     position: fixed; inset: 0; z-index: 100;
     display: flex; align-items: center; justify-content: center; padding: 24px;
+    // Space above the popup. A host with a fixed header sets this to the header's height + a gap,
+    // e.g. app-initiative-sc { --initiative-popup-top: 96px; }
+    padding-top: var(--initiative-popup-top, 24px);
     background: rgba(0, 18, 45, 0.4);
   }
   .drawer {
@@ -28,7 +31,7 @@ app-initiative-sc {
   .btn-close:focus-visible { outline: 2px solid var(--vivid-green-01); outline-offset: 2px; }
 
   @media (max-width: 600px) {
-    .drawer-backdrop { padding: 12px; }
+    .drawer-backdrop { padding: 12px; padding-top: var(--initiative-popup-top, 12px); }
     .drawer { border-radius: 16px; padding: 20px 16px 0; }
     .drawer__foot { margin: auto -16px 0; padding: 16px; flex-wrap: wrap; }
     .drawer__foot .btn { flex: 1; }

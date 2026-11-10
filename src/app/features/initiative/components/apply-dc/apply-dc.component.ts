@@ -12,8 +12,11 @@ import { Establishment, Faq } from '../initiative.models';
 export class ApplyDcComponent {
   @Input() establishment!: Establishment;
   @Input() faqs: Faq[] = [];
+  /** The terms were scrolled to the end — kept by the parent for the session, so coming back doesn't reset it */
+  @Input() termsRead = false;
 
   @Output() apply = new EventEmitter<void>();
+  @Output() termsReadChange = new EventEmitter<boolean>();
 
   declarationAccepted = false;
   showTerms = false;
@@ -45,6 +48,14 @@ export class ApplyDcComponent {
     this.showTerms = true;
   }
 
+  /** Reaching the end of the terms enables the checkbox; it stays enabled after that */
+  onTermsReadToEnd(): void {
+    if (!this.termsRead) {
+      this.termsRead = true;
+      this.termsReadChange.emit(true);
+    }
+  }
+
   closeTerms(): void {
     this.showTerms = false;
     // Back to where the user was, for keyboard and screen reader users
@@ -53,7 +64,7 @@ export class ApplyDcComponent {
 
 
   onApply(): void {
-    if (this.declarationAccepted) {
+    if (this.termsRead && this.declarationAccepted) {
       this.apply.emit();
     }
   }

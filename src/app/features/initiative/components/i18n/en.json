@@ -68,6 +68,7 @@
       "faqTitle": "Frequently asked questions",
       "declarationBefore": "I have read and agree to the",
       "termsLink": "terms and conditions",
+      "termsHint": "Please read the full terms and conditions to enable this checkbox.",
       "declarationAfter": "of the GOSI Initiative, and I confirm that the information provided is accurate. I authorize GOSI to request the initiative record from licensed entities."
     },
     "terms": {
