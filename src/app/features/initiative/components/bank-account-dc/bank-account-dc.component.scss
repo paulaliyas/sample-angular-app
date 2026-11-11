@@ -25,6 +25,15 @@ app-bank-account-dc {
   .field--iban.is-locked .field__input { color: var(--midnight-03); cursor: default; }
   .field--iban.is-locked:focus-within { border-color: var(--midnight-03); }
 
+  /* IBAN field + its error. The error sits in the row's bottom padding, so the row doesn't jump */
+  .iban-cell { position: relative; flex: 1 1 0; min-width: 0; }
+  .iban-cell .field--iban { width: 100%; }
+  .field--iban.has-error, .field--iban.has-error:focus-within { border-color: var(--error-01); }
+  .iban-cell__error {
+    position: absolute; top: calc(100% + 4px); inset-inline-start: 0; inset-inline-end: 0;
+    margin: 0; font-size: 12px; line-height: 18px; color: var(--error-01);
+  }
+
   .actions { display: flex; align-items: center; flex-shrink: 0; }
   .btn-icon {
     flex-shrink: 0; width: 64px; height: 64px; padding: 8px; border: 0; border-radius: 16px; background: none; cursor: pointer;
@@ -45,5 +54,7 @@ app-bank-account-dc {
     .task-list { padding: 16px 16px 0; }
     .actions { order: 4; margin-inline-start: auto; }
     .field--bank { order: 3; }
+    .iban-cell { flex-basis: 100%; }
+    .iban-cell__error { position: static; margin-top: 4px; } // may wrap to 2 lines on phones
   }
 }

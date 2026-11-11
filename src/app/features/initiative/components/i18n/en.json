@@ -106,6 +106,7 @@
       "existingTab": "Existing IBAN ({{count}})",
       "editFor": "Edit IBAN for {{name}}",
       "saveFor": "Save IBAN for {{name}}",
+      "ibanError": "Please enter a valid IBAN.",
       "cancelFor": "Cancel editing IBAN for {{name}}"
     },
     "summary": {

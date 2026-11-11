@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { Contributor } from '../initiative.models';
+import { IBAN_MAX_LENGTH, ibanError, normalizeIban } from '../iban';
 import { matchesSearch, memoize } from '../list-utils';
 
 /**
@@ -36,6 +37,11 @@ export class BankAccountDcComponent implements OnInit {
   /** The existing-IBAN row being edited, and its unsaved value */
   editingId: string | null = null;
   editValue = '';
+  readonly ibanMaxLength = IBAN_MAX_LENGTH;
+  /** Rows whose IBAN field has been left at least once — their errors show from then on */
+  private touched = new Set<string>();
+  /** Next was pressed with errors — show them on every row */
+  private showAllErrors = false;
 
   // Fixed when the step opens, so rows don't jump tabs while typing
   private missing: Contributor[] = [];
@@ -128,10 +134,25 @@ export class BankAccountDcComponent implements OnInit {
     }
   }
 
-  /** Typing finished (the field lost focus) — look up the bank once per new IBAN */
+  /**
+   * What's wrong with the row's IBAN (a translation key), or null.
+   * The API's own IBAN is trusted; only typed or edited ones are checked.
+   */
+  validationError(contributor: Contributor, value = this.valueOf(contributor)): string | null {
+    return value.trim() === contributor.iban ? null : ibanError(value);
+  }
+
+  /** The error shown under the field — only once the user has left it, or pressed Next */
+  errorOf(contributor: Contributor): string | null {
+    const shown = this.showAllErrors || this.touched.has(contributor.nnid);
+    return shown ? this.validationError(contributor) : null;
+  }
+
+  /** Typing finished (the field lost focus) — check it, and look up the bank once per new valid IBAN */
   onChange(contributor: Contributor): void {
+    this.touched.add(contributor.nnid);
     const iban = this.valueOf(contributor).trim();
-    if (iban && iban !== contributor.iban && !(iban in this.bankNames)) {
+    if (iban && iban !== contributor.iban && !this.validationError(contributor) && !(iban in this.bankNames)) {
       this.ibanEntered.emit(iban);
     }
   }
@@ -143,9 +164,15 @@ export class BankAccountDcComponent implements OnInit {
     input.select();
   }
 
+  /** An invalid IBAN isn't saved; its error shows and the row stays in edit mode */
   saveEdit(): void {
-    if (this.editingId && this.editValue.trim()) {
-      this.ibans[this.editingId] = this.editValue;
+    const contributor = this.contributors.find((c) => c.nnid === this.editingId);
+    if (contributor && this.editValue.trim()) {
+      this.touched.add(contributor.nnid);
+      if (this.validationError(contributor, this.editValue)) {
+        return;
+      }
+      this.ibans[contributor.nnid] = this.editValue;
       this.editingId = null;
     }
   }
@@ -154,12 +181,28 @@ export class BankAccountDcComponent implements OnInit {
     this.editingId = null;
   }
 
+  /** With an invalid IBAN anywhere, show all errors and go to the first one instead */
   onNext(): void {
+    const firstInvalid = this.contributors.find((c) => this.validationError(c, this.ibans[c.nnid]));
+    if (firstInvalid) {
+      this.showAllErrors = true;
+      this.showFirstError(firstInvalid);
+      return;
+    }
     this.next.emit(
       this.contributors.map((c) => {
-        const iban = this.ibans[c.nnid].trim();
+        const iban = normalizeIban(this.ibans[c.nnid]);
         return iban ? { ...c, iban } : c;
       }),
     );
+  }
+
+  /** Opens the tab and page that hold the contributor, with the search cleared */
+  private showFirstError(contributor: Contributor): void {
+    const tab = this.missing.includes(contributor) ? 'missing' : 'existing';
+    this.showTab(tab);
+    this.searchText = '';
+    const index = (tab === 'missing' ? this.missing : this.existing).indexOf(contributor);
+    this.page = Math.floor(index / this.pageSize) + 1;
   }
 }

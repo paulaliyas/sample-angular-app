@@ -43,7 +43,8 @@
               <span class="contributor__id">{{ 'initiative.common.idNo' | translate: { id: c.nnid } }}</span>
             </div>
 
-            <label class="field field--iban" [class.is-verified]="isVerified(c)" [class.is-locked]="isLocked(c)">
+            <div class="iban-cell">
+            <label class="field field--iban" [class.is-verified]="isVerified(c)" [class.is-locked]="isLocked(c)" [class.has-error]="errorOf(c)">
               <span class="field__inner">
                 <span class="field__label">{{ 'initiative.common.iban' | translate }}</span>
                 <input
@@ -53,17 +54,22 @@
                   [placeholder]="'initiative.common.iban' | translate"
                   autocomplete="off"
                   spellcheck="false"
+                  [maxLength]="ibanMaxLength"
                   [value]="valueOf(c)"
                   [readOnly]="isLocked(c)"
                   [attr.aria-label]="'initiative.common.ibanFor' | translate: { name: c.name }"
+                  [attr.aria-invalid]="errorOf(c) ? true : null"
+                  [attr.aria-describedby]="errorOf(c) ? 'iban-error-' + c.nnid : null"
                   (input)="onInput(c, ibanInput)"
                   (change)="onChange(c)"
-                  (keydown.enter)="saveEdit()"
+                  (keydown.enter)="onChange(c); saveEdit()"
                   (keydown.escape)="cancelEdit()"
                 />
               </span>
               <span class="field__icon"><app-icon-dc name="seal-check"></app-icon-dc></span>
             </label>
+            <p class="iban-cell__error" *ngIf="errorOf(c) as error" [id]="'iban-error-' + c.nnid">{{ error | translate }}</p>
+            </div>
 
             <label class="field field--bank">
               <span class="field__inner">

@@ -106,6 +106,7 @@
       "existingTab": "لديهم آيبان ({{count}})",
       "editFor": "تعديل آيبان {{name}}",
       "saveFor": "حفظ آيبان {{name}}",
+      "ibanError": "يرجى إدخال رقم آيبان صحيح.",
       "cancelFor": "إلغاء تعديل آيبان {{name}}"
     },
     "summary": {
