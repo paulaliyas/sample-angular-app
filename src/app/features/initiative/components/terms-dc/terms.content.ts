@@ -1,4 +1,4 @@
-/** Popup legal text per language: English T&C from Figma node 1028:132652, Arabic declaration from node 1028:137204. */
+/** Popup legal text per language: the Acknowledgment and Authorization, as supplied by the business (EN and AR). */
 // TODO: load from the CMS / API if the legal text is managed there
 
 export interface TermsSection {
@@ -12,123 +12,45 @@ export interface TermsContent {
   sections: TermsSection[];
 }
 
-export const TERMS_TITLE = 'Terms and Conditions of the Initiative to Support Employees in Subsidized Establishments';
-
-export const TERMS_SECTIONS: TermsSection[] = [
-  {
-    title: '1. Introduction',
-    clauses: [
-      '1.1. The Initiative supports the wages of Saudi employees working in eligible establishments subject to the Social Insurance Law, through the Unemployment Insurance Law (SANED), once the eligibility requirements are met within the period specified for the Initiative.',
-        "1.2. By applying through GOSI Business, the establishment acknowledges that it has read, understood and agreed to these Terms and Conditions, which form an integral part of the Terms of Use of GOSI's electronic services.",
-    ],
-  },
-  {
-    title: '2. Definitions',
-    clauses: [
-      '2.1. GOSI: The General Organization for Social Insurance.',
-      '2.2. Initiative: The Initiative to Support Employees in Subsidized Establishments.',
-        "2.3. Ministerial Committee: The committee formed to set the Initiative's eligibility criteria and controls.",
-      '2.4. Establishment: An establishment subject to the Social Insurance Law that the Ministerial Committee has determined as eligible for support.',
-      '2.5. Contributor: A Saudi employee registered under the Social Insurance Law at the eligible establishment.',
-      '2.6. SANED: The Unemployment Insurance Law.',
-    ],
-  },
-  {
-    title: '3. Eligibility of Establishments',
-    clauses: [
-      '3.1. Eligible establishments are determined by the Ministerial Committee based on the lists submitted by the regulatory sector responsible for them, in accordance with the approved criteria and controls.',
-      '3.2. Support stops for any establishment that no longer meets the eligibility criteria.',
-    ],
-  },
-  {
-    title: '4. Eligibility of Contributors',
-    clauses: [
-      '4.1. The contributor must be Saudi, covered by SANED, and actively employed at the eligible establishment.',
-      '4.2. The contributor must have a continuous contribution period at the establishment that started before the reference date set for the Initiative.',
-      '4.3. Contributors with a suspended contribution period are not eligible for selection, as SANED coverage is not in effect during the suspension period.',
-      '4.4. Eligibility is subject to the rules governing the combination of benefits under SANED.',
-      '4.5. Meeting the contributor eligibility requirements alone is not sufficient; the establishment must also be eligible for support.',
-    ],
-  },
-  {
-    title: '5. Registering Contributors',
-    clauses: [
-      '5.1. Contributors are registered by the eligible establishment only; employees cannot apply individually.',
-      '5.2. The number of contributors the establishment can register is subject to the approved ratio set by the Ministerial Committee.',
-      '5.3. The establishment must add a valid IBAN for each registered contributor.',
-    ],
-  },
-  {
-    title: '6. Support Amount, Duration and Payment',
-    clauses: [
-        "6.1. The support amount is calculated according to the compensation calculation mechanism stipulated in the Unemployment Insurance Law (SANED) of 1435 AH, and varies according to each contributor's insurance data.",
-      '6.2. The support is paid monthly to the Saudi employees registered by the establishment, according to the disbursement date set by the Ministerial Committee.',
-        "6.3. The initial support period does not exceed three months, and may be extended if the establishment's continued impact is confirmed in accordance with the approved controls.",
-      '6.4. Contribution and insurance coverage in all branches continue during the support period.',
-    ],
-  },
-  {
-    title: '7. Stopping the Support',
-    clauses: [
-      '7.1. Support stops for a contributor in any of the following cases:',
-      '7.1.1. The contributor is excluded from the eligible establishment.',
-      '7.1.2. The contributor reaches the statutory retirement age and meets the pension eligibility conditions.',
-      '7.1.3. The contributor no longer meets any of the eligibility conditions, or any of the specified cases for stopping the support applies.',
-    ],
-  },
-  {
-    title: '8. Establishment Obligations',
-    clauses: [
-      '8.1. The establishment confirms that all information it submits is accurate and bears full responsibility for it.',
-      '8.2. The employer must pay the full wages due to the beneficiary employees after the support period ends.',
-      '8.3. The establishment authorizes GOSI to request the Initiative record from licensed entities in accordance with the applicable laws, regulations, decisions and policies.',
-    ],
-  },
-  {
-    title: '9. Data Protection and Privacy',
-    clauses: [
-      '9.1. GOSI protects data in accordance with the Personal Data Protection Law and its implementing regulations, and uses it only for the purposes of the Initiative and as permitted by applicable laws.',
-    ],
-  },
-  {
-    title: '10. Electronic Acceptance',
-    clauses: [
-      '10.1. Approving the declaration electronically through GOSI Business is considered a valid electronic signature in accordance with the Electronic Transactions Law, and is legally binding on the establishment.',
-    ],
-  },
-  {
-    title: '11. Amendments',
-    clauses: [
-        "11.1. GOSI may update these Terms and Conditions in line with the Ministerial Committee's decisions or applicable regulations. Continuing to use the service after the update is published means accepting the updated terms.",
-    ],
-  },
-  {
-    title: '12. Governing Law',
-    clauses: ['12.1. These Terms and Conditions are governed by the laws and regulations in force in the Kingdom of Saudi Arabia.'],
-  },
-];
-
-/** The Arabic design shows a declaration and authorization (إقرار وتفويض), not a translation of the English terms */
-export const TERMS_AR: TermsContent = {
-  title: 'إقرار وتفويض لمبادرة دعم أجور السعوديين العاملين في المنشآت',
+export const TERMS_EN: TermsContent = {
+  title: 'Acknowledgment and Authorization',
   sections: [
     {
       clauses: [
-        "أقر أنا صاحب العمل المتقدم بطلب التسجيل في مبادرة دعم أجور السعوديين العاملين بالمنشآت المتضررة بسبب تداعيات المتغيرات الراهنة بما يلي:",
-        "1- تضرر المنشأة وفق الشروط والضوابط المعتمدة لذلك.",
-        "2- التزامي بكامل المسؤولية حيال تحديد قائمة العاملين المطلوب تسجيلهم في المبادرة وما يقتضيه ذلك من أي متطلبات وفق أحكام العلاقة التعاقدية في هذا الشأن، دون أي مسؤولية على المؤسسة تجاه صاحب العمل والعاملين والغير عن أي آثار ناتجة عن الإجراءات المتخذة من صاحب العمل تجاه العاملين بمنشأته بما في ذلك تحديد القائمة، وتقتصر مسؤولية المؤسسة على صرف التعويض للمستحقين من العاملين المدرجين في القائمة وفق أحكام الأمر الملكي والقرارات الصادرة تنفيذاً لذلك.",
-        "3- أن كافة الاحكام المقررة بموجب الأمر الملكي تنطبق على هذه المنشأة، وأتعهد بالالتزام بأحكام الأمر الملكي وكافة الاحكام النظامية الأخرى ذات العلاقة، بما في ذلك الاستمرار في دفع الأجور لبقية العمال غير المشمولين بالتعويض، كما أتعهد بالالتزام باستئناف دفع الأجور للمشمولين بهذا التعويض بعد انتهاء مدة صرف التعويض.",
-        "4- تفويض المؤسسة وكافة الجهات الحكومية ذات العلاقة بالحصول على أي من البيانات والمعلومات والمستندات اللازمة من الجهات المعنية، لغرض دراسة الطلبات المتعلقة بالمبادرة والبت فيها.",
-        "5- أن جميع البيانات والمعلومات والمستندات المقدمة عن المنشأة والعاملين صحيحة وكاملة، وأتعهد بتحديثها فور حدوث أي تغيير يطرأ عليها، مع استمرار أحقية المؤسسة وكافة الجهات الحكومية ذات العلاقة بالتحقق من أي من تلك البيانات والمعلومات والمستندات في أي وقت.",
-        "6- أوافق على تلقي كافة الإشعارات من المؤسسة من خلال الوسائل الإلكترونية التي تحددها المؤسسة، وعلى سبيل المثال لا الحصر: البريد الإلكتروني، ورقم الهاتف، وحسابي في البوابة الإلكترونية، والموقع الالكتروني للمؤسسة، وأتحمل المسؤولية الكاملة عن متابعة هذه القنوات، وتعد أي إشعارات ترسل من خلال هذه الوسائل تبليغا نظاميَّا من تاريخ إرسالها.",
-        "7- تقديم الطلب لا يعني الموافقة عليه، وأن المؤسسة ستقوم بدراسته والتحقق من مدى توافر كافة الشروط اللازمة للاستحقاق وفقاً للإجراءات والضوابط المعتمدة.",
-        "8- أن مخالفة أي حكم من أحكام الأمر الملكي أو الأنظمة ذات العلاقة أو الفقرات الواردة بموجب هذا النموذج، يترتب عليها المساءلة القانونية و تطبيق العقوبات الواردة بموجب الأنظمة المرعية، بالإضافة إلى حق المؤسسة في استرداد مبالغ التعويض من المنشأة.",
+        'I, the employer submitting the registration application for the “Saudi Salaries Support in Eligible Establishments Subject to Social Insurance” initiative, hereby acknowledge and agree to the following:',
+        '1. The establishment has suffered damage in accordance with the approved conditions and regulations.',
+        '2. I accept full responsibility for determining the list of employees to be registered in the initiative, including any requirements arising from this determination under the terms of the employment relationship. The Institution bears no responsibility toward the employer, employees, or third parties regarding any consequences resulting from actions taken by the employer concerning their employees, including the preparation of such lists. The Institution’s responsibility is limited solely to disbursing compensation to eligible employees listed therein, in accordance with the Royal Order and implementing regulations.',
+        '3. All provisions stipulated by the Royal Order apply to this establishment. I commit to complying with the Royal Order and all other relevant regulatory provisions, including continuing to pay salaries to non-compensated employees and resuming salary payments to compensated employees upon the expiration of the compensation period.',
+        '4. I authorize the Institution and all relevant government entities to obtain any necessary data, information, and documents from concerned parties for the purpose of reviewing and adjudicating applications related to the initiative.',
+        '5. All data, information, and documents submitted regarding the establishment and its employees are accurate and complete. I commit to updating them immediately upon any changes. The Institution and all relevant government entities retain the right to verify any of these data, information, or documents at any time.',
+        '6. I consent to receive all notifications from the Institution through electronic means designated by the Institution, including but not limited to: email, phone number, my account on the e-portal, and the Institution’s website. I assume full responsibility for monitoring these channels. Any notification sent through these means shall constitute official notice as of the date of transmission.',
+        '7. Submitting the application does not constitute approval thereof. The Institution will review the application and verify compliance with all eligibility conditions according to established procedures and regulations.',
+        '8. Violation of any provision of the Royal Order, related systems, or clauses contained in this form shall result in legal accountability and the application of penalties prescribed under prevailing regulations, in addition to the Institution’s right to recover compensation amounts from the establishment.',
+      ],
+    },
+  ],
+};
+
+export const TERMS_AR: TermsContent = {
+  title: 'إقرار وتفويض',
+  sections: [
+    {
+      clauses: [
+        'أقر أنا صاحب العمل المتقدم بطلب التسجيل في مبادرة «دعم أجور السعوديين العاملين بالمنشآت المستحقة الخاضعة لنظام التأمينات الاجتماعية» بما يلي:',
+        '1- تضرر المنشأة وفق الشروط والضوابط المعتمدة لذلك.',
+        '2- التزامي بكامل المسؤولية حيال تحديد قائمة العاملين المطلوب تسجيلهم في المبادرة وما يقتضيه ذلك من أي متطلبات وفق أحكام العلاقة التعاقدية في هذا الشأن، دون أي مسؤولية على المؤسسة تجاه صاحب العمل والعاملين والغير عن أي آثار ناتجة عن الإجراءات المتخذة من صاحب العمل تجاه العاملين بمنشأته، بما في ذلك تحديد القائمة، وتقتصر مسؤولية المؤسسة على صرف التعويض للمستحقين من العاملين المدرجين في القائمة وفق أحكام الأمر الملكي والقرارات الصادرة تنفيذاً لذلك.',
+        '3- أن كافة الأحكام المقررة بموجب الأمر الملكي تنطبق على هذه المنشأة، وأتعهد بالالتزام بأحكام الأمر الملكي وكافة الاحكام النظامية الأخرى ذات العلاقة، بما في ذلك الاستمرار في دفع الأجور لبقية العمال غير المشمولين بالتعويض، كما أتعهد بالالتزام باستئناف دفع الأجور للمشمولين بهذا التعويض بعد انتهاء مدة صرف التعويض.',
+        '4- تفويض المؤسسة وكافة الجهات الحكومية ذات العلاقة بالحصول على أي من البيانات والمعلومات والمستندات اللازمة من الجهات المعنية، لغرض دراسة الطلبات المتعلقة بالمبادرة والبت فيها.',
+        '5- أن جميع البيانات والمعلومات والمستندات المقدمة عن المنشأة والعاملين صحيحة وكاملة، وأتعهد بتحديثها فور حدوث أي تغيير يطرأ عليها، مع استمرار أحقية المؤسسة وكافة الجهات الحكومية ذات العلاقة بالتحقق من أي من تلك البيانات والمعلومات والمستندات في أي وقت.',
+        '6- أوافق على تلقي كافة الإشعارات من المؤسسة من خلال الوسائل الإلكترونية التي تحددها المؤسسة، وعلى سبيل المثال لا الحصر: البريد الإلكتروني، ورقم الهاتف، وحسابي في البوابة الإلكترونية، والموقع الإلكتروني للمؤسسة، وأتحمل المسؤولية الكاملة عن متابعة هذه القنوات، وتعد أي إشعارات ترسل من خلال هذه الوسائل تبليغا نظاميَّا من تاريخ إرسالها.',
+        '7- تقديم الطلب لا يعني الموافقة عليه، وأن المؤسسة ستقوم بدراسته والتحقق من مدى توافر كافة الشروط اللازمة للاستحقاق وفقاً للإجراءات والضوابط المعتمدة.',
+        '8- أن مخالفة أي حكم من أحكام الأمر الملكي أو الأنظمة ذات العلاقة أو الفقرات الواردة بموجب هذا النموذج، يترتب عليها المساءلة القانونية و تطبيق العقوبات الواردة بموجب الأنظمة المرعية، بالإضافة إلى حق المؤسسة في استرداد مبالغ التعويض من المنشأة.',
       ],
     },
   ],
 };
 
 export const TERMS: Record<'en' | 'ar', TermsContent> = {
-  en: { title: TERMS_TITLE, sections: TERMS_SECTIONS },
+  en: TERMS_EN,
   ar: TERMS_AR,
 };
